@@ -1,0 +1,66 @@
+name: main
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+
+        - name: Windows_VS2019_x64
+          os: windows-2019
+          architecture: x64
+          cmake_config: -G "Visual Studio 16 2019" -A "x64"
+
+    steps:
+    - name: Sync Repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Download MaterialX
+      run: |
+        gh release download -R "AcademySoftwareFoundation/MaterialX" --pattern "MaterialX_Windows_VS2019_x64_Python38.zip"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      #uses: robinraju/release-downloader@v1.3
+      #with:
+      #  repo: ""
+      #  version: "v1.38.4"
+      #  file: "MaterialX_Windows_VS2019_x64_Python38.zip"
+      #  target: "MaterialX_Windows_VS2019_x64_Python38.zip"
+      #  token: ${{ secrets.GITHUB_TOKEN }}        
+    
+    - name: Extract MaterialX
+      run: |
+        7z x -oMaterialX_Install MaterialX_Windows_VS2019_x64_Python38.zip
+        ls -l ${{github.workspace}}/MaterialX_install
+
+    - name: Configure CMake
+      run: |
+        mkdir build
+        cd build
+        cmake -DMATERIALX_ROOT="${{ github.workspace }}/MaterialX_Install" ${{matrix.cmake_config}} ..
+
+    - name: CMake Build
+      run: cmake --build . --target install --config Release
+      working-directory: build
+
+    - name: Upload Installed Package
+      uses: actions/upload-artifact@v3
+      with:
+        name: glTF2Mtlx_${{ matrix.name }}
+        path: build/installed/
+        if-no-files-found: warn 
