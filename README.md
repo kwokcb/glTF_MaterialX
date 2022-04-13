@@ -13,6 +13,7 @@ glTF to MaterialX translation
 ## To do
 - Handle binary resources in ASCII or glb form
 - Handle factor * image if both exist
+- Migrate code to a library and create separate tests and sample executable. 
 
 ## Examples
 - Original glTF
