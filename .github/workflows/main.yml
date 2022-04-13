@@ -50,10 +50,16 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake --build ${{github.workspace}}/build -DMATERIALX_ROOT="${{ github.workspace }}/MaterialX_Install" ${{matrix.cmake_config}} ..
+        mkdir build
+        cd build
+        cmake -DMATERIALX_ROOT="${{ github.workspace }}/MaterialX_Install" ${{matrix.cmake_config}} ..
 
     - name: CMake Build
       run: cmake --build . --target install --config Release
-      working-directory: ${{github.workspace}}/build
+      working-directory: build
 
-  
+    - name: Upload Installed Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: glTF2Mtlx_${{ matrix.name }}
+        path: build/installed/

@@ -5,9 +5,13 @@ project(glTF2Mtlx VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Adjust binary and library locations
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Adjust the default installation path
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "Default install path" FORCE)
 
 # Get MaterialX installation information
 #set(MATERIALX_ROOT "<MATERIALX_ROOT>" CACHE PATH "Path to the root folder of the MaterialX installation.")
@@ -57,10 +61,6 @@ file(GLOB materialx_source "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB materialx_headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h*")
 
 add_executable(glTF2Mtlx ${materialx_source} ${materialx_headers})
-
-#set(MATERIALX_LIBRARIES
-#     MaterialXFormat,
-#     MaterialXRender)
 
 target_link_libraries(
     glTF2Mtlx
