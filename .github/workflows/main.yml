@@ -18,10 +18,23 @@ jobs:
       matrix:
         include:
 
-        - name: Windows_VS2019_x64
+        - name: Windows_VS2019_x64_Python38
           os: windows-2019
           architecture: x64
           cmake_config: -G "Visual Studio 16 2019" -A "x64"
+          install_file: MaterialX_Windows_VS2019_x64_Python38.zip
+
+        - name: MacOS_Xcode_13_Python39
+          os: macos-11
+          compiler: xcode
+          compiler_version: "13.1"
+          install_file: MaterialX_MacOS_Xcode_13_Python39.zip
+
+        - name: Linux_GCC_11_Python39
+          os: ubuntu-20.04
+          compiler: gcc
+          compiler_version: "11"
+          install_file: MaterialX_Linux_GCC_11_Python39.zip
 
     steps:
     - name: Sync Repository
@@ -29,12 +42,42 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Install Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install libglu1-mesa-dev xorg-dev
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          sudo apt-get install -y g++-${{ matrix.compiler_version }} g++-${{ matrix.compiler_version }}-multilib
+          echo "CC=gcc-${{ matrix.compiler_version }}" >> $GITHUB_ENV
+          echo "CXX=g++-${{ matrix.compiler_version }}" >> $GITHUB_ENV
+        else
+          sudo apt-get install -y clang-${{ matrix.compiler_version }} libc++-${{ matrix.compiler_version }}-dev libc++abi-${{ matrix.compiler_version }}-dev
+          echo "CC=clang-${{ matrix.compiler_version }}" >> $GITHUB_ENV
+          echo "CXX=clang++-${{ matrix.compiler_version }}" >> $GITHUB_ENV
+        fi
+
+    - name: Install Dependencies (MacOS)
+      if: runner.os == 'macOS'
+      run: |
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          brew install gcc@${{ matrix.compiler_version }}
+          echo "CC=gcc-${{ matrix.compiler_version }}" >> $GITHUB_ENV
+          echo "CXX=g++-${{ matrix.compiler_version }}" >> $GITHUB_ENV
+        else
+          ls -ls /Applications/
+          sudo xcode-select -switch /Applications/Xcode_${{ matrix.compiler_version }}.app
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+        fi        
+
     - name: Download MaterialX
       run: |
-        gh release download -R "AcademySoftwareFoundation/MaterialX" --pattern "MaterialX_Windows_VS2019_x64_Python38.zip"
+        gh release download v1.38.4 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # This action is currently only support on Linux, so use gh CLI instead
       #uses: robinraju/release-downloader@v1.3
       #with:
       #  repo: ""
@@ -45,8 +88,8 @@ jobs:
     
     - name: Extract MaterialX
       run: |
-        7z x -oMaterialX_Install MaterialX_Windows_VS2019_x64_Python38.zip
-        ls -l ${{github.workspace}}/MaterialX_install
+        7z x -o${{github.workspace}}/MaterialX_Install ${{ matrix.install_file }}
+        ls -l ${{github.workspace}}
 
     - name: Configure CMake
       run: |
