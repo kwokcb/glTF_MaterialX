@@ -30,13 +30,16 @@ jobs:
         submodules: recursive
 
     - name: Download MaterialX
-      uses: dsaltares/fetch-gh-release-asset@master
-      with:
-        repo: "dsaltares/godot-wild-jam-18"
-        version: "v1.38.4"
-        file: "MaterialX_Windows_VS2019_x64_Python38.zip"
-        target: "MaterialX_Windows_VS2019_x64_Python38.zip"
-        token: ${{ secrets.GITHUB_TOKEN }}        
+      run: |
+        gh release download -R "AcademySoftwareFoundation/MaterialX" --pattern "MaterialX_Windows_VS2019_x64_Python38.zip"
+
+      #uses: robinraju/release-downloader@v1.3
+      #with:
+      #  repo: ""
+      #  version: "v1.38.4"
+      #  file: "MaterialX_Windows_VS2019_x64_Python38.zip"
+      #  target: "MaterialX_Windows_VS2019_x64_Python38.zip"
+      #  token: ${{ secrets.GITHUB_TOKEN }}        
     
     - name: Extract MaterialX
       run: |
