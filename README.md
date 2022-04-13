@@ -1,4 +1,5 @@
 # glTF / MaterialX Datamodel Conversion Repo
+[![CI main](https://github.com/kwokcb/glTF_MaterialX/workflows/main/badge.svg)](https://github.com/kwokcb/glTF_MaterialX/actions)
 
 Prototyping repo to work out logic for glTF bidirectional MaterialX conversion.
 - See issue: https://github.com/AcademySoftwareFoundation/MaterialX/issues/874 as first step to get
@@ -7,6 +8,7 @@ glTF to MaterialX translation
 ## Current Status
 - Basic glTF to MaterialX file conversion for existing glTF PBR node.
 - Handles ASCII glTF files without embedded binary image resources
+- Basic CI workflow put up to create Windows binary build.
 
 ## To do
 - Handle binary resources in ASCII or glb form
