@@ -18,7 +18,7 @@ jobs:
       matrix:
         include:
 
-        - name: Windows_VS2019_x64_Python38
+        - name: Windows_VS2019_x64
           os: windows-2019
           architecture: x64
           cmake_config: -G "Visual Studio 16 2019" -A "x64"
@@ -59,7 +59,8 @@ jobs:
       working-directory: build
 
     - name: Upload Installed Package
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: glTF2Mtlx_${{ matrix.name }}
         path: build/installed/
+        if-no-files-found: warn 
