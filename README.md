@@ -8,7 +8,7 @@ glTF to MaterialX translation
 ## Current Status
 - Basic glTF to MaterialX file conversion for existing glTF PBR node.
 - Handles ASCII glTF files without embedded binary image resources
-- Basic CI workflow put up to create Windows binary build.
+- Basic CI workflow put up to builds for subset of platforms in MaterialX release (Windows, Linux, Mac)
 
 ## To do
 - Handle binary resources in ASCII or glb form
