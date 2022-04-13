@@ -24,20 +24,27 @@ void mtlx2glTF()
 
 }
 
-mx::FileSearchPath getDefaultSearchPath()
+mx::FileSearchPath getDefaultSearchPath(const mx::FilePath& materialXLibraryPath)
 {
-    mx::FilePath modulePath = mx::FilePath::getModulePath();
-    mx::FilePath installRootPath = modulePath.getParentPath();
-    mx::FilePath devRootPath = installRootPath.getParentPath().getParentPath();
-
     mx::FileSearchPath searchPath;
-    if ((devRootPath / "libraries").exists())
+    if (!materialXLibraryPath.isEmpty())
     {
-        searchPath.append(devRootPath);
+        searchPath.append(materialXLibraryPath);
+    }
+
+    const mx::FilePath libraryFolder("libraries");
+    mx::FilePath modulePath = mx::FilePath::getModulePath();
+    if ((modulePath / libraryFolder).exists())
+    {
+        searchPath.append(modulePath);
     }
     else
     {
-        searchPath.append(installRootPath);
+        mx::FilePath parentPath = modulePath.getParentPath();
+        if ((parentPath / libraryFolder).exists())
+        {
+            searchPath.append(parentPath);
+        }
     }
 
     return searchPath;
@@ -52,6 +59,7 @@ int main(int argc, char* const argv[])
     }
 
     mx::FilePath glTFFile;
+    mx::FilePath materialXLibraryPath;
     for (size_t i = 0; i < tokens.size(); i++)
     {
         const std::string& token = tokens[i];
@@ -60,24 +68,38 @@ int main(int argc, char* const argv[])
         {
             glTFFile = nextToken;
         }
+        else if (token == "--lib")
+        {
+            materialXLibraryPath = nextToken;
+        }
     }
 
+    mx::FilePath modulePath = mx::FilePath::getModulePath();
+    if (!glTFFile.isAbsolute())
+    {
+        glTFFile = modulePath / glTFFile;
+    }
     if (!glTFFile.exists())
     {
         std::cerr << "Input file does not exist: " << glTFFile.asString();
         return -1;
     }
 
-    mx::FilePathVec _libraryFolders; 
-    _libraryFolders.push_back(mx::FilePath("libraries"));
-    mx::FileSearchPath _searchPath = getDefaultSearchPath();
-    mx::DocumentPtr _stdLib = mx::createDocument();
-    mx::StringSet _xincludeFiles = mx::loadLibraries(_libraryFolders, _searchPath, _stdLib);
+    mx::FilePathVec libraryFolders; 
+    libraryFolders.push_back(mx::FilePath("libraries"));
+    mx::FileSearchPath searchPath = getDefaultSearchPath(materialXLibraryPath);
+    mx::DocumentPtr stdLib = mx::createDocument();
+    mx::StringSet xincludeFiles = mx::loadLibraries(libraryFolders, searchPath, stdLib);
+    if (xincludeFiles.empty())
+    {
+        std::cerr << "Could not load library definitions using paths";
+        return -1;
+    }
 
     bool toMaterialX = true;
     if (toMaterialX)
     {
-        mx::DocumentPtr materials = glTF2Mtlx(glTFFile, _stdLib);
+        mx::DocumentPtr materials = glTF2Mtlx(glTFFile, stdLib);
         if (materials)
         {
             mx::XmlWriteOptions writeOptions;
@@ -89,6 +111,8 @@ int main(int argc, char* const argv[])
                 }
                 return true;
             };
+            const std::string outputFileName = glTFFile.asString() + ".mtlx";
+            std::cout << "Wrote MaterialX File: " << outputFileName;
             mx::writeToXmlFile(materials, glTFFile.asString() + ".mtlx", &writeOptions);
         }
     }
