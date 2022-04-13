@@ -89,7 +89,7 @@ jobs:
     - name: Extract MaterialX
       run: |
         7z x -o${{github.workspace}}/MaterialX_Install ${{ matrix.install_file }}
-        ls -l ${{github.workspace}}/MaterialX_install
+        ls -l ${{github.workspace}}
 
     - name: Configure CMake
       run: |
