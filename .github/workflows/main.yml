@@ -8,24 +8,25 @@ on:
     paths-ignore:
       - '**.md'
   workflow_dispatch:
-  
+
 jobs:
 
-  build:
+build:
     name: Build
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-        - name: Windows_VS2019_x64
+
+        - name: Windows_VS2019_x64_Python38
           os: windows-2019
           architecture: x64
           cmake_config: -G "Visual Studio 16 2019" -A "x64"
 
     steps:
-    - name: Sync Reposiory
-      uses: actions/checkout@v3
+    - name: Sync Repository
+      uses: actions/checkout@v2
       with:
         submodules: recursive
 
@@ -51,8 +52,5 @@ jobs:
     - name: CMake Build
       run: cmake --build . --target install --config Release
       working-directory: ${{github.workspace}}/build
-        
-    - name: CMake Test
-    #  working-directory: ${{github.workspace}}/build
-    #  run: ctest -C ${{env.BUILD_TYPE}}
-      
+
+  
