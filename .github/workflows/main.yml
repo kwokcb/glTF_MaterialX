@@ -31,7 +31,7 @@ jobs:
 
     - name: Download MaterialX
       run: |
-        gh auth login
+        gh auth login github.com
         gh release download -R "AcademySoftwareFoundation/MaterialX" --pattern "MaterialX_Windows_VS2019_x64_Python38.zip"
 
       #uses: robinraju/release-downloader@v1.3
