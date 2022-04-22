@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-# set the project name
-project(glTF2Mtlx VERSION 1.0)
+set(GLTFMTLX_MAJOR_VERSION 1)
+set(GLTFMTLX_MINOR_VERSION 38)
+set(GLTFMTLX_BUILD_VERSION 5)
+set(GLTFMTLX_LIBRARY_VERSION ${GLTFMTLX_MAJOR_VERSION}.${GLTFMTLX_MINOR_VERSION}.${GLTFMTLX_BUILD_VERSION})
+
+project(glTF2Mtlx VERSION ${GLTFMTLX_MAJOR_VERSION}.${GLTFMTLX_MINOR_VERSION})
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -14,15 +18,20 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "Default install path" FORCE)
 
 # Get MaterialX installation information
-#set(MATERIALX_ROOT "<MATERIALX_ROOT>" CACHE PATH "Path to the root folder of the MaterialX installation.")
-set(MATERIALX_ROOT "D:/Work/materialx/bernard_MaterialX_2/build/installed" CACHE PATH "Path to the root folder of the MaterialX installation.")
+set(MATERIALX_ROOT "<MATERIALX_ROOT>" CACHE PATH "Path to the root folder of the MaterialX installation.")
+#set(MATERIALX_ROOT "D:/Work/materialx/bernard_MaterialX_2/build/installed" CACHE PATH "Path to the root folder of the MaterialX installation.")
 message(MATERIALX_ROOT: ${MATERIALX_ROOT})
 if (NOT EXISTS ${MATERIALX_ROOT})
     message(FATAL_ERROR "Could not find external MaterialX installation: ${MATERIAL_ROOT}")
 endif()
 
-set(MATERIALX_LIBRARIES "" PATH)
-set(MATERIALX_INCLUDE_DIR "" PATH)
+set(MATERIALX_LIBRARIES CACHE "" PATH)
+set(MATERIALX_INCLUDE_DIR CACHE "" PATH)
+
+# Library name custom suffix
+# This helps an application that needs to ship a dynamic library MaterialX ensure
+# that it has a unique name that won't conflict with one elsewhere on the system.
+set (GLTFMTLX_LIBNAME_SUFFIX "" CACHE STRING "Specify a suffix to all libraries that are built")
 
 # Do if Mac
 if (APPLE)
@@ -57,24 +66,11 @@ if (NOT MATERIALX_INCLUDE_DIRS OR NOT MATERIALX_LIBRARIES)
     message(FATAL_ERROR "Could not find external MaterialX installation, is MATERIALX_ROOT set?")
 endif()
 
-file(GLOB materialx_source "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
-file(GLOB materialx_headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h*")
+set(GLTFMTLX_INSTALL_INCLUDE_PATH "include" CACHE STRING "Install header include path (e.g. 'inc', 'include').")
+set(GLTFMTLX_INSTALL_LIB_PATH "lib" CACHE STRING "Install lib path (e.g. 'libs', 'lib').")
 
-add_executable(glTF2Mtlx ${materialx_source} ${materialx_headers})
+add_subdirectory(source/MaterialXglTF)
+add_subdirectory(source/glTFTest)
 
-target_link_libraries(
-    glTF2Mtlx
-    ${MATERIALX_LIBRARIES})
-
-target_include_directories(
-    glTF2Mtlx
-    PRIVATE
-    ${CMAKE_BINARY_DIR},
-    ${MATERIALX_INCLUDE_DIRS})
-
-install(TARGETS glTF2Mtlx
-    RUNTIME DESTINATION bin)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/glTF2Mtlx.pdb"
-    DESTINATION "bin" OPTIONAL)
 
     
