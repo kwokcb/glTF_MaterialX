@@ -4,7 +4,7 @@
 #include <MaterialXFormat/Util.h>
 
 #include <iostream>
-#include "CgltfMaterialLoader.h"
+#include <MaterialXglTF/CgltfMaterialLoader.h>
 
 namespace mx = MaterialX;
 
