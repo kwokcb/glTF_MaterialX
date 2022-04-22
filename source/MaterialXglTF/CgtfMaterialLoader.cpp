@@ -360,7 +360,7 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
     {
         return false;
     }
-    return false;
+    return true;
 }
 
 bool CgltfMaterialLoader::load(const FilePath& filePath)

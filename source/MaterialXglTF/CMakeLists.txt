@@ -34,3 +34,7 @@ install(TARGETS MaterialXglTF
  install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/"
     DESTINATION ${GLTFMTLX_INSTALL_INCLUDE_PATH}/MaterialXglTF/ 
     FILES_MATCHING PATTERN "*.h*")   
+
+add_custom_command(TARGET MaterialXglTF
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${CMAKE_CURRENT_SOURCE_DIR}/../../resources ${CMAKE_BINARY_DIR}/bin/resources)
