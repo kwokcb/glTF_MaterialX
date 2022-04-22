@@ -19,14 +19,13 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "Default ins
 
 # Get MaterialX installation information
 set(MATERIALX_ROOT "<MATERIALX_ROOT>" CACHE PATH "Path to the root folder of the MaterialX installation.")
-#set(MATERIALX_ROOT "D:/Work/materialx/bernard_MaterialX_2/build/installed" CACHE PATH "Path to the root folder of the MaterialX installation.")
 message(MATERIALX_ROOT: ${MATERIALX_ROOT})
 if (NOT EXISTS ${MATERIALX_ROOT})
     message(FATAL_ERROR "Could not find external MaterialX installation: ${MATERIAL_ROOT}")
 endif()
 
-set(MATERIALX_LIBRARIES CACHE "" PATH)
-set(MATERIALX_INCLUDE_DIR CACHE "" PATH)
+set(MATERIALX_LIBRARIES CACHE "" PATH "MaterialX libraries")
+set(MATERIALX_INCLUDE_DIR CACHE "" PATH "MaterialX includes ")
 
 # Library name custom suffix
 # This helps an application that needs to ship a dynamic library MaterialX ensure

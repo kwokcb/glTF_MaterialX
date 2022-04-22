@@ -35,9 +35,17 @@ class /*MX_RENDER_API*/ CgltfMaterialLoader
     /// Load materials from file path
     bool load(const FilePath& filePath);
 
+    /// Save materials to file path
+    bool save(const FilePath& filePath);
+
     void setDefinitions(DocumentPtr doc)
     {
         _definitions = doc;
+    }
+
+    void setMaterials(DocumentPtr materials)
+    {
+        _materials = materials;
     }
 
     DocumentPtr getMaterials() const
