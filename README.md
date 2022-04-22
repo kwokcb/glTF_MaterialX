@@ -9,11 +9,13 @@ glTF to MaterialX translation
 - Basic glTF to MaterialX file conversion for existing glTF PBR node.
 - Handles ASCII glTF files without embedded binary image resources
 - Basic CI workflow put up to builds for subset of platforms in MaterialX release (Windows, Linux, Mac)
+- Code is part of a `MaterialXglTF` library which can be reused. Sample executable `glTF2Mtlx` uses this library. 
 
 ## To do
+- Merge glTF to MTLX reverse translation code.
+- Add static analysis.
 - Handle binary resources in ASCII or glb form
 - Handle factor * image if both exist
-- Migrate code to a library and create separate tests and sample executable. 
 
 ## Examples
 - Original glTF
