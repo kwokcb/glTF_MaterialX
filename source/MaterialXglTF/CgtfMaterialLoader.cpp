@@ -39,6 +39,7 @@ namespace
 
 void initialize_cgltf_texture_view(cgltf_texture_view& textureview)
 {
+    std::memset(&textureview, 0, sizeof(cgltf_texture_view));
     textureview.texture = nullptr;
     textureview.scale = 1.0;
     textureview.has_transform = false;
@@ -51,6 +52,7 @@ void initialize_cgltf_texture_view(cgltf_texture_view& textureview)
 void initialize_cgtlf_texture(cgltf_texture& texture, const string& name, const string& uri, 
                               cgltf_image* image)
 {
+    std::memset(&texture, 0, sizeof(cgltf_texture));
     texture.has_basisu = false;
     texture.extras.start_offset = 0;
     texture.extras.end_offset = 0;
@@ -210,6 +212,7 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
     for (const NodePtr& pbrNode : pbrNodes)
     {
         cgltf_material* material = &(materials[i]);
+        std::memset(material, 0, sizeof(cgltf_material));
 	    material->has_pbr_metallic_roughness = false;
 	    material->has_pbr_specular_glossiness = false;
 	    material->has_clearcoat = false;

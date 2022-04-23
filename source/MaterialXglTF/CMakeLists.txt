@@ -1,8 +1,6 @@
 file(GLOB materialx_source "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB materialx_headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h*")
 
-#add_executable(glTF2Mtlx ${materialx_source} ${materialx_headers})
-
 add_library(MaterialXglTF ${materialx_source} ${materialx_headers})
 
 set_target_properties(
