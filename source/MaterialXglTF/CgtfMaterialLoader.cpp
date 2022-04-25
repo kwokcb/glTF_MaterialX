@@ -346,6 +346,7 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
         // Handle normal
         filename = EMPTY_STRING;
         imageNode = pbrNode->getConnectedNode("normal");
+        initialize_cgltf_texture_view(material->normal_texture);
         if (imageNode)
         {
             // Read past normalmap node
@@ -376,6 +377,7 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
         cgltf_sheen& sheen = material->sheen;
         filename = EMPTY_STRING;
         imageNode = pbrNode->getConnectedNode("sheen_color");
+        initialize_cgltf_texture_view(sheen.sheen_color_texture);
         if (imageNode)
         {
             InputPtr fileInput = imageNode->getInput("file");
@@ -411,6 +413,7 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
 
         filename = EMPTY_STRING;
         imageNode = pbrNode->getConnectedNode("sheen_roughness");
+        initialize_cgltf_texture_view(sheen.sheen_roughness_texture);
         if (imageNode)
         {
             InputPtr fileInput = imageNode->getInput("file");
@@ -442,6 +445,7 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
         // Handle emissive
         filename = EMPTY_STRING;
         imageNode = pbrNode->getConnectedNode("emissive");
+        initialize_cgltf_texture_view(material->emissive_texture);
         if (imageNode)
         {
             InputPtr fileInput = imageNode->getInput("file");
