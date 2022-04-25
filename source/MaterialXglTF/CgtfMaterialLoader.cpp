@@ -372,6 +372,140 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
             imageIndex++;
         }
 
+        // Handle sheen
+        cgltf_sheen& sheen = material->sheen;
+        filename = EMPTY_STRING;
+        imageNode = pbrNode->getConnectedNode("sheen_color");
+        if (imageNode)
+        {
+            InputPtr fileInput = imageNode->getInput("file");
+            filename = fileInput && fileInput->getAttribute("type") == "filename" ?
+                fileInput->getValueString() : EMPTY_STRING;
+            if (filename.empty())
+                imageNode = nullptr;
+        }
+        if (imageNode)
+        {
+            cgltf_texture* texture = &(textureList[imageIndex]);
+            sheen.sheen_color_texture.texture = texture;
+            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
+                &(imageList[imageIndex]));            
+
+            sheen.sheen_color_factor[0] = 1.0;
+            sheen.sheen_color_factor[1] = 1.0;
+            sheen.sheen_color_factor[2] = 1.0;
+
+            imageIndex++;
+        }
+        else
+        {
+            ValuePtr value = pbrNode->getInputValue("sheen_color");
+            if (value)
+            {
+                Color3 color = value->asA<Color3>();
+                sheen.sheen_color_factor[0] = color[0];
+                sheen.sheen_color_factor[1] = color[1];
+                sheen.sheen_color_factor[2] = color[2];
+            }
+        }        
+
+        filename = EMPTY_STRING;
+        imageNode = pbrNode->getConnectedNode("sheen_roughness");
+        if (imageNode)
+        {
+            InputPtr fileInput = imageNode->getInput("file");
+            filename = fileInput && fileInput->getAttribute("type") == "filename" ?
+                fileInput->getValueString() : EMPTY_STRING;
+            if (filename.empty())
+                imageNode = nullptr;
+        }
+        if (imageNode)
+        {
+            cgltf_texture* texture = &(textureList[imageIndex]);
+            sheen.sheen_roughness_texture.texture = texture;
+            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
+                &(imageList[imageIndex]));            
+
+            sheen.sheen_roughness_factor = 1.0;
+
+            imageIndex++;
+        }
+        else
+        {
+            ValuePtr value = pbrNode->getInputValue("sheen_roughness");
+            if (value)
+            {
+                sheen.sheen_roughness_factor = value->asA<float>();
+            }
+        }
+
+        // Handle emissive
+        filename = EMPTY_STRING;
+        imageNode = pbrNode->getConnectedNode("emissive");
+        if (imageNode)
+        {
+            InputPtr fileInput = imageNode->getInput("file");
+            filename = fileInput && fileInput->getAttribute("type") == "filename" ?
+                fileInput->getValueString() : EMPTY_STRING;
+            if (filename.empty())
+                imageNode = nullptr;
+        }
+        if (imageNode)
+        {
+            cgltf_texture* texture = &(textureList[imageIndex]);
+            material->emissive_texture.texture = texture;
+            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
+                &(imageList[imageIndex]));            
+
+            material->emissive_factor[0] = 1.0;
+            material->emissive_factor[1] = 1.0;
+            material->emissive_factor[2] = 1.0;
+
+            imageIndex++;
+        }
+        else
+        {
+            ValuePtr value = pbrNode->getInputValue("emissive");
+            if (value)
+            {
+                Color3 color = value->asA<Color3>();
+                material->emissive_factor[0] = color[0];
+                material->emissive_factor[1] = color[1];
+                material->emissive_factor[2] = color[2];
+            }
+        }        
+        
+        filename = EMPTY_STRING;
+        imageNode = pbrNode->getConnectedNode("emissive_strength");
+        if (imageNode)
+        {
+            InputPtr fileInput = imageNode->getInput("file");
+            filename = fileInput && fileInput->getAttribute("type") == "filename" ?
+                fileInput->getValueString() : EMPTY_STRING;
+            if (filename.empty())
+                imageNode = nullptr;
+        }
+        if (imageNode)
+        {
+            cgltf_texture* texture = &(textureList[imageIndex]);
+            sheen.sheen_roughness_texture.texture = texture;
+            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
+                &(imageList[imageIndex]));            
+
+            material->emissive_strength.emissive_strength = 1.0;
+
+            imageIndex++;
+        }
+        else
+        {
+            ValuePtr value = pbrNode->getInputValue("emissive_strength");
+            if (value)
+            {
+                material->emissive_strength.emissive_strength = value->asA<float>();
+            }
+        }
+        material->has_emissive_strength = true;
+
         material_idx++;
     }
 
