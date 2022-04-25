@@ -37,10 +37,6 @@
           "index": 1
         }
       },
-      "extensions": {
-        "KHR_materials_emissive_strength": {
-        }
-      },
       "normalTexture": {
         "index": 2,
         "scale": 0
@@ -59,10 +55,6 @@
         },
         "metallicFactor": 0,
         "roughnessFactor": 0.735000014
-      },
-      "extensions": {
-        "KHR_materials_emissive_strength": {
-        }
       }
     }
   ],
@@ -87,8 +79,5 @@
       "name": "image_basecolor2",
       "source": 4
     }
-  ],
-  "extensionsUsed": [
-    "KHR_materials_emissive_strength"
   ]
 }
