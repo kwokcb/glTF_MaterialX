@@ -207,11 +207,11 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
     cgltf_texture textureList[1024];
     cgltf_image imageList[1024];
 
-    size_t i = 0;
+    size_t material_idx = 0;
     size_t imageIndex = 0;
     for (const NodePtr& pbrNode : pbrNodes)
     {
-        cgltf_material* material = &(materials[i]);
+        cgltf_material* material = &(materials[material_idx]);
         std::memset(material, 0, sizeof(cgltf_material));
 	    material->has_pbr_metallic_roughness = false;
 	    material->has_pbr_specular_glossiness = false;
@@ -342,13 +342,37 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
                 }
             }
         }
-        /* if (roughnessInput)
-        {
-            value = roughnessInput->getValue();
-            roughness.roughness_factor = value->asA<float>();
-        }*/
 
-        i++;
+        // Handle normal
+        filename = EMPTY_STRING;
+        imageNode = pbrNode->getConnectedNode("normal");
+        if (imageNode)
+        {
+            // Read past normalmap node
+            if (imageNode->getCategory() == "normalmap")
+            {
+                imageNode = imageNode->getConnectedNode("in");
+            }
+            if (imageNode)
+            {
+                InputPtr fileInput = imageNode->getInput("file");
+                filename = fileInput && fileInput->getAttribute("type") == "filename" ?
+                    fileInput->getValueString() : EMPTY_STRING;
+                if (filename.empty())
+                    imageNode = nullptr;
+            }
+        }
+        if (imageNode)
+        {
+            cgltf_texture* texture = &(textureList[imageIndex]);
+            material->normal_texture.texture = texture;
+            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
+                &(imageList[imageIndex]));            
+
+            imageIndex++;
+        }
+
+        material_idx++;
     }
 
     // Set image and texture lists
