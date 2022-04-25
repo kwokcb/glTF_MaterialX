@@ -14,6 +14,14 @@
       "uri": "BoomBoxWithAxes_roughnessMetallic.png"
     },
     {
+      "name": "image_normal",
+      "uri": "BoomBoxWithAxes_normal.png"
+    },
+    {
+      "name": "image_emission",
+      "uri": "BoomBoxWithAxes_emissive.png"
+    },
+    {
       "name": "image_basecolor2",
       "uri": "BoomBoxWithAxes_baseColor1.png"
     }
@@ -28,16 +36,33 @@
         "metallicRoughnessTexture": {
           "index": 1
         }
-      }
+      },
+      "extensions": {
+        "KHR_materials_emissive_strength": {
+        }
+      },
+      "normalTexture": {
+        "index": 2,
+        "scale": 0
+      },
+      "emissiveTexture": {
+        "index": 3,
+        "scale": 0
+      },
+      "emissiveFactor": [1, 1, 1]
     },
     {
       "name": "M_Coordinates",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 2
+          "index": 4
         },
         "metallicFactor": 0,
         "roughnessFactor": 0.735000014
+      },
+      "extensions": {
+        "KHR_materials_emissive_strength": {
+        }
       }
     }
   ],
@@ -51,8 +76,19 @@
       "source": 1
     },
     {
-      "name": "image_basecolor2",
+      "name": "image_normal",
       "source": 2
+    },
+    {
+      "name": "image_emission",
+      "source": 3
+    },
+    {
+      "name": "image_basecolor2",
+      "source": 4
     }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_emissive_strength"
   ]
 }
