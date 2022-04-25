@@ -38,12 +38,10 @@
         }
       },
       "normalTexture": {
-        "index": 2,
-        "scale": 0
+        "index": 2
       },
       "emissiveTexture": {
-        "index": 3,
-        "scale": 0
+        "index": 3
       },
       "emissiveFactor": [1, 1, 1]
     },
