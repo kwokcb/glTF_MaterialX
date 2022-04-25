@@ -475,36 +475,11 @@ bool CgltfMaterialLoader::save(const FilePath& filePath)
             }
         }        
         
-        filename = EMPTY_STRING;
-        imageNode = pbrNode->getConnectedNode("emissive_strength");
-        if (imageNode)
+        value = pbrNode->getInputValue("emissive_strength");
+        if (value)
         {
-            InputPtr fileInput = imageNode->getInput("file");
-            filename = fileInput && fileInput->getAttribute("type") == "filename" ?
-                fileInput->getValueString() : EMPTY_STRING;
-            if (filename.empty())
-                imageNode = nullptr;
+            material->emissive_strength.emissive_strength = value->asA<float>();
         }
-        if (imageNode)
-        {
-            cgltf_texture* texture = &(textureList[imageIndex]);
-            sheen.sheen_roughness_texture.texture = texture;
-            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
-                &(imageList[imageIndex]));            
-
-            material->emissive_strength.emissive_strength = 1.0;
-
-            imageIndex++;
-        }
-        else
-        {
-            ValuePtr value = pbrNode->getInputValue("emissive_strength");
-            if (value)
-            {
-                material->emissive_strength.emissive_strength = value->asA<float>();
-            }
-        }
-        material->has_emissive_strength = true;
 
         material_idx++;
     }
