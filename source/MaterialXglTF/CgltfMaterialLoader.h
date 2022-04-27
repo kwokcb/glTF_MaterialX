@@ -21,7 +21,8 @@ class CgltfMaterialLoader
 {
   public:
     CgltfMaterialLoader() 
-        : _generateAssignments(false)
+        : _generateFullDefinitions(true)
+        , _generateAssignments(false)
     {
         _extensions = { "glb", "GLB", "gltf", "GLTF" };
     }
@@ -96,12 +97,44 @@ class CgltfMaterialLoader
         return _generateAssignments;
     }
 
+    /// <summary>
+    ///     Set whether to generate all inputs on MaterialX nodes when converting from glTF file.
+    ///     By default all inputs are generated.
+    /// </summary>
+    /// <param name="val">Generate inputsflag</param>
+    void setGenerateFullDefinitions(bool val)
+    {
+        _generateFullDefinitions = val;
+    }
+
+    /// <summary>
+    ///     Get whether to generate all inputs for MaterialX nodes.
+    /// </summary>
+    /// <returns>True if generating</returns>
+    bool getGenerateFullDefinitions() const
+    {
+        return _generateFullDefinitions;
+    }
+
+
   private:
+    NodePtr createTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,
+                          const std::string & textureType, const std::string & colorspace);
+    void    setColorInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+                          const Color3& colorFactor, const void* textureView,
+                          const std::string& inputImageNodeName);
+    void    setFloatInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+                          float floatFactor, const void* textureView,
+                          const std::string& inputImageNodeName);
+
     void loadMaterials(void *);
 
     StringSet _extensions;
     DocumentPtr _definitions;
     DocumentPtr _materials;
+
+    // Generation options
+    bool _generateFullDefinitions;
     bool _generateAssignments;
 };
 

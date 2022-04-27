@@ -13,16 +13,19 @@ const std::string options =
 "    --mtlx [FILENAME]              Specify the filename to convert to glTF. The --gltf option has priority over this option\n"
 "    --gltf [FILENAME]              Specify the filename to convert to MaterialX.\n"
 "    --lib [FILEPATH]               Specify the location of the MaterialX definitions libraries. If not specified will try to lose call libraries\n"
-"    --assignments                  Specify the location of the MaterialX definitions libraries. If not specified will try to lose call libraries\n"
+"    --assignments                  Specify to generatl material assignments\n"
+"    --fullDefinition               Specify to generatel full definitions for each node (all inputs)\n"
 "    --help                         Display the complete list of command-line options\n";
 
 
 // glTF to MaterialX conversion
-mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definitions, bool createAssignments)
+mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definitions, 
+                          bool createAssignments, bool fullDefinition)
 {
     mx::CgltfMaterialLoaderPtr gltfMTLXLoader = mx::CgltfMaterialLoader::create();
     gltfMTLXLoader->setDefinitions(definitions);
     gltfMTLXLoader->setGenerateAssignments(createAssignments);
+    gltfMTLXLoader->setGenerateFullDefinitions(fullDefinition);
     bool loadedMaterial = gltfMTLXLoader->load(filename);
     mx::DocumentPtr materials = loadedMaterial ? gltfMTLXLoader->getMaterials() : nullptr;
     return materials;
@@ -73,6 +76,7 @@ int main(int argc, char* const argv[])
     mx::FilePath glTFFile;
     mx::FilePath mtlxFile;
     bool createAssignments = false;
+    bool fullDefinition = false;
     mx::FilePath materialXLibraryPath;
     for (size_t i = 0; i < tokens.size(); i++)
     {
@@ -96,6 +100,10 @@ int main(int argc, char* const argv[])
         {
             createAssignments = true;
         }
+        else if (token == "--fullDefinition")
+        {
+            fullDefinition = true;
+        }        
         else if (token == "--lib")
         {
             materialXLibraryPath = nextToken;
@@ -188,7 +196,7 @@ int main(int argc, char* const argv[])
             std::cerr << "Input GLTF file does not exist: " << glTFFile.asString() << std::endl;
             return -1;
         }
-        mx::DocumentPtr materials = glTF2Mtlx(glTFFile, stdLib, createAssignments);
+        mx::DocumentPtr materials = glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition);
         if (materials)
         {
             mx::XmlWriteOptions writeOptions;
