@@ -12,7 +12,7 @@ const std::string options =
 " Options: \n"
 "    --mtlx [FILENAME]              Specify the filename to convert to glTF. The --gltf option has priority over this option\n"
 "    --gltf [FILENAME]              Specify the filename to convert to MaterialX.\n"
-"    --lib [FILEPATH]               Specify the location of the MaterialX definitions libraries\n"
+"    --lib [FILEPATH]               Specify the location of the MaterialX definitions libraries. If not specified will try to lose call libraries\n"
 "    --help                         Display the complete list of command-line options\n";
 
 
@@ -105,15 +105,21 @@ int main(int argc, char* const argv[])
     mx::StringSet xincludeFiles = mx::loadLibraries(libraryFolders, searchPath, stdLib);
     if (xincludeFiles.empty())
     {
-        std::cerr << "Could not load library definitions";
+        std::cerr << "Could not load library definitions" << std::endl;
         return -1;
     }
 
     bool toMaterialX = !glTFFile.isEmpty();
 
     // Convert from glTF to MaterialX
-    if (!toMaterialX && !mtlxFile.isEmpty())
+    if (!toMaterialX)
     {
+        if (mtlxFile.isEmpty())
+        {
+            std::cerr << "Input MaterialX file not specified. " << std::endl;
+            return -1;
+        }
+
         mx::FilePath testPath;
         if (!mtlxFile.isAbsolute())
         {
@@ -133,7 +139,7 @@ int main(int argc, char* const argv[])
         }
         if (!mtlxFile.exists())
         {
-            std::cerr << "Input MaterialX file does not exist: " << mtlxFile.asString();
+            std::cerr << "Input MaterialX file does not exist: " << mtlxFile.asString() << std::endl;
             return -1;
         }
 
@@ -149,6 +155,11 @@ int main(int argc, char* const argv[])
     }
     else
     {
+        if (glTFFile.isEmpty())
+        {
+            std::cerr << "Input GLTF file not specified." << std::endl;
+            return -1;
+        }
         if (!glTFFile.isAbsolute())
         {
             mx::FilePath testPath = modulePath / glTFFile;
@@ -167,7 +178,7 @@ int main(int argc, char* const argv[])
         }
         if (!glTFFile.exists())
         {
-            std::cerr << "Input GLTF file does not exist: " << glTFFile.asString();
+            std::cerr << "Input GLTF file does not exist: " << glTFFile.asString() << std::endl;
             return -1;
         }
         mx::DocumentPtr materials = glTF2Mtlx(glTFFile, stdLib);

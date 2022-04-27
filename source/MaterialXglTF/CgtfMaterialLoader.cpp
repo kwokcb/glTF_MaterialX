@@ -1,6 +1,7 @@
 
 #include <MaterialXCore/Value.h>
 #include <MaterialXCore/Types.h>
+#include <MaterialXCore/Library.h>
 #include <MaterialXFormat/XmlIo.h>
 #include <MaterialXFormat/Util.h>
 #include <MaterialXglTF/CgltfMaterialLoader.h>
@@ -33,6 +34,8 @@
 #include <limits>
 
 MATERIALX_NAMESPACE_BEGIN
+
+using GLTFMaterialMeshList = std::unordered_map<cgltf_material*, StringVec>;
 
 namespace
 {
@@ -610,6 +613,45 @@ void setFloatInput(DocumentPtr materials, NodePtr shaderNode, const std::string&
     }
 }
 
+void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, cgltf_node* cnode, FilePath& path)
+{
+    // Push node name on to path
+    FilePath prevPath = path;
+    path = path / ( string(cnode->name) + "/" );
+    cgltf_mesh* cmesh = cnode->mesh;
+    if (cmesh)
+    {
+        cgltf_primitive* prim = cmesh->primitives;
+        if (prim && prim->material)
+        {
+            cgltf_material* material = prim->material;
+            if (material)
+            {
+                // Add reference to mesh (by name) to material 
+                FilePath stringPath = path.asString(FilePath::FormatPosix);
+                std::cout << "Add mesh path: " << stringPath.asString() << " for material: " << material->name;
+                if (materialMeshList.count(material))
+                {
+                    materialMeshList[material].push_back(stringPath);
+                }
+                else
+                {
+                    //std::pair<cgltf_material*, StringVec> newItem(material, { stringPath });
+                    materialMeshList.insert({ material, {stringPath} });
+                }
+            }
+        }
+    }
+
+    for (cgltf_size i = 0; i < cnode->children_count; i++)
+    {
+        computeMeshMaterials(materialMeshList, cnode->children[i], path);
+    }
+
+    // Pop path name
+    path = prevPath;
+}
+
 }
 
 void CgltfMaterialLoader::loadMaterials(void *vdata)
@@ -891,6 +933,28 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
                 volume.attenuation_distance, nullptr, EMPTY_STRING);
         }
     }
+
+    // Create a material assignment for this material if requested
+    GLTFMaterialMeshList materialMeshList;
+    if (_generateAssignments)
+    {
+        FilePath meshPath("/");
+        for (cgltf_size sceneIndex = 0; sceneIndex < data->scenes_count; ++sceneIndex)
+        {
+            cgltf_scene* scene = &data->scenes[sceneIndex];
+            for (cgltf_size nodeIndex = 0; nodeIndex < scene->nodes_count; ++nodeIndex)
+            {
+                cgltf_node* cnode = scene->nodes[nodeIndex];
+                if (!cnode)
+                {
+                    continue;
+                }
+                computeMeshMaterials(materialMeshList, cnode, meshPath);
+            }
+        }
+    }
 }
+
+
 
 MATERIALX_NAMESPACE_END

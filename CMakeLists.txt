@@ -25,7 +25,8 @@ if (NOT EXISTS ${MATERIALX_ROOT})
 endif()
 
 set(MATERIALX_LIBRARIES CACHE "" PATH "MaterialX libraries")
-set(MATERIALX_INCLUDE_DIR CACHE "" PATH "MaterialX includes ")
+set(MATERIALX_INCLUDE_DIRS CACHE "" PATH "MaterialX include directory ")
+set(MATERIALX_DEFINITIONS_DIR CACHE "" PATH "MaterialX definition directory")
 
 # Library name custom suffix
 # This helps an application that needs to ship a dynamic library MaterialX ensure
@@ -44,6 +45,10 @@ if (MATERIALX_EXTERNAL)
             MaterialXCore/Document.h
         HINTS
             "${MATERIALX_ROOT}/include")
+
+    find_path(MATERIALX_DEFINITIONS_DIR
+        HINTS
+            "${MATERIALX_ROOT}/libraries")
         
     foreach(libname IN ITEMS ${MATERIALX_LIBRARY_NAMES})                    
         find_library(foundLibName
@@ -55,6 +60,7 @@ if (MATERIALX_EXTERNAL)
     endforeach()        
 else()
     set(MATERIALX_INCLUDE_DIRS "${MATERIALX_ROOT}/include")
+    set(MATERIALX_DEFINITIONS_DIR "${MATERIALX_ROOT}/libraries")
     file(GLOB MATERIALX_LIBRARIES "${MATERIALX_ROOT}/lib/*${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
 
@@ -66,10 +72,12 @@ if (NOT MATERIALX_INCLUDE_DIRS OR NOT MATERIALX_LIBRARIES)
 endif()
 
 set(GLTFMTLX_INSTALL_INCLUDE_PATH "include" CACHE STRING "Install header include path (e.g. 'inc', 'include').")
+set(GLTFMTLX_INSTALL_DEFINITION_PATH "libraries" CACHE STRING "Install definition path.")
+set(GLTFMTLX_INSTALL_RESOURCE_PATH "resources" CACHE STRING "Install sample resources path.")
 set(GLTFMTLX_INSTALL_LIB_PATH "lib" CACHE STRING "Install lib path (e.g. 'libs', 'lib').")
 
 add_subdirectory(source/MaterialXglTF)
-add_subdirectory(source/glTFTest)
+add_subdirectory(source/glTF2Mtx)
 
 
     
