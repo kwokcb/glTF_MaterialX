@@ -32,10 +32,13 @@
 #include <cstring>
 #include <iostream>
 #include <limits>
+#include <algorithm>
+#include <sstream>
+#include <iterator>
 
 MATERIALX_NAMESPACE_BEGIN
 
-using GLTFMaterialMeshList = std::unordered_map<cgltf_material*, StringVec>;
+using GLTFMaterialMeshList = std::unordered_map<cgltf_material*, string>;
 
 namespace
 {
@@ -628,16 +631,14 @@ void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, cgltf_node* cn
             if (material)
             {
                 // Add reference to mesh (by name) to material 
-                FilePath stringPath = path.asString(FilePath::FormatPosix);
-                std::cout << "Add mesh path: " << stringPath.asString() << " for material: " << material->name;
+                string stringPath = path.asString(FilePath::FormatPosix);
                 if (materialMeshList.count(material))
                 {
-                    materialMeshList[material].push_back(stringPath);
+                    materialMeshList[material].append(", " + stringPath);
                 }
                 else
                 {
-                    //std::pair<cgltf_material*, StringVec> newItem(material, { stringPath });
-                    materialMeshList.insert({ material, {stringPath} });
+                    materialMeshList.insert({ material, stringPath });
                 }
             }
         }
@@ -951,6 +952,19 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
                 }
                 computeMeshMaterials(materialMeshList, cnode, meshPath);
             }
+        }
+
+        // Add look with material assignments if requested
+        LookPtr look = _materials->addLook();
+        for (auto materialItem : materialMeshList)
+        {
+            cgltf_material* material = materialItem.first;
+            const string& paths = materialItem.second;
+  
+            MaterialAssignPtr matAssign = look->addMaterialAssign(EMPTY_STRING, material->name);
+            CollectionPtr collection = _materials->addCollection();
+            collection->setIncludeGeom(paths);
+            matAssign->setCollection(collection);
         }
     }
 }
