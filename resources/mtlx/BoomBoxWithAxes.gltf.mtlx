@@ -1,136 +1,63 @@
 <?xml version="1.0"?>
 <materialx version="1.38">
   <gltf_pbr name="M_BoomBox" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
-    <input name="base_color" type="color3" value="0.8, 0.8, 0.8" nodename="image_basecolor" />
-    <input name="metallic" type="float" value="0" nodename="extract_metallic" />
-    <input name="roughness" type="float" value="0" nodename="extract_roughness" />
-    <input name="normal" type="vector3" nodename="pbr_normalmap" />
-    <input name="occlusion" type="float" value="0" nodename="extract_occlusion" />
-    <input name="transmission" type="float" value="0" />
-    <input name="specular" type="float" value="1" />
-    <input name="specular_color" type="color3" value="1, 1, 1" />
-    <input name="ior" type="float" value="1.5" />
+    <input name="base_color" type="color3" value="1, 1, 1" nodename="image_basecolor" />
     <input name="alpha" type="float" value="1" />
-    <input name="alpha_mode" type="integer" value="0" />
-    <input name="alpha_cutoff" type="float" value="0.5" />
-    <input name="sheen_color" type="color3" value="0, 0, 0" />
-    <input name="sheen_roughness" type="float" value="0" />
-    <input name="clearcoat" type="float" value="0" />
-    <input name="clearcoat_roughness" type="float" value="0" />
-    <input name="clearcoat_normal" type="vector3" />
-    <input name="emissive" type="color3" value="0, 0, 0" nodename="image_emission" />
-    <input name="emissive_strength" type="float" value="1" />
-    <input name="thickness" type="float" value="0" />
-    <input name="attenuation_distance" type="float" />
-    <input name="attenuation_color" type="color3" value="1, 1, 1" />
+    <input name="metallic" type="float" value="1" nodename="extract_metallic" />
+    <input name="roughness" type="float" value="1" nodename="extract_roughness" />
+    <input name="occlusion" type="float" value="0" nodename="extract_occlusion" />
+    <input name="normal" type="vector3" nodename="pbr_normalmap" />
+    <input name="emissive" type="color3" value="1, 1, 1" nodename="image_emission" />
   </gltf_pbr>
   <surfacematerial name="MATERIAL_M_BoomBox" type="material">
     <input name="surfaceshader" type="surfaceshader" nodename="M_BoomBox" />
   </surfacematerial>
   <tiledimage name="image_basecolor" type="color3" nodedef="ND_image_color3">
     <input name="file" type="filename" value="BoomBoxWithAxes_baseColor.png" colorspace="srgb_texture" />
-    <input name="layer" type="string" value="" />
-    <input name="default" type="color3" value="0.0, 0.0, 0.0" />
-    <input name="texcoord" type="vector2" />
-    <input name="uaddressmode" type="string" value="periodic" />
-    <input name="vaddressmode" type="string" value="periodic" />
-    <input name="filtertype" type="string" value="linear" />
-    <input name="framerange" type="string" value="" />
-    <input name="frameoffset" type="integer" value="0" />
-    <input name="frameendaction" type="string" value="constant" />
   </tiledimage>
   <tiledimage name="image_orm" type="vector3" nodedef="ND_image_vector3">
     <input name="file" type="filename" value="BoomBoxWithAxes_roughnessMetallic.png" />
-    <input name="layer" type="string" value="" />
-    <input name="default" type="vector3" value="0.0, 0.0, 0.0" />
-    <input name="texcoord" type="vector2" />
-    <input name="uaddressmode" type="string" value="periodic" />
-    <input name="vaddressmode" type="string" value="periodic" />
-    <input name="filtertype" type="string" value="linear" />
-    <input name="framerange" type="string" value="" />
-    <input name="frameoffset" type="integer" value="0" />
-    <input name="frameendaction" type="string" value="constant" />
   </tiledimage>
   <extract name="extract_occlusion" type="float" nodedef="ND_extract_vector3">
-    <input name="in" type="vector3" value="0.0, 0.0, 0.0" nodename="image_orm" />
+    <input name="in" type="vector3" value="1.0, 1.0, 1.0" nodename="image_orm" />
     <input name="index" type="integer" value="0" />
   </extract>
   <extract name="extract_roughness" type="float" nodedef="ND_extract_vector3">
-    <input name="in" type="vector3" value="0.0, 0.0, 0.0" nodename="image_orm" />
+    <input name="in" type="vector3" value="1.0, 1.0, 1.0" nodename="image_orm" />
     <input name="index" type="integer" value="1" />
   </extract>
   <extract name="extract_metallic" type="float" nodedef="ND_extract_vector3">
-    <input name="in" type="vector3" value="0.0, 0.0, 0.0" nodename="image_orm" />
+    <input name="in" type="vector3" value="1.0, 1.0, 1.0" nodename="image_orm" />
     <input name="index" type="integer" value="2" />
   </extract>
   <tiledimage name="image_normal" type="vector3" nodedef="ND_image_vector3">
     <input name="file" type="filename" value="BoomBoxWithAxes_normal.png" />
-    <input name="layer" type="string" value="" />
-    <input name="default" type="vector3" value="0.0, 0.0, 0.0" />
-    <input name="texcoord" type="vector2" />
-    <input name="uaddressmode" type="string" value="periodic" />
-    <input name="vaddressmode" type="string" value="periodic" />
-    <input name="filtertype" type="string" value="linear" />
-    <input name="framerange" type="string" value="" />
-    <input name="frameoffset" type="integer" value="0" />
-    <input name="frameendaction" type="string" value="constant" />
   </tiledimage>
   <normalmap name="pbr_normalmap" type="vector3" nodedef="ND_normalmap">
     <input name="in" type="vector3" value="0.5, 0.5, 1.0" nodename="image_normal" />
-    <input name="space" type="string" value="tangent" />
-    <input name="scale" type="float" value="1.0" />
-    <input name="normal" type="vector3" />
-    <input name="tangent" type="vector3" />
   </normalmap>
   <tiledimage name="image_emission" type="color3" nodedef="ND_image_color3">
     <input name="file" type="filename" value="BoomBoxWithAxes_emissive.png" colorspace="srgb_texture" />
-    <input name="layer" type="string" value="" />
-    <input name="default" type="color3" value="0.0, 0.0, 0.0" />
-    <input name="texcoord" type="vector2" />
-    <input name="uaddressmode" type="string" value="periodic" />
-    <input name="vaddressmode" type="string" value="periodic" />
-    <input name="filtertype" type="string" value="linear" />
-    <input name="framerange" type="string" value="" />
-    <input name="frameoffset" type="integer" value="0" />
-    <input name="frameendaction" type="string" value="constant" />
   </tiledimage>
   <gltf_pbr name="M_Coordinates" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
-    <input name="base_color" type="color3" value="0.8, 0.8, 0.8" nodename="image_basecolor2" />
+    <input name="base_color" type="color3" value="1, 1, 1" nodename="image_basecolor2" />
+    <input name="alpha" type="float" value="1" />
     <input name="metallic" type="float" value="0" />
     <input name="roughness" type="float" value="0.735" />
-    <input name="normal" type="vector3" />
     <input name="occlusion" type="float" value="0" />
-    <input name="transmission" type="float" value="0" />
-    <input name="specular" type="float" value="1" />
-    <input name="specular_color" type="color3" value="1, 1, 1" />
-    <input name="ior" type="float" value="1.5" />
-    <input name="alpha" type="float" value="1" />
-    <input name="alpha_mode" type="integer" value="0" />
-    <input name="alpha_cutoff" type="float" value="0.5" />
-    <input name="sheen_color" type="color3" value="0, 0, 0" />
-    <input name="sheen_roughness" type="float" value="0" />
-    <input name="clearcoat" type="float" value="0" />
-    <input name="clearcoat_roughness" type="float" value="0" />
-    <input name="clearcoat_normal" type="vector3" />
+    <input name="normal" type="vector3" />
     <input name="emissive" type="color3" value="0, 0, 0" />
-    <input name="emissive_strength" type="float" value="1" />
-    <input name="thickness" type="float" value="0" />
-    <input name="attenuation_distance" type="float" />
-    <input name="attenuation_color" type="color3" value="1, 1, 1" />
   </gltf_pbr>
   <surfacematerial name="MATERIAL_M_Coordinates" type="material">
     <input name="surfaceshader" type="surfaceshader" nodename="M_Coordinates" />
   </surfacematerial>
   <tiledimage name="image_basecolor2" type="color3" nodedef="ND_image_color3">
     <input name="file" type="filename" value="BoomBoxWithAxes_baseColor1.png" colorspace="srgb_texture" />
-    <input name="layer" type="string" value="" />
-    <input name="default" type="color3" value="0.0, 0.0, 0.0" />
-    <input name="texcoord" type="vector2" />
-    <input name="uaddressmode" type="string" value="periodic" />
-    <input name="vaddressmode" type="string" value="periodic" />
-    <input name="filtertype" type="string" value="linear" />
-    <input name="framerange" type="string" value="" />
-    <input name="frameoffset" type="integer" value="0" />
-    <input name="frameendaction" type="string" value="constant" />
   </tiledimage>
+  <look name="look1">
+    <materialassign name="materialassign1" material="MATERIAL_M_Coordinates" collection="collection1" />
+    <materialassign name="materialassign2" material="MATERIAL_M_BoomBox" collection="collection2" />
+  </look>
+  <collection name="collection1" includegeom="/BoomBox_Coordinates/CoordinateSystem, /BoomBox_Coordinates/X_axis, /BoomBox_Coordinates/Y_axis, /BoomBox_Coordinates/Z_axis" />
+  <collection name="collection2" includegeom="/BoomBox_Coordinates/BoomBox" />
 </materialx>
