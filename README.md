@@ -49,9 +49,38 @@ glTF2Mtlx.exe --gltf resources/gltf/BoomBoxWithAxes.gltf --assignments
 to get this result:
 [BoomBoxWithAxes.gltf.mtlx](https://github.com/kwokcb/glTF_MaterialX/blob/main/resources/mtlx/BoomBoxWithAxes.gltf.mtlx)
 
-and this file can be converted back to glTF (WIP) using this command:
+visualized in MaterialXView:
+
+<image src="https://user-images.githubusercontent.com/49369885/165810147-83be80f6-eb4c-4dd1-9e06-a20ee0b7c6c8.png" width="480"/>
+
+This file can be converted back to glTF (WIP) using this command:
 ```
 glTF2Mtlx.exe --mtlx resources/gltf/BoomBoxWithAxes.gltf.mtlx
 ```
 resulting in:
 [BoomBoxWithAxes.gltf.mtlx._converted.gltf](https://github.com/kwokcb/glTF_MaterialX/blob/main/resources/mtlx/BoomBoxWithAxes.gltf.mtlx._converted.gltf)
+
+# Gallery
+Some other samples of "forward" conversion from glTF to MaterialX:
+<table style="width:100%">
+  <tr>
+    <th><b>Model</b></th>
+    <th><b>Render</b></th>
+  </tr>
+  <tr>
+    <td>Camera</td>
+    <td><image src="https://user-images.githubusercontent.com/49369885/165810963-f495b8e4-221a-4196-a1dd-d9968b08064e.png" height="320"/>
+  </tr>
+  <tr>
+    <td>Helmet</td>
+    <td><image src="https://user-images.githubusercontent.com/49369885/165811071-3f778635-853b-49c5-9637-1a8b2f98300a.png" height="320"/>
+  </tr>
+  <tr>
+    <td>Stained Glass Lamp</td>
+    <td><image src="https://user-images.githubusercontent.com/49369885/165811131-beb0156c-6c04-4c4a-98ae-249eb260cc20.png" height="320"/>
+  </tr>
+</table>
+
+
+
+
