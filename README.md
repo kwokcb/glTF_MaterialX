@@ -13,6 +13,9 @@ glTF to MaterialX translation
 - Handles ASCII glTF files without embedded binary image resources
 - Basic CI workflow put up to builds for subset of platforms in MaterialX release (Windows, Linux, Mac)
 - Code is part of a `MaterialXglTF` library which can be reused. Sample executable `glTF2Mtlx` uses this library. 
+- Allow for option to create nodes with full set off inputs or not. For glTF->MTLX conversion.
+- Allow for option to create look with material assignments if these exist in the glTF file. For glTF->MTLX conversion.
+- For now: always write out both "value" and "nodename" (connection). 
 
 ## To do
 
@@ -20,6 +23,7 @@ glTF to MaterialX translation
 - Add static analysis.
 - Handle binary resources in ASCII or glb form
 - Handle factor * image if both exist
+  -  Raise TSC issue to allow multiplication as operation to perform if both specified in MTLX (to match glTF logic).
 
 ## Examples
 
