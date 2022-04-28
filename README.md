@@ -27,9 +27,24 @@ glTF to MaterialX translation
 
 ## Examples
 
-- Original glTF
+The `glTF2Mtlx` sample program can be used try out the library. RUn `glTF2Mtlx --help` for command line options.
+
+Added in this repo when building (and part of the distribution)
+is the `libraries` folder from the MaterialX version chosen to build against as well as a sample glTF file from [here](https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/BoomBoxWithAxes). 
+
+The original glTF:
 [BoomBoxWithAxes.gltf](https://github.com/kwokcb/glTF_MaterialX/blob/main/resources/gltf/BoomBoxWithAxes.gltf)
-- Converted to MaterialX (as of 1.38.4 release)
+
+can be converted to MaterialX (as of 1.38.4 release) using this command:
+```
+glTF2Mtlx.exe --gltf resources/gltf/BoomBoxWithAxes.gltf --assignments
+```
+to get this result:
 [BoomBoxWithAxes.gltf.mtlx](https://github.com/kwokcb/glTF_MaterialX/blob/main/resources/mtlx/BoomBoxWithAxes.gltf.mtlx)
-- Converted back to glTF (WIP)
+
+and this file can be converted back to glTF (WIP) using this command:
+```
+glTF2Mtlx.exe --mtlx resources/gltf/BoomBoxWithAxes.gltf.mtlx
+```
+resulting in:
 [BoomBoxWithAxes.gltf.mtlx._converted.gltf](https://github.com/kwokcb/glTF_MaterialX/blob/main/resources/mtlx/BoomBoxWithAxes.gltf.mtlx._converted.gltf)
