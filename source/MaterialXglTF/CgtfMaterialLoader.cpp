@@ -626,6 +626,11 @@ void CgltfMaterialLoader::setColorInput(DocumentPtr materials, NodePtr shaderNod
             NodePtr newTexture = createTexture(materials, imageNodeName, uri,
                 "color3", "srgb_texture");
             colorInput->setAttribute("nodename", newTexture->getName());
+            // For discussion. Proposal is that value can be used to 
+            // multiply by mapped value. Otherwise there is ambiguity
+            // when both "value" and "nodename" are specified. 
+            //colorInput->removeAttribute("value");
+            colorInput->setValueString(color3Value->getValueString());
         }
         else
         {
@@ -654,6 +659,8 @@ void CgltfMaterialLoader::setFloatInput(DocumentPtr materials, NodePtr shaderNod
             NodePtr newTexture = createTexture(materials, imageNodeName, uri,
                 "float", EMPTY_STRING);
             floatInput->setAttribute("nodename", newTexture->getName());
+            // See above node about "value" + "nodename" both being specified.
+            floatInput->setValue<float>(floatFactor);
         }
         else
         {
@@ -803,8 +810,10 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
                         extractNode->addInputFromNodeDef("in");
                         extractNode->addInputFromNodeDef("index");
                     }
-                    extractNode->getInput("in")->setAttribute("nodename", textureNode->getName());
-                    extractNode->getInput("in")->setType("vector3");
+                    InputPtr extractInput = extractNode->getInput("in");
+                    extractInput->setAttribute("nodename", textureNode->getName());
+                    extractInput->setType("vector3");
+                    extractInput->setValueString("1.0, 1.0, 1.0");
                     extractNode->getInput("index")->setAttribute("value", std::to_string(i));
                     if (inputs[i])
                     {
@@ -812,6 +821,11 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
                         inputs[i]->setType("float");
                     }
                 }
+
+                // See note about both "value" and "nodename" being
+                // specified.
+                metallicInput->setValue<float>(roughness.metallic_factor);;
+                roughnessInput->setValue<float>(roughness.roughness_factor);
             }
             else
             {
