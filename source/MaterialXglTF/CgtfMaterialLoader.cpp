@@ -1007,10 +1007,10 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
             cgltf_material* material = materialItem.first;
             const string& paths = materialItem.second;
   
+            // Keep the assignment as simple as possible as more complex
+            // systems such as USD can parse these files easily.
             MaterialAssignPtr matAssign = look->addMaterialAssign(EMPTY_STRING, MATERIAL_PREFIX + material->name);
-            CollectionPtr collection = _materials->addCollection();
-            collection->setIncludeGeom(paths);
-            matAssign->setCollection(collection);
+            matAssign->setGeom(paths);
         }
     }
 }

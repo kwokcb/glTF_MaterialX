@@ -131,7 +131,9 @@ int main(int argc, char* const argv[])
     {
         if (mtlxFile.isEmpty())
         {
-            std::cerr << "Input MaterialX file not specified. " << std::endl;
+            std::cerr << "Insufficient arguments specified." << std::endl;
+            std::cerr << "\n gltf2Mtlx " << std::endl;
+            std::cerr << options << std::endl;
             return -1;
         }
 
