@@ -41,7 +41,11 @@ MATERIALX_NAMESPACE_BEGIN
 namespace
 {
 const std::string SPACE_STRING = " ";
-using GLTFMaterialMeshList = std::unordered_map<cgltf_material*, string>;
+using GLTFMaterialMeshList = std::unordered_map<string, string>;
+const std::string DEFAULT_NODE_PREFIX = "NODE_";
+const std::string DEFAULT_MESH_PREFIX = "MESH_";
+const std::string DEFAULT_MATERIAL_NAME = "MATERIAL_0";
+const std::string DEFAULT_SHADER_NAME = "SHADER_0";
 
 void initialize_cgltf_texture_view(cgltf_texture_view& textureview)
 {
@@ -78,13 +82,22 @@ void initialize_cgtlf_texture(cgltf_texture& texture, const string& name, const 
 void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, void* cnodeIn, FilePath& path)
 {
     cgltf_node* cnode = static_cast<cgltf_node*>(cnodeIn);
+    static unsigned int nodeCount = 0;
+    static unsigned int meshCount = 0;
 
     // Push node name on to path
     FilePath prevPath = path;
-    path = path / ( string(cnode->name) + "/" );
+    string cnodeName = cnode->name ? string(cnode->name) : DEFAULT_NODE_PREFIX + std::to_string(nodeCount++);
+    path = path / ( cnodeName + "/" );
     cgltf_mesh* cmesh = cnode->mesh;
     if (cmesh)
     {
+        string meshName = cmesh->name ? string(cmesh->name) : DEFAULT_MESH_PREFIX + std::to_string(meshCount++);
+        //if (meshName.size())
+        {
+            path = path / meshName;
+        }
+
         cgltf_primitive* prim = cmesh->primitives;
         if (prim && prim->material)
         {
@@ -93,13 +106,15 @@ void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, void* cnodeIn,
             {
                 // Add reference to mesh (by name) to material 
                 string stringPath = path.asString(FilePath::FormatPosix);
-                if (materialMeshList.count(material))
+                string materialName = material->name;
+                std::cout << "mesh: " << stringPath << " uses material: " << materialName << std::endl;
+                if (materialMeshList.count(materialName))
                 {
-                    materialMeshList[material].append(", " + stringPath);
+                    materialMeshList[materialName].append(", " + stringPath);
                 }
                 else
                 {
-                    materialMeshList.insert({ material, stringPath });
+                    materialMeshList.insert({ materialName, stringPath });
                 }
             }
         }
@@ -107,7 +122,10 @@ void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, void* cnodeIn,
 
     for (cgltf_size i = 0; i < cnode->children_count; i++)
     {
-        computeMeshMaterials(materialMeshList, cnode->children[i], path);
+        if (cnode->children[i])
+        {
+            computeMeshMaterials(materialMeshList, cnode->children[i], path);
+        }
     }
 
     // Pop path name
@@ -715,8 +733,6 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
         _materials->importLibrary(_definitions);
     }
     size_t materialId = 0;
-    const std::string SHADER_PREFIX = "Shader_";
-    const std::string MATERIAL_PREFIX = "MATERIAL_";
     for (size_t m = 0; m < data->materials_count; m++)
     {
         cgltf_material* material = &(data->materials[m]);
@@ -726,12 +742,22 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
         }
 
         // Create a default gltf_pbr node
-        std::string matName = material->name ? material->name : EMPTY_STRING;
-        if (!matName.empty() && std::isdigit(matName[0]))
+        std::string shaderName;
+        std::string materialName;
+        if (!material->name)
         {
-            matName = SHADER_PREFIX + matName;
+            materialName = DEFAULT_MATERIAL_NAME;
+            shaderName = DEFAULT_SHADER_NAME;
         }
-        std::string shaderName = matName.empty() ? SHADER_PREFIX + std::to_string(materialId) : matName;
+        else
+        {
+            materialName = material->name;
+            shaderName = "SHADER_" + materialName;
+        }
+        materialName = _materials->createValidChildName(materialName);
+        string* name = new string(materialName);
+        material->name = const_cast<char*>(name->c_str());
+
         shaderName = _materials->createValidChildName(shaderName);
         NodePtr shaderNode = _materials->addNode("gltf_pbr", shaderName, "surfaceshader");
         shaderNode->setAttribute("nodedef", "ND_gltf_pbr_surfaceshader");
@@ -740,9 +766,9 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
             shaderNode->addInputsFromNodeDef();
         }
 
+        std::cout << "Set material name: " << materialName << ". shadername: " << shaderName << std::endl;
+
         // Create a surface material for the shader node
-        std::string materialName = matName.empty() ? MATERIAL_PREFIX + std::to_string(materialId) : MATERIAL_PREFIX + matName;
-        materialName = _materials->createValidChildName(materialName);
         NodePtr materialNode = _materials->addNode("surfacematerial", materialName, "material");
         InputPtr shaderInput = materialNode->addInput("surfaceshader", "surfaceshader");
         shaderInput->setAttribute("nodename", shaderNode->getName());
@@ -1004,12 +1030,12 @@ void CgltfMaterialLoader::loadMaterials(void *vdata)
         LookPtr look = _materials->addLook();
         for (auto materialItem : materialMeshList)
         {
-            cgltf_material* material = materialItem.first;
+            const string& materialName = materialItem.first;
             const string& paths = materialItem.second;
   
             // Keep the assignment as simple as possible as more complex
             // systems such as USD can parse these files easily.
-            MaterialAssignPtr matAssign = look->addMaterialAssign(EMPTY_STRING, MATERIAL_PREFIX + material->name);
+            MaterialAssignPtr matAssign = look->addMaterialAssign(EMPTY_STRING, materialName);
             matAssign->setGeom(paths);
         }
     }
