@@ -4,7 +4,7 @@
 #include <MaterialXFormat/Util.h>
 
 #include <iostream>
-#include <MaterialXglTF/CgltfMaterialLoader.h>
+#include <MaterialXglTF/CgltfMaterialHandler.h>
 
 namespace mx = MaterialX;
 
@@ -22,7 +22,7 @@ const std::string options =
 mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definitions, 
                           bool createAssignments, bool fullDefinition)
 {
-    mx::CgltfMaterialLoaderPtr gltfMTLXLoader = mx::CgltfMaterialLoader::create();
+    mx::MaterialHandlerPtr gltfMTLXLoader = mx::CgltfMaterialHandler::create();
     gltfMTLXLoader->setDefinitions(definitions);
     gltfMTLXLoader->setGenerateAssignments(createAssignments);
     gltfMTLXLoader->setGenerateFullDefinitions(fullDefinition);
@@ -34,7 +34,7 @@ mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definiti
 // MaterialX to cgTF conversion
 bool mtlx2glTF(const mx::FilePath& filename, mx::DocumentPtr materials)
 {
-    mx::CgltfMaterialLoaderPtr gltfMTLXLoader = mx::CgltfMaterialLoader::create();
+    mx::MaterialHandlerPtr gltfMTLXLoader = mx::CgltfMaterialHandler::create();
     gltfMTLXLoader->setMaterials(materials);
     return gltfMTLXLoader->save(filename);
 }
@@ -113,6 +113,7 @@ int main(int argc, char* const argv[])
     // Load in MaterialX library definitions
     //
     mx::FilePath modulePath = mx::FilePath::getModulePath();
+    mx::FilePath currentPath = mx::FilePath::getCurrentPath();
     mx::FilePathVec libraryFolders; 
     libraryFolders.push_back(mx::FilePath("libraries"));
     mx::FileSearchPath searchPath = getDefaultSearchPath(materialXLibraryPath);
@@ -140,14 +141,14 @@ int main(int argc, char* const argv[])
         mx::FilePath testPath;
         if (!mtlxFile.isAbsolute())
         {
-            testPath = modulePath / mtlxFile;
+            testPath = currentPath / mtlxFile;
             if (testPath.exists())
             {
                 mtlxFile = testPath;
             }
             else 
             {
-                testPath = modulePath.getParentPath() / mtlxFile;
+                testPath = currentPath.getParentPath() / mtlxFile;
                 if (testPath.exists())
                 {
                     mtlxFile = testPath;
@@ -169,6 +170,10 @@ int main(int argc, char* const argv[])
         {
             std::cout << "Wrote glTF file to: " << outputFile.asString() << std::endl;
         }
+        else
+        {
+            std::cout << "Failed to write glTF file to: " << outputFile.asString() << std::endl;
+        }
     }
     else
     {
@@ -177,28 +182,41 @@ int main(int argc, char* const argv[])
             std::cerr << "Input GLTF file not specified." << std::endl;
             return -1;
         }
-        if (!glTFFile.isAbsolute())
+/*        if (!glTFFile.isAbsolute())
         {
-            mx::FilePath testPath = modulePath / glTFFile;
+            mx::FilePath testPath = currentPath / glTFFile;
             if (testPath.exists())
             {
                 glTFFile = testPath;
             }
             else 
             {
-                testPath = modulePath.getParentPath() / glTFFile;
+                testPath = currentPath.getParentPath() / glTFFile;
                 if (testPath.exists())
                 {
                     glTFFile = testPath;
                 }
             }
         }
+        */
         if (!glTFFile.exists())
         {
             std::cerr << "Input GLTF file does not exist: " << glTFFile.asString() << std::endl;
             return -1;
         }
-        mx::DocumentPtr materials = glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition);
+        else
+        {
+            std::cout << "current path: " << currentPath.asString() << std::endl;
+            std::cout << "Convert GLTF: " << glTFFile.asString() << std::endl;
+        }
+        mx::DocumentPtr materials = nullptr;
+        try {
+             materials = glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition);
+        }
+        catch (std::exception&)
+        {
+            std::cerr << "Failed to translate" << std::endl;
+        }
         if (materials)
         {
             mx::XmlWriteOptions writeOptions;
@@ -211,8 +229,12 @@ int main(int argc, char* const argv[])
                 return true;
             };
             const std::string outputFileName = glTFFile.asString() + ".mtlx";
-            std::cout << "Wrote MaterialX File: " << outputFileName;
+            std::cout << "Wrote MaterialX File: " << outputFileName << std::endl;
             mx::writeToXmlFile(materials, glTFFile.asString() + ".mtlx", &writeOptions);
+        }
+        else
+        {
+            std::cout << "Failed to write MaterialX File" << std::endl;
         }
     }
     return 0;

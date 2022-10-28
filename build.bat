@@ -7,9 +7,15 @@ cd build
 cmake -DMATERIALX_ROOT="%1" -G "Visual Studio 16 2019" -A "x64" -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 cmake --build . --target install --config RelWithDebInfo
 
+
 cd ..
-REM build\bin\RelWithDebInfo\glTF2Mtlx --gltf /Users/bernardkwok/work/glTF-Sample-Models/2.0/BoomBox/glTF/BoomBox.gltf --lib /Users/bernardkwok/work/bernard_materialx
-REM less /Users/bernardkwok/work/glTF-Sample-Models/2.0/BoomBox/glTF/BoomBox.gltf.mtlx
+build\bin\RelWithDebInfo\glTF2Mtlx --gltf ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf --assignments
+echo "-- Converstion to MTLTX from GLTF --" > conversion_log.txt
+cat ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf.mtlx >> conversion_log.txt
+
+build\bin\RelWithDebInfo\glTF2Mtlx --mtlx ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf.mtlx 
+echo "-- Converstion to GLTF from MTLX --" >> conversion_log.txt
+cat ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf.mtlx._converted.gltf >> conversion_log.txt
 goto :eof
 
 :usage
