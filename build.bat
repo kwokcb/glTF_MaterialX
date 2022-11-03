@@ -9,11 +9,11 @@ cmake --build . --target install --config RelWithDebInfo
 
 
 cd ..
-build\bin\RelWithDebInfo\glTF2Mtlx --gltf ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf --assignments
+build\installed\bin\glTF2Mtlx --gltf ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf --assignments
 echo "-- Converstion to MTLTX from GLTF --" > conversion_log.txt
 cat ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf.mtlx >> conversion_log.txt
 
-build\bin\RelWithDebInfo\glTF2Mtlx --mtlx ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf.mtlx 
+build\installed\bin\glTF2Mtlx --mtlx ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf.mtlx 
 echo "-- Converstion to GLTF from MTLX --" >> conversion_log.txt
 cat ./resources/ABeautifulGame/glTF/ABeautifulGame.gltf.mtlx._converted.gltf >> conversion_log.txt
 goto :eof

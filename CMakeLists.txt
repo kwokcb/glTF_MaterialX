@@ -76,8 +76,21 @@ set(GLTFMTLX_INSTALL_DEFINITION_PATH "libraries" CACHE STRING "Install definitio
 set(GLTFMTLX_INSTALL_RESOURCE_PATH "resources" CACHE STRING "Install sample resources path.")
 set(GLTFMTLX_INSTALL_LIB_PATH "lib" CACHE STRING "Install lib path (e.g. 'libs', 'lib').")
 
+# Shared functions
+function(assign_source_group prefix)
+    foreach(_source IN ITEMS ${ARGN})
+        if(IS_ABSOLUTE "${_source}")
+            file(RELATIVE_PATH _source_rel "${CMAKE_CURRENT_SOURCE_DIR}" "${_source}")
+        else()
+            set(_source_rel "${_source}")
+        endif()
+        get_filename_component(_source_path "${_source_rel}" PATH)
+        string(REPLACE "/" "\\" _source_path_msvc "${_source_path}")
+        source_group("${prefix}\\${_source_path_msvc}" FILES "${_source}")
+    endforeach()
+endfunction(assign_source_group)
+
 add_subdirectory(source/MaterialXglTF)
+add_subdirectory(source/glTFMtlxTest)
 add_subdirectory(source/glTF2Mtx)
-
-
     
