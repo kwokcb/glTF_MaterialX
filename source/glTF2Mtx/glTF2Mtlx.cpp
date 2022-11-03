@@ -182,7 +182,7 @@ int main(int argc, char* const argv[])
             std::cerr << "Input GLTF file not specified." << std::endl;
             return -1;
         }
-/*        if (!glTFFile.isAbsolute())
+        if (!glTFFile.isAbsolute())
         {
             mx::FilePath testPath = currentPath / glTFFile;
             if (testPath.exists())
@@ -198,7 +198,6 @@ int main(int argc, char* const argv[])
                 }
             }
         }
-        */
         if (!glTFFile.exists())
         {
             std::cerr << "Input GLTF file does not exist: " << glTFFile.asString() << std::endl;

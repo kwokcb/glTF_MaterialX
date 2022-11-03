@@ -51,17 +51,19 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
     };
 
     // Scan for glTF sample mode files in resources directory
-    const mx::FilePath currentPath = mx::FilePath::getCurrentPath();
-    mx::FilePath rootPath = currentPath / "resources/";
+    //const mx::FilePath currentPath = mx::FilePath::getCurrentPath();
+    mx::FilePath rootPath = "resources/";
 
     // Check if an environment variable was set as the root
+    bool useSampleModels = false;
     if (!rootPath.exists())
     {
         rootPath = mx::getEnviron("GLTF_SAMPLE_MODELS_ROOT");
+        std::cout << "glTF sample models directory used: " << rootPath.asString() << std::endl;
     }
     if (!rootPath.exists())
     {
-        std::cout << "glTF sample models not found: " << rootPath.asString() << ". Skipping test" << std::endl;
+        std::cout << "Test glTF directory not found: " << rootPath.asString() << ". Skipping test" << std::endl;
         return;
     }
 
@@ -70,11 +72,15 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
     const std::string GLTF_EXTENSION("gltf");
     for (const mx::FilePath& dir : rootPath.getSubDirectories())
     {
-        if (std::string::npos != dir.asString().find("glTF-Binary") || 
-            std::string::npos != dir.asString().find("glTF-Draco") || 
-            std::string::npos != dir.asString().find("glTF-Embedded"))
+        // If sample models directory is set, then skip the following directories
+        if (useSampleModels)
         {
-            continue;
+            if (std::string::npos != dir.asString().find("glTF-Binary") ||
+                std::string::npos != dir.asString().find("glTF-Draco") ||
+                std::string::npos != dir.asString().find("glTF-Embedded"))
+            {
+                continue;
+            }
         }
         for (const mx::FilePath& gltfFile : dir.getFilesInDirectory(GLTF_EXTENSION))
         {

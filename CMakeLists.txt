@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+enable_testing()
 
 set(GLTFMTLX_MAJOR_VERSION 1)
 set(GLTFMTLX_MINOR_VERSION 38)

@@ -25,7 +25,7 @@
 //#define CGLTF_IMPLEMENTATION //-- don't set to avoid duplicate symbols
 #include <MaterialXRender/External/Cgltf/cgltf.h>
 #define CGLTF_WRITE_IMPLEMENTATION
-#include <MaterialXRender/External/Cgltf/cgltf_write.h>
+#include <MaterialXglTF/External/Cgltf/cgltf_write.h>
 
 #if defined(_MSC_VER)
     #pragma warning(pop)
