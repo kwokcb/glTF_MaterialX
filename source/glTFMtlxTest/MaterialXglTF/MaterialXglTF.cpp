@@ -82,9 +82,26 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                 continue;
             }
         }
+        if (std::string::npos != dir.asString().find("converted_materials"))
+        {
+            continue;
+        }
+
+        bool createdOutputDirectories = false;
+        const std::string OUTPUT_MATERIAL_FOLDER = "converted_materials";
+        mx::FilePath materialsPath;
+
         for (const mx::FilePath& gltfFile : dir.getFilesInDirectory(GLTF_EXTENSION))
         {
             mx::FilePath fullPath = dir / gltfFile;
+
+            if (!createdOutputDirectories)
+            {
+                mx::FilePath outputPath = fullPath.getParentPath();
+                materialsPath = outputPath / OUTPUT_MATERIAL_FOLDER;
+                materialsPath.createDirectory();
+            }
+
             mx::DocumentPtr materials = glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition);
             if (materials)
             {
@@ -97,13 +114,15 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                         std::cerr << "*** Validation warnings document created from: " << fullPath.asString() << " ***" << std::endl;
                         std::cerr << message;
                     }
-                    mx::FilePath outputPath = fullPath;
-                    outputPath.removeExtension();
-                    const std::string outputFileName = outputPath.asString() + "_converted.mtlx";
+                    mx::FilePath fileName = fullPath.getBaseName();
+                    fileName.removeExtension();
+                    fileName = materialsPath / fileName;
+
+                    const std::string outputFileName = fileName.asString() + "_converted.mtlx";
                     std::cout << "Wrote " << std::to_string(nodes.size()) << " materials to file : " << outputFileName << std::endl;
                     mx::writeToXmlFile(materials, outputFileName, &writeOptions);
 
-                    const std::string outputFileName2 = outputPath.asString() + "_converted.gltf";
+                    const std::string outputFileName2 = fileName.asString() + "_converted.gltf";
                     bool converted = mtlx2glTF(outputFileName2, materials);
                     CHECK(converted);
                     if (converted)

@@ -1,7 +1,7 @@
 /**
  * cgltf - a single-file glTF 2.0 parser written in C99.
  *
- * Version: 1.12
+ * Version: 1.13
  *
  * Website: https://github.com/jkuhlmann/cgltf
  *
@@ -63,7 +63,7 @@
  * By passing null for the output pointer, users can find out how many floats are required in the
  * output buffer.
  *
- * `cgltf_accessor_num_components` is a tiny utility that tells you the dimensionality of
+ * `cgltf_num_components` is a tiny utility that tells you the dimensionality of
  * a certain accessor type. This can be used before `cgltf_accessor_unpack_floats` to help allocate
  * the necessary amount of memory.
  *

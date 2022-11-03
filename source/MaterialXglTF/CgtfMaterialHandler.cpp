@@ -25,7 +25,7 @@
 //#define CGLTF_IMPLEMENTATION //-- don't set to avoid duplicate symbols
 #include <MaterialXRender/External/Cgltf/cgltf.h>
 #define CGLTF_WRITE_IMPLEMENTATION
-#include <MaterialXglTF/External/Cgltf/cgltf_write.h>
+#include <MaterialXRender/External/Cgltf/cgltf_write.h>
 
 #if defined(_MSC_VER)
     #pragma warning(pop)
@@ -242,21 +242,28 @@ bool CgltfMaterialHandler::save(const FilePath& filePath)
 
     // Scan for PBR shader nodes
     const string PBR_CATEGORY_STRING("gltf_pbr");
+    const string UNLIT_CATEGORY_STRING("surface_unlit");
     std::set<NodePtr> pbrNodes;
+    std::set<NodePtr> unlitNodes;
     for (const NodePtr& material : _materials->getMaterialNodes())
     {
         vector<NodePtr> shaderNodes = getShaderNodes(material);
         for (const NodePtr& shaderNode : shaderNodes)
         {
-            if (shaderNode->getCategory() == PBR_CATEGORY_STRING &&
-                pbrNodes.find(shaderNode) == pbrNodes.end())
+            const string& category = shaderNode->getCategory();
+            if (category == PBR_CATEGORY_STRING && pbrNodes.find(shaderNode) == pbrNodes.end())
             {
                 pbrNodes.insert(shaderNode);
             }
+            else if (category == UNLIT_CATEGORY_STRING && unlitNodes.find(shaderNode) == unlitNodes.end())
+            {
+                unlitNodes.insert(shaderNode);
+            }
+            // TODO: Handle converson from other shading models to gltf pbr
         }
     }
 
-    cgltf_size materials_count = pbrNodes.size();
+    cgltf_size materials_count = pbrNodes.size() + unlitNodes.size();
     if (!materials_count)
     {
         return false;
@@ -309,6 +316,55 @@ bool CgltfMaterialHandler::save(const FilePath& filePath)
 
     size_t material_idx = 0;
     size_t imageIndex = 0;
+
+    // Handle unlit nodes
+    for (const NodePtr& unlitNode : unlitNodes)
+    {
+        cgltf_material* material = &(materials[material_idx]);
+        std::memset(material, 0, sizeof(cgltf_material));
+        material->unlit = true;
+	    material->has_pbr_metallic_roughness = false;
+	    material->has_pbr_specular_glossiness = false;
+	    material->has_clearcoat = false;
+	    material->has_transmission = false;
+	    material->has_volume = false;
+	    material->has_ior = false;
+	    material->has_specular = false;
+	    material->has_sheen = false;
+	    material->has_emissive_strength = false;
+	    material->extensions_count = 0;
+	    material->extensions = nullptr;
+        material->emissive_texture.texture = nullptr;
+        material->normal_texture.texture = nullptr;
+        material->occlusion_texture.texture = nullptr;
+
+        string* name = new string(unlitNode->getNamePath());
+        material->name = const_cast<char*>(name->c_str());
+        
+        material->has_pbr_metallic_roughness = true;
+        cgltf_pbr_metallic_roughness& roughness = material->pbr_metallic_roughness;
+        initialize_cgltf_texture_view(roughness.base_color_texture);
+
+        // Handle base color
+        ValuePtr value = unlitNode->getInputValue("base_color");
+        if (value)
+        {
+            Color3 color = value->asA<Color3>();
+            roughness.base_color_factor[0] = color[0];
+            roughness.base_color_factor[1] = color[1];
+            roughness.base_color_factor[2] = color[2];
+        }
+
+        value = unlitNode->getInputValue("alpha");
+        if (value)
+        {
+            roughness.base_color_factor[3] = value->asA<float>();
+        }
+
+        material_idx++;
+    }
+
+    // Handle gltf pbr nodes
     for (const NodePtr& pbrNode : pbrNodes)
     {
         cgltf_material* material = &(materials[material_idx]);
