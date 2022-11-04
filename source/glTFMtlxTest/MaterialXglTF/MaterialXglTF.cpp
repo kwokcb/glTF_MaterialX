@@ -51,7 +51,6 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
     };
 
     // Scan for glTF sample mode files in resources directory
-    //const mx::FilePath currentPath = mx::FilePath::getCurrentPath();
     mx::FilePath rootPath = "resources/";
 
     // Check if an environment variable was set as the root
@@ -70,6 +69,7 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
     bool createAssignments = true;
     bool fullDefinition = false;
     const std::string GLTF_EXTENSION("gltf");
+    mx::StringSet testedFiles;
     for (const mx::FilePath& dir : rootPath.getSubDirectories())
     {
         // If sample models directory is set, then skip the following directories
@@ -82,24 +82,17 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                 continue;
             }
         }
-        if (std::string::npos != dir.asString().find("converted_materials"))
-        {
-            continue;
-        }
 
         bool createdOutputDirectories = false;
         const std::string OUTPUT_MATERIAL_FOLDER = "converted_materials";
-        mx::FilePath materialsPath;
 
         for (const mx::FilePath& gltfFile : dir.getFilesInDirectory(GLTF_EXTENSION))
         {
             mx::FilePath fullPath = dir / gltfFile;
 
-            if (!createdOutputDirectories)
+            if (testedFiles.count(fullPath))
             {
-                mx::FilePath outputPath = fullPath.getParentPath();
-                materialsPath = outputPath / OUTPUT_MATERIAL_FOLDER;
-                materialsPath.createDirectory();
+                continue;
             }
 
             mx::DocumentPtr materials = glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition);
@@ -111,23 +104,60 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                     std::string message;
                     if (!materials->validate(&message))
                     {
-                        std::cerr << "*** Validation warnings document created from: " << fullPath.asString() << " ***" << std::endl;
+                        std::cerr << "- Validation warnings document created from: " << fullPath.asString() << " ***" << std::endl;
                         std::cerr << message;
                     }
                     mx::FilePath fileName = fullPath.getBaseName();
                     fileName.removeExtension();
-                    fileName = materialsPath / fileName;
+                    fileName = dir / fileName;
 
-                    const std::string outputFileName = fileName.asString() + "_converted.mtlx";
-                    std::cout << "Wrote " << std::to_string(nodes.size()) << " materials to file : " << outputFileName << std::endl;
+                    const std::string outputFileName = fileName.asString() + "_fromgltf.mtlx";
+                    std::cout << "- Wrote " << std::to_string(nodes.size()) << " materials to file : " << outputFileName << std::endl;
                     mx::writeToXmlFile(materials, outputFileName, &writeOptions);
 
-                    const std::string outputFileName2 = fileName.asString() + "_converted.gltf";
+                    const std::string outputFileName2 = fileName.asString() + "_fromtlx.gltf";
                     bool converted = mtlx2glTF(outputFileName2, materials);
                     CHECK(converted);
                     if (converted)
                     {
-                        std::cout << "Wrote MTLX materials to glTF file : " << outputFileName2 << std::endl;
+                        testedFiles.insert(outputFileName2);
+                        std::cout << "- Wrote MTLX materials to glTF file : " << outputFileName2 << std::endl;
+                    }
+
+                    // Run test renders on output
+                    mx::FilePath materialXInstallRoot(MTLXVIEW_TEST_RENDER);
+                    if (!materialXInstallRoot.isEmpty())
+                    {
+
+                        const std::string imageFileName = fileName.asString() + ".png";
+                        const std::string errorFile = fileName.asString() + "_errors.txt";
+                        const std::string redirectString(" 2>&1");
+
+                        std::string command = materialXInstallRoot.asString()
+                            + " --mesh " + fullPath.asString()
+                            + " --material " + outputFileName
+                            + " --screenWidth 512 --screenHeight 512 "
+                            + " --captureFilename " + imageFileName
+                            + "- --envSampleCount 4"
+                            + " > " + errorFile + redirectString;
+
+                        std::cout << "- Render image: " + imageFileName << std::endl;
+                        int returnValue = std::system(command.c_str());
+
+                        std::ifstream errorStream(errorFile);
+                        std::string result;
+                        result.assign(std::istreambuf_iterator<char>(errorStream),
+                            std::istreambuf_iterator<char>());
+
+                        if (!result.empty())
+                        {
+                            mx::StringVec errors;
+                            std::cout << "- Errors: " << std::endl;
+                            std::cout << "  - Command string : " + command << std::endl;
+                            std::cout << "  - Command return code: " + std::to_string(returnValue) << std::endl;
+                            std::cout << "  - Log: " << result << std::endl;
+                        }
+                        CHECK(result.empty());
                     }
                 }
             }

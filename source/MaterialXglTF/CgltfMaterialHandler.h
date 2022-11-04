@@ -26,6 +26,7 @@ class MX_GLTF_API MaterialHandler
     MaterialHandler() 
         : _generateFullDefinitions(false)
         , _generateAssignments(false)
+        , _generateNodeDefs(false)
       {}
 
     virtual ~MaterialHandler() = default;
@@ -116,6 +117,7 @@ class MX_GLTF_API MaterialHandler
     // Generation options
     bool _generateFullDefinitions;
     bool _generateAssignments;
+    bool _generateNodeDefs;
 };
 
 /// @class CgltfMateralLoader

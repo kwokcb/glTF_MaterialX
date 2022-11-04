@@ -65,8 +65,17 @@ else()
     file(GLOB MATERIALX_LIBRARIES "${MATERIALX_ROOT}/lib/*${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
 
-message(MATERIALX_INCLUDE_DIRS: ${MATERIALX_INCLUDE_DIRS})
-message(MATERIALX_LIBRARIES: ${MATERIALX_LIBRARIES})
+# Set definitions and options
+add_definitions(-DMATERIALX_ROOT=\"${MATERIALX_ROOT}\")
+option(MATERIALX_TEST_RENDER "Run rendering tests. GPU required for graphics validation." OFF)
+if (MATERIALX_TEST_RENDER)
+    set(MTLXVIEW_TEST_RENDER "${MATERIALX_ROOT}/bin/MaterialXView")
+endif()
+add_definitions(-DMTLXVIEW_TEST_RENDER=\"${MTLXVIEW_TEST_RENDER}\")
+
+message(STATUS "----- MTLXVIEW_TEST_RENDER: ${MTLXVIEW_TEST_RENDER}")
+message(STATUS "----- MATERIALX_INCLUDE_DIRS: ${MATERIALX_INCLUDE_DIRS}")
+message(STATUS "----- MATERIALX_LIBRARIES: ${MATERIALX_LIBRARIES}")
 
 if (NOT MATERIALX_INCLUDE_DIRS OR NOT MATERIALX_LIBRARIES)                    
     message(FATAL_ERROR "Could not find external MaterialX installation, is MATERIALX_ROOT set?")

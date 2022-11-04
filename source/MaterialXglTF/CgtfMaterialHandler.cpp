@@ -738,7 +738,10 @@ NodePtr CgltfMaterialHandler::createColoredTexture(DocumentPtr& doc, const std::
     {
         return nullptr;
     }
-    newTexture->setAttribute(InterfaceElement::NODE_DEF_ATTRIBUTE, "ND_gltf_colorimage" );
+    if (_generateNodeDefs)
+    {
+        newTexture->setAttribute(InterfaceElement::NODE_DEF_ATTRIBUTE, "ND_gltf_colorimage");
+    }
     if (_generateFullDefinitions)
     {
         newTexture->addInputsFromNodeDef();
@@ -769,7 +772,10 @@ NodePtr CgltfMaterialHandler::createTexture(DocumentPtr& doc, const std::string 
     {
         return nullptr;
     }
-    //newTexture->setAttribute(InterfaceElement::NODE_DEF_ATTRIBUTE, "ND_image_" + textureType);
+    if (_generateNodeDefs)
+    {
+        newTexture->setAttribute(InterfaceElement::NODE_DEF_ATTRIBUTE, "ND_image_" + textureType);
+    }
     if (_generateFullDefinitions)
     {
         newTexture->addInputsFromNodeDef();
@@ -999,10 +1005,19 @@ void CgltfMaterialHandler::setColorInput(DocumentPtr materials, NodePtr shaderNo
     // Handle simple color / alpha input
     else
     {
+        if (!colorInput)
+        {
+            colorInput = colorInputName.size() ? shaderNode->addInputFromNodeDef(colorInputName) : nullptr;
+        }
         if (colorInput)
         {
             ValuePtr color3Value = Value::createValue<Color3>(color);
             colorInput->setValueString(color3Value->getValueString());
+        }
+
+        if (!alphaInput)
+        {
+            alphaInput = alphaInputName.size() ? shaderNode->addInputFromNodeDef(alphaInputName) : nullptr;
         }
         if (alphaInput)
         {
@@ -1171,7 +1186,10 @@ void CgltfMaterialHandler::loadMaterials(void *vdata)
         string shaderCategory = use_unlit ? "surface_unlit" : "gltf_pbr";
         string nodedefString = use_unlit ? "ND_surface_unlit" : "ND_gltf_pbr_surfaceshader";
         NodePtr shaderNode = _materials->addNode(shaderCategory, shaderName, SURFACE_SHADER_TYPE_STRING);
-        shaderNode->setAttribute(InterfaceElement::NODE_DEF_ATTRIBUTE, nodedefString);
+        if (_generateNodeDefs)
+        {
+            shaderNode->setAttribute(InterfaceElement::NODE_DEF_ATTRIBUTE, nodedefString);
+        }
         if (_generateFullDefinitions)
         {
             shaderNode->addInputsFromNodeDef();
