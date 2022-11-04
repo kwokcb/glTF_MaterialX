@@ -1344,57 +1344,62 @@ void CgltfMaterialHandler::loadMaterials(void *vdata)
                 "image_sheen_roughness");
         }
 
-        // Parse iridescence
-        // typedef struct cgltf_iridescence
-        //{
-        //	cgltf_float iridescence_factor;
-        //	cgltf_texture_view iridescence_texture;
-        //	cgltf_float iridescence_ior;
-        //	cgltf_float iridescence_thickness_min;
-        //	cgltf_float iridescence_thickness_max;
-        //	cgltf_texture_view iridescence_thickness_texture;
-        //} cgltf_iridescence;
-        // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_iridescence/README.md
-        if (material->has_iridescence)
+        // Only 1.35.6 and newer has iridescence
+        std::tuple<int, int, int> version = getVersionIntegers();
+        if (version >= std::tuple<int,int,int>(1, 35, 6))
         {
-            const cgltf_iridescence& iridescence = material->iridescence;
-
-            setFloatInput(_materials, shaderNode, "iridescence",
-                iridescence.iridescence_factor, &iridescence.iridescence_texture,
-                "image_iridescence");
-
-            setFloatInput(_materials, shaderNode, "iridescence_ior",
-                iridescence.iridescence_ior, nullptr,
-                "image_iridescence_ior");
-
-            // Create special node to map thickness min, max and input texture
-            InputPtr floatInput = shaderNode->addInputFromNodeDef("iridescence_thickness");
-            if (floatInput)
+            // Parse iridescence
+            // typedef struct cgltf_iridescence
+            //{
+            //	cgltf_float iridescence_factor;
+            //	cgltf_texture_view iridescence_texture;
+            //	cgltf_float iridescence_ior;
+            //	cgltf_float iridescence_thickness_min;
+            //	cgltf_float iridescence_thickness_max;
+            //	cgltf_texture_view iridescence_thickness_texture;
+            //} cgltf_iridescence;
+            // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_iridescence/README.md
+            if (material->has_iridescence)
             {
-                const cgltf_texture_view& textureView = iridescence.iridescence_thickness_texture;
-                cgltf_texture* texture = textureView.texture;
-                if (texture && texture->image)
+                const cgltf_iridescence& iridescence = material->iridescence;
+
+                setFloatInput(_materials, shaderNode, "iridescence",
+                    iridescence.iridescence_factor, &iridescence.iridescence_texture,
+                    "image_iridescence");
+
+                setFloatInput(_materials, shaderNode, "iridescence_ior",
+                    iridescence.iridescence_ior, nullptr,
+                    "image_iridescence_ior");
+
+                // Create special node to map thickness min, max and input texture
+                InputPtr floatInput = shaderNode->addInputFromNodeDef("iridescence_thickness");
+                if (floatInput)
                 {
-                    std::string imageNodeName = _materials->createValidChildName("image_iridescence_thickness");
-                    std::string uri = texture->image->uri ? texture->image->uri : SPACE_STRING;
-                    NodePtr newTexture = createTexture(_materials, imageNodeName, uri, FLOAT_STRING, EMPTY_STRING, 
-                                                        "gltf_iridescence_thickness");
-                    if (newTexture)
+                    const cgltf_texture_view& textureView = iridescence.iridescence_thickness_texture;
+                    cgltf_texture* texture = textureView.texture;
+                    if (texture && texture->image)
                     {
-                        InputPtr minInput = newTexture->addInputFromNodeDef("thicknessMin");
-                        if (minInput)
+                        std::string imageNodeName = _materials->createValidChildName("image_iridescence_thickness");
+                        std::string uri = texture->image->uri ? texture->image->uri : SPACE_STRING;
+                        NodePtr newTexture = createTexture(_materials, imageNodeName, uri, FLOAT_STRING, EMPTY_STRING,
+                            "gltf_iridescence_thickness");
+                        if (newTexture)
                         {
-                            minInput->setValue<float>(iridescence.iridescence_thickness_min);
+                            InputPtr minInput = newTexture->addInputFromNodeDef("thicknessMin");
+                            if (minInput)
+                            {
+                                minInput->setValue<float>(iridescence.iridescence_thickness_min);
+                            }
+                            InputPtr maxInput = newTexture->addInputFromNodeDef("thicknessMax");
+                            if (maxInput)
+                            {
+                                maxInput->setValue<float>(iridescence.iridescence_thickness_max);
+                            }
+                            setImageProperties(newTexture, &textureView);
                         }
-                        InputPtr maxInput = newTexture->addInputFromNodeDef("thicknessMax");
-                        if (maxInput)
-                        {
-                            maxInput->setValue<float>(iridescence.iridescence_thickness_max);
-                        }
-                        setImageProperties(newTexture, &textureView);
+                        floatInput->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, newTexture->getName());
+                        floatInput->removeAttribute(AttributeDef::VALUE_ATTRIBUTE);
                     }
-                    floatInput->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, newTexture->getName());
-                    floatInput->removeAttribute(AttributeDef::VALUE_ATTRIBUTE);
                 }
             }
         }
