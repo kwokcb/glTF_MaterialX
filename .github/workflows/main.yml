@@ -73,7 +73,7 @@ jobs:
 
     - name: Download MaterialX
       run: |
-        gh release download v1.38.5 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
+        gh release download v1.38.6 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
