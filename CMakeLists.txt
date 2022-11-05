@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+enable_testing()
 
 set(GLTFMTLX_MAJOR_VERSION 1)
 set(GLTFMTLX_MINOR_VERSION 38)
@@ -64,8 +65,17 @@ else()
     file(GLOB MATERIALX_LIBRARIES "${MATERIALX_ROOT}/lib/*${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
 
-message(MATERIALX_INCLUDE_DIRS: ${MATERIALX_INCLUDE_DIRS})
-message(MATERIALX_LIBRARIES: ${MATERIALX_LIBRARIES})
+# Set definitions and options
+add_definitions(-DMATERIALX_ROOT=\"${MATERIALX_ROOT}\")
+option(MATERIALX_TEST_RENDER "Run rendering tests. GPU required for graphics validation." OFF)
+if (MATERIALX_TEST_RENDER)
+    set(MTLXVIEW_TEST_RENDER "${MATERIALX_ROOT}/bin/MaterialXView")
+endif()
+add_definitions(-DMTLXVIEW_TEST_RENDER=\"${MTLXVIEW_TEST_RENDER}\")
+
+message(STATUS "----- MTLXVIEW_TEST_RENDER: ${MTLXVIEW_TEST_RENDER}")
+message(STATUS "----- MATERIALX_INCLUDE_DIRS: ${MATERIALX_INCLUDE_DIRS}")
+message(STATUS "----- MATERIALX_LIBRARIES: ${MATERIALX_LIBRARIES}")
 
 if (NOT MATERIALX_INCLUDE_DIRS OR NOT MATERIALX_LIBRARIES)                    
     message(FATAL_ERROR "Could not find external MaterialX installation, is MATERIALX_ROOT set?")
@@ -76,8 +86,21 @@ set(GLTFMTLX_INSTALL_DEFINITION_PATH "libraries" CACHE STRING "Install definitio
 set(GLTFMTLX_INSTALL_RESOURCE_PATH "resources" CACHE STRING "Install sample resources path.")
 set(GLTFMTLX_INSTALL_LIB_PATH "lib" CACHE STRING "Install lib path (e.g. 'libs', 'lib').")
 
+# Shared functions
+function(assign_source_group prefix)
+    foreach(_source IN ITEMS ${ARGN})
+        if(IS_ABSOLUTE "${_source}")
+            file(RELATIVE_PATH _source_rel "${CMAKE_CURRENT_SOURCE_DIR}" "${_source}")
+        else()
+            set(_source_rel "${_source}")
+        endif()
+        get_filename_component(_source_path "${_source_rel}" PATH)
+        string(REPLACE "/" "\\" _source_path_msvc "${_source_path}")
+        source_group("${prefix}\\${_source_path_msvc}" FILES "${_source}")
+    endforeach()
+endfunction(assign_source_group)
+
 add_subdirectory(source/MaterialXglTF)
+add_subdirectory(source/glTFMtlxTest)
 add_subdirectory(source/glTF2Mtx)
-
-
     

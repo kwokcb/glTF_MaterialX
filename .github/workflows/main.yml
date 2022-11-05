@@ -23,22 +23,25 @@ jobs:
           architecture: x64
           cmake_config: -G "Visual Studio 16 2019" -A "x64"
           install_file: MaterialX_Windows_VS2019_x64_Python38.zip
+          run_test: ON
 
         - name: MacOS_Xcode_13_Python39
-          os: macos-11
+          os: macos-12
           compiler: xcode
-          compiler_version: "13.1"
+          compiler_version: "13.3"
+          python: 3.9
           install_file: MaterialX_MacOS_Xcode_13_Python39.zip
 
         - name: Linux_GCC_11_Python39
           os: ubuntu-20.04
           compiler: gcc
           compiler_version: "11"
+          python: 3.9
           install_file: MaterialX_Linux_GCC_11_Python39.zip
 
     steps:
     - name: Sync Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -73,7 +76,7 @@ jobs:
 
     - name: Download MaterialX
       run: |
-        gh release download v1.38.4 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
+        gh release download v1.38.6 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -99,6 +102,11 @@ jobs:
 
     - name: CMake Build
       run: cmake --build . --target install --config Release
+      working-directory: build
+
+    - name: CMake Test
+      if: matrix.test_render == 'ON'
+      run: ctest -VV --output-on-failure --build-config Release -j1
       working-directory: build
 
     - name: Upload Installed Package

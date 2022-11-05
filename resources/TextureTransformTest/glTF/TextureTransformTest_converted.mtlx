@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<materialx version="1.38">
+  <gltf_pbr name="SHD_Offset_U" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Offset_U" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Offset_U" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="UV.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+    <input name="offset" type="vector2" value="0.500000,0.000000" />
+    <input name="rotate" type="float" value="0" />
+    <input name="scale" type="vector2" value="1.000000,1.000000" />
+    <input name="uaddressmode" type="string" value="clamp" />
+    <input name="vaddressmode" type="string" value="clamp" />
+    <input name="filtertype" type="string" value="linear" />
+  </gltf_colorimage>
+  <gltf_pbr name="SHD_Offset_V" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor2" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor2" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Offset_V" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Offset_V" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor2" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="UV.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+    <input name="offset" type="vector2" value="0.000000,0.500000" />
+    <input name="rotate" type="float" value="0" />
+    <input name="scale" type="vector2" value="1.000000,1.000000" />
+    <input name="uaddressmode" type="string" value="clamp" />
+    <input name="vaddressmode" type="string" value="clamp" />
+    <input name="filtertype" type="string" value="linear" />
+  </gltf_colorimage>
+  <gltf_pbr name="SHD_Offset_UV" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor3" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor3" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Offset_UV" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Offset_UV" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor3" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="UV.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+    <input name="offset" type="vector2" value="0.500000,0.500000" />
+    <input name="rotate" type="float" value="0" />
+    <input name="scale" type="vector2" value="1.000000,1.000000" />
+    <input name="uaddressmode" type="string" value="clamp" />
+    <input name="vaddressmode" type="string" value="clamp" />
+    <input name="filtertype" type="string" value="linear" />
+  </gltf_colorimage>
+  <gltf_pbr name="SHD_Rotation" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor4" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor4" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Rotation" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Rotation" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor4" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="Arrow.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+    <input name="offset" type="vector2" value="0.000000,0.000000" />
+    <input name="rotate" type="float" value="22.5" />
+    <input name="scale" type="vector2" value="1.000000,1.000000" />
+    <input name="uaddressmode" type="string" value="clamp" />
+    <input name="vaddressmode" type="string" value="clamp" />
+    <input name="filtertype" type="string" value="linear" />
+  </gltf_colorimage>
+  <gltf_pbr name="SHD_Scale" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor5" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor5" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Scale" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Scale" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor5" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="Arrow.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+    <input name="offset" type="vector2" value="0.000000,0.000000" />
+    <input name="rotate" type="float" value="0" />
+    <input name="scale" type="vector2" value="1.500000,1.500000" />
+    <input name="uaddressmode" type="string" value="clamp" />
+    <input name="vaddressmode" type="string" value="clamp" />
+    <input name="filtertype" type="string" value="linear" />
+  </gltf_colorimage>
+  <gltf_pbr name="SHD_All" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor6" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor6" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_All" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_All" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor6" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="Arrow.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+    <input name="offset" type="vector2" value="-0.200000,-0.100000" />
+    <input name="rotate" type="float" value="17.1887" />
+    <input name="scale" type="vector2" value="1.500000,1.500000" />
+    <input name="uaddressmode" type="string" value="clamp" />
+    <input name="vaddressmode" type="string" value="clamp" />
+    <input name="filtertype" type="string" value="linear" />
+  </gltf_colorimage>
+  <gltf_pbr name="SHD_Correct" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor7" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor7" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Correct" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Correct" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor7" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="Correct.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+  </gltf_colorimage>
+  <gltf_pbr name="SHD_NotSupported" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor8" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor8" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_NotSupported" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_NotSupported" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor8" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="NotSupported.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+  </gltf_colorimage>
+  <gltf_pbr name="SHD_Error" type="surfaceshader" nodedef="ND_gltf_pbr_surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor9" output="outcolor" />
+    <input name="alpha" type="float" nodename="image_basecolor9" output="outa" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="1" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="alpha_mode" type="integer" value="0" />
+    <input name="alpha_cutoff" type="float" value="0.5" />
+    <input name="normal" type="vector3" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Error" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Error" />
+  </surfacematerial>
+  <gltf_colorimage name="image_basecolor9" type="multioutput" nodedef="ND_gltf_colorimage">
+    <input name="file" type="filename" value="Error.png" colorspace="srgb_texture" />
+    <input name="color" type="color4" value="1, 1, 1, 1" />
+    <input name="uvindex" type="integer" value="0" />
+  </gltf_colorimage>
+  <look name="look1">
+    <materialassign name="materialassign1" material="MAT_Offset_U" geom="Offset_U" />
+    <materialassign name="materialassign2" material="MAT_Scale" geom="Scale" />
+    <materialassign name="materialassign3" material="MAT_Correct" geom="Rotation/Rotation___Correct, Scale/Scale___Correct, All/All___Correct" />
+    <materialassign name="materialassign4" material="MAT_Rotation" geom="Rotation" />
+    <materialassign name="materialassign5" material="MAT_Offset_V" geom="Offset_V" />
+    <materialassign name="materialassign6" material="MAT_Offset_UV" geom="Offset_UV" />
+    <materialassign name="materialassign7" material="MAT_NotSupported" geom="Rotation/Rotation___Not_Supported, Scale/Scale___Not_Supported" />
+    <materialassign name="materialassign8" material="MAT_Error" geom="Rotation/Rotation___Error" />
+    <materialassign name="materialassign9" material="MAT_All" geom="All" />
+  </look>
+</materialx>

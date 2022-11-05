@@ -1,0 +1,471 @@
+#include "mx_funcs.h"
+
+#define true 1
+#define false 0
+struct textureresource { string filename; string colorspace; };
+struct BSDF { closure color response; color throughput; float thickness; float ior; };
+#define EDF closure color
+#define VDF closure color
+#define surfaceshader closure color
+#define volumeshader closure color
+#define displacementshader vector
+#define lightshader closure color
+#define MATERIAL closure color
+
+#define M_FLOAT_EPS 1e-8
+
+vector2 mx_transform_uv(vector2 texcoord)
+{
+    return texcoord;
+}
+
+void mx_image_color3(textureresource file, string layer, color default_value, vector2 texcoord, string uaddressmode, string vaddressmode, string filtertype, string framerange, int frameoffset, string frameendaction, output color out)
+{
+    if (file.filename == "" ||
+        (uaddressmode == "constant" && (texcoord.x<0.0 || texcoord.x>1.0)) ||
+        (vaddressmode == "constant" && (texcoord.y<0.0 || texcoord.y>1.0)))
+    {
+        out = default_value;
+        return;
+    }
+
+    color missingColor = default_value;
+    vector2 st = mx_transform_uv(texcoord);
+    out = texture(file.filename, st.x, st.y, "subimage", layer, "missingcolor", missingColor, "swrap", uaddressmode, "twrap", vaddressmode );
+}
+
+
+
+void mx_image_vector3(textureresource file, string layer, vector default_value, vector2 texcoord, string uaddressmode, string vaddressmode, string filtertype, string framerange, int frameoffset, string frameendaction, output vector out)
+{
+    if (file.filename == "" ||
+        (uaddressmode == "constant" && (texcoord.x<0.0 || texcoord.x>1.0)) ||
+        (vaddressmode == "constant" && (texcoord.y<0.0 || texcoord.y>1.0)))
+    {
+        out = default_value;
+        return;
+    }
+
+    color missingColor = default_value;
+    vector2 st = mx_transform_uv(texcoord);
+    out = texture(file.filename, st.x, st.y, "subimage", layer, "missingcolor", missingColor, "swrap", uaddressmode, "twrap", vaddressmode);
+}
+
+#define M_AP1_TO_REC709 matrix(1.705079555511475, -0.1297005265951157, -0.02416634373366833, 0.0, -0.6242334842681885, 1.138468623161316, -0.1246141716837883, 0.0, -0.0808461606502533, -0.008768022060394287, 1.148780584335327, 0.0, 0.0, 0.0, 0.0, 1.0)
+
+color mx_srgb_texture_to_lin_rec709(color inColor)
+{
+    float breakPnt = 0.04045;
+    color isAbove = color(inColor[0] > breakPnt ? 1.0 : 0.0,
+                          inColor[1] > breakPnt ? 1.0 : 0.0,
+                          inColor[2] > breakPnt ? 1.0 : 0.0);
+    color linSeg = inColor / 12.92;
+    color powSeg = pow(max(inColor + color(0.055), color(0.0)) / 1.055, color(2.4));
+    return mix(linSeg, powSeg, isAbove);
+}
+
+void mx_srgb_texture_to_lin_rec709_color3(color _in, output color result)
+{
+    result = mx_srgb_texture_to_lin_rec709(_in);
+}
+
+void NG_extract_vector3(vector in, int index, output float out)
+{
+    float N_x_vector3_out = in[0];
+    float N_y_vector3_out = in[1];
+    float N_z_vector3_out = in[2];
+    float N_sw_vector3_out = 0.0;
+    if (float(index) < float(1))
+    {
+        N_sw_vector3_out = N_x_vector3_out;
+    }
+    else if (float(index) < float(2))
+    {
+        N_sw_vector3_out = N_y_vector3_out;
+    }
+    else if (float(index) < float(3))
+    {
+        N_sw_vector3_out = N_z_vector3_out;
+    }
+    else if (float(index) < float(4))
+    {
+        N_sw_vector3_out = 0;
+    }
+    else if (float(index) < float(5))
+    {
+        N_sw_vector3_out = 0;
+    }
+    out = N_sw_vector3_out;
+}
+
+void mx_normalmap(vector value, string map_space, float normal_scale, vector N, vector U, output vector result)
+{
+    // Tangent space
+    if (map_space == "tangent")
+    {
+        vector v = value * 2.0 - 1.0;
+        vector T = normalize(U - dot(U, N) * N);
+        vector B = normalize(cross(N, T));
+        result = normalize(T * v[0] * normal_scale + B * v[1] * normal_scale + N * v[2]);
+    }
+    // Object space
+    else
+    {
+        vector n = value * 2.0 - 1.0;
+        result = normalize(n);
+    }
+}
+
+void mx_roughness_anisotropy(float roughness, float anisotropy, output vector2 result)
+{
+    float roughness_sqr = clamp(roughness*roughness, M_FLOAT_EPS, 1.0);
+    if (anisotropy > 0.0)
+    {
+        float aspect = sqrt(1.0 - clamp(anisotropy, 0.0, 0.98));
+        result.x = min(roughness_sqr / aspect, 1.0);
+        result.y = roughness_sqr * aspect;
+    }
+    else
+    {
+        result.x = roughness_sqr;
+        result.y = roughness_sqr;
+    }
+}
+
+void NG_extract_color3(color in, int index, output float out)
+{
+    float N_r_color3_out = in[0];
+    float N_g_color3_out = in[1];
+    float N_b_color3_out = in[2];
+    float N_sw_color3_out = 0.0;
+    if (float(index) < float(1))
+    {
+        N_sw_color3_out = N_r_color3_out;
+    }
+    else if (float(index) < float(2))
+    {
+        N_sw_color3_out = N_g_color3_out;
+    }
+    else if (float(index) < float(3))
+    {
+        N_sw_color3_out = N_b_color3_out;
+    }
+    else if (float(index) < float(4))
+    {
+        N_sw_color3_out = 0;
+    }
+    else if (float(index) < float(5))
+    {
+        N_sw_color3_out = 0;
+    }
+    out = N_sw_color3_out;
+}
+
+void mx_dielectric_bsdf(float weight, color tint, float ior, vector2 roughness, normal N, vector U, string distribution, string scatter_mode, output BSDF bsdf)
+{
+    if (scatter_mode == "R")
+    {
+        bsdf = weight * dielectric_bsdf(N, U, tint, color(0.0), roughness.x, roughness.y, ior, distribution);
+    }
+    else if (scatter_mode == "T")
+    {
+        bsdf = weight * dielectric_bsdf(N, U, color(0.0), tint, roughness.x, roughness.y, ior, distribution);
+    }
+    else
+    {
+        bsdf = weight * dielectric_bsdf(N, U, tint, tint, roughness.x, roughness.y, ior, distribution);
+    }
+}
+
+void mx_generalized_schlick_bsdf(float weight, color color0, color color90, float exponent, vector2 roughness, normal N, vector U, string distribution, string scatter_mode, output BSDF bsdf)
+{
+    if (scatter_mode == "R")
+    {
+        bsdf = weight * generalized_schlick_bsdf(N, U, color(1.0), color(0.0), roughness.x, roughness.y, color0, color90, exponent, distribution);
+    }
+    else if (scatter_mode == "T")
+    {
+        bsdf = weight * generalized_schlick_bsdf(N, U, color(0.0), color(1.0), roughness.x, roughness.y, color0, color90, exponent, distribution);
+    }
+    else
+    {
+        bsdf = weight * generalized_schlick_bsdf(N, U, color(1.0), color(1.0), roughness.x, roughness.y, color0, color90, exponent, distribution);
+    }
+}
+
+void mx_surface(BSDF bsdf, EDF edf, float opacity, output surfaceshader result)
+{
+    float opacity_weight = clamp(opacity, 0.0, 1.0);
+    result = (bsdf + edf) * opacity_weight + transparent() * (1.0 - opacity_weight);
+}
+
+void IMPL_gltf_pbr_surfaceshader(color base_color, float metallic, float roughness, vector normal1, float occlusion, float transmission, float specular, color specular_color, float ior, float alpha, int alpha_mode, float alpha_cutoff, color sheen_color, float sheen_roughness, float clearcoat, float clearcoat_roughness, vector clearcoat_normal, color emissive, float emissive_strength, float thickness, float attenuation_distance, color attenuation_color, output surfaceshader out)
+{
+    closure color null_closure = 0;
+    string geomprop_Tworld_space_tmp = "world";
+    vector geomprop_Tworld_out = transform(geomprop_Tworld_space_tmp, normalize(dPdu));
+    vector2 clearcoat_roughness_uv_out = vector2(0.0, 0.0);
+    mx_roughness_anisotropy(clearcoat_roughness, 0, clearcoat_roughness_uv_out);
+    float sheen_color_r_out = 0.0;
+    NG_extract_color3(sheen_color, 0, sheen_color_r_out);
+    float sheen_color_g_out = 0.0;
+    NG_extract_color3(sheen_color, 1, sheen_color_g_out);
+    float sheen_color_b_out = 0.0;
+    NG_extract_color3(sheen_color, 2, sheen_color_b_out);
+    float sheen_roughness_sq_out = sheen_roughness * sheen_roughness;
+    float one_minus_ior_in1_tmp = 1;
+    float one_minus_ior_out = mx_sub(one_minus_ior_in1_tmp, ior);
+    float one_plus_ior_in1_tmp = 1;
+    float one_plus_ior_out = mx_add(one_plus_ior_in1_tmp, ior);
+    color dielectric_f90_in1_tmp = color(1, 1, 1);
+    color dielectric_f90_out = dielectric_f90_in1_tmp * specular;
+    vector2 roughness_uv_out = vector2(0.0, 0.0);
+    mx_roughness_anisotropy(roughness, 0, roughness_uv_out);
+    color emission_color_out = emissive * emissive_strength;
+    float opacity_mask_cutoff_out = 0.0;
+    if (alpha >= alpha_cutoff)
+    {
+        opacity_mask_cutoff_out = 1;
+    }
+    else
+    {
+        opacity_mask_cutoff_out = 0;
+    }
+    float sheen_color_max_rg_out = max(sheen_color_r_out, sheen_color_g_out);
+    float ior_div_out = one_minus_ior_out / one_plus_ior_out;
+    float opacity_mask_out = 0.0;
+    if (alpha_mode == 1)
+    {
+        opacity_mask_out = opacity_mask_cutoff_out;
+    }
+    else
+    {
+        opacity_mask_out = alpha;
+    }
+    float sheen_intensity_out = max(sheen_color_max_rg_out, sheen_color_b_out);
+    float dielectric_f0_from_ior_out = ior_div_out * ior_div_out;
+    float opacity_out = 0.0;
+    if (alpha_mode == 0)
+    {
+        opacity_out = 1;
+    }
+    else
+    {
+        opacity_out = opacity_mask_out;
+    }
+    color sheen_color_normalized_out = sheen_color / sheen_intensity_out;
+    color dielectric_f0_from_ior_specular_color_out = specular_color * dielectric_f0_from_ior_out;
+    float clamped_dielectric_f0_from_ior_specular_color_in2_tmp = 1;
+    color clamped_dielectric_f0_from_ior_specular_color_out = min(dielectric_f0_from_ior_specular_color_out, clamped_dielectric_f0_from_ior_specular_color_in2_tmp);
+    color dielectric_f0_out = clamped_dielectric_f0_from_ior_specular_color_out * specular;
+    BSDF clearcoat_bsdf_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    mx_dielectric_bsdf(clearcoat, color(1, 1, 1), 1.5, clearcoat_roughness_uv_out, clearcoat_normal, geomprop_Tworld_out, "ggx", "R", clearcoat_bsdf_out);
+    BSDF sheen_bsdf_out = sheen_intensity_out * sheen_bsdf(normal1, sheen_color_normalized_out, sheen_roughness_sq_out);
+    BSDF metal_bsdf_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    mx_generalized_schlick_bsdf(1, base_color, color(1, 1, 1), 5, roughness_uv_out, normal1, geomprop_Tworld_out, "ggx", "R", metal_bsdf_out);
+    BSDF reflection_bsdf_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    mx_generalized_schlick_bsdf(1, dielectric_f0_out, dielectric_f90_out, 5, roughness_uv_out, normal1, geomprop_Tworld_out, "ggx", "R", reflection_bsdf_out);
+    BSDF transmission_bsdf_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    mx_dielectric_bsdf(1, base_color, ior, roughness_uv_out, normal1, geomprop_Tworld_out, "ggx", "T", transmission_bsdf_out);
+    float diffuse_bsdf_weight_tmp = 1;
+    float diffuse_bsdf_roughness_tmp = 0;
+    BSDF diffuse_bsdf_out = diffuse_bsdf_weight_tmp * oren_nayar_diffuse_bsdf(normal1, base_color, diffuse_bsdf_roughness_tmp);
+    BSDF transmission_mix_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    transmission_mix_out.response = mix(diffuse_bsdf_out.response, transmission_bsdf_out.response, transmission);
+    transmission_mix_out.throughput = mix(diffuse_bsdf_out.throughput, transmission_bsdf_out.throughput, transmission);
+    BSDF dielectric_bsdf_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    dielectric_bsdf_out.response = reflection_bsdf_out.response + transmission_mix_out.response * reflection_bsdf_out.throughput;
+    dielectric_bsdf_out.throughput = reflection_bsdf_out.throughput * transmission_mix_out.throughput;
+    BSDF base_mix_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    base_mix_out.response = mix(dielectric_bsdf_out.response, metal_bsdf_out.response, metallic);
+    base_mix_out.throughput = mix(dielectric_bsdf_out.throughput, metal_bsdf_out.throughput, metallic);
+    BSDF sheen_layer_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    sheen_layer_out.response = sheen_bsdf_out.response + base_mix_out.response * sheen_bsdf_out.throughput;
+    sheen_layer_out.throughput = sheen_bsdf_out.throughput * base_mix_out.throughput;
+    BSDF clearcoat_layer_out = BSDF(null_closure, color(1.0), 0.0, 0.0);
+    clearcoat_layer_out.response = clearcoat_bsdf_out.response + sheen_layer_out.response * clearcoat_bsdf_out.throughput;
+    clearcoat_layer_out.throughput = clearcoat_bsdf_out.throughput * sheen_layer_out.throughput;
+    EDF emission_out = uniform_edf(emission_color_out);
+    surfaceshader shader_constructor_out = null_closure;
+    mx_surface(clearcoat_layer_out, emission_out, opacity_out, shader_constructor_out);
+    out = shader_constructor_out;
+}
+
+shader MATERIAL_Material_MR
+[[
+    string mtlx_category = "surfacematerial",
+    string mtlx_name = "MATERIAL_Material_MR"
+]]
+(
+    displacementshader displacementshader1 = vector(0.0),
+    string geomprop_Nworld_space = "world",
+    int geomprop_UV0_index = 0
+    [[
+        string widget = "number"
+    ]],
+    string geomprop_Tworld_space = "world",
+    int geomprop_Tworld_index = 0
+    [[
+        string widget = "number"
+    ]],
+    textureresource  image_basecolor_file = {"Default_albedo.jpg", "srgb_texture"}
+    [[
+        string widget = "filename"
+    ]],
+    string image_basecolor_layer = "",
+    color image_basecolor_default = color(0, 0, 0),
+    string image_basecolor_uaddressmode = "periodic",
+    string image_basecolor_vaddressmode = "periodic",
+    string image_basecolor_filtertype = "linear",
+    string image_basecolor_framerange = "",
+    int image_basecolor_frameoffset = 0
+    [[
+        string widget = "number"
+    ]],
+    string image_basecolor_frameendaction = "constant",
+    textureresource  image_orm_file = {"Default_metalRoughness.jpg", ""}
+    [[
+        string widget = "filename"
+    ]],
+    string image_orm_layer = "",
+    vector image_orm_default = vector(0, 0, 0),
+    string image_orm_uaddressmode = "periodic",
+    string image_orm_vaddressmode = "periodic",
+    string image_orm_filtertype = "linear",
+    string image_orm_framerange = "",
+    int image_orm_frameoffset = 0
+    [[
+        string widget = "number"
+    ]],
+    string image_orm_frameendaction = "constant",
+    textureresource  image_normal_file = {"Default_normal.jpg", ""}
+    [[
+        string widget = "filename"
+    ]],
+    string image_normal_layer = "",
+    vector image_normal_default = vector(0, 0, 0),
+    string image_normal_uaddressmode = "periodic",
+    string image_normal_vaddressmode = "periodic",
+    string image_normal_filtertype = "linear",
+    string image_normal_framerange = "",
+    int image_normal_frameoffset = 0
+    [[
+        string widget = "number"
+    ]],
+    string image_normal_frameendaction = "constant",
+    textureresource  image_emission_file = {"Default_emissive.jpg", "srgb_texture"}
+    [[
+        string widget = "filename"
+    ]],
+    string image_emission_layer = "",
+    color image_emission_default = color(0, 0, 0),
+    string image_emission_uaddressmode = "periodic",
+    string image_emission_vaddressmode = "periodic",
+    string image_emission_filtertype = "linear",
+    string image_emission_framerange = "",
+    int image_emission_frameoffset = 0
+    [[
+        string widget = "number"
+    ]],
+    string image_emission_frameendaction = "constant",
+    int extract_metallic_index = 2
+    [[
+        string widget = "number"
+    ]],
+    int extract_roughness_index = 1
+    [[
+        string widget = "number"
+    ]],
+    int extract_occlusion_index = 0
+    [[
+        string widget = "number"
+    ]],
+    string pbr_normalmap_space = "tangent",
+    float pbr_normalmap_scale = 1
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_transmission = 0
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_specular = 1
+    [[
+        string widget = "number"
+    ]],
+    color Material_MR_specular_color = color(1, 1, 1),
+    float Material_MR_ior = 1.5
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_alpha = 1
+    [[
+        string widget = "number"
+    ]],
+    int Material_MR_alpha_mode = 0
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_alpha_cutoff = 0.5
+    [[
+        string widget = "number"
+    ]],
+    color Material_MR_sheen_color = color(0, 0, 0),
+    float Material_MR_sheen_roughness = 0
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_clearcoat = 0
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_clearcoat_roughness = 0
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_emissive_strength = 1
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_thickness = 0
+    [[
+        string widget = "number"
+    ]],
+    float Material_MR_attenuation_distance = 0.0
+    [[
+        string widget = "number"
+    ]],
+    color Material_MR_attenuation_color = color(1, 1, 1),
+    output MATERIAL out = 0
+)
+{
+    closure color null_closure = 0;
+    vector geomprop_Nworld_out = transform(geomprop_Nworld_space, N);
+    vector2 geomprop_UV0_out = vector2(u,v);
+    vector geomprop_Tworld_out = transform(geomprop_Tworld_space, normalize(dPdu));
+    color image_basecolor_out = color(0.0);
+    mx_image_color3(image_basecolor_file, image_basecolor_layer, image_basecolor_default, geomprop_UV0_out, image_basecolor_uaddressmode, image_basecolor_vaddressmode, image_basecolor_filtertype, image_basecolor_framerange, image_basecolor_frameoffset, image_basecolor_frameendaction, image_basecolor_out);
+    vector image_orm_out = vector(0.0);
+    mx_image_vector3(image_orm_file, image_orm_layer, image_orm_default, geomprop_UV0_out, image_orm_uaddressmode, image_orm_vaddressmode, image_orm_filtertype, image_orm_framerange, image_orm_frameoffset, image_orm_frameendaction, image_orm_out);
+    vector image_normal_out = vector(0.0);
+    mx_image_vector3(image_normal_file, image_normal_layer, image_normal_default, geomprop_UV0_out, image_normal_uaddressmode, image_normal_vaddressmode, image_normal_filtertype, image_normal_framerange, image_normal_frameoffset, image_normal_frameendaction, image_normal_out);
+    color image_emission_out = color(0.0);
+    mx_image_color3(image_emission_file, image_emission_layer, image_emission_default, geomprop_UV0_out, image_emission_uaddressmode, image_emission_vaddressmode, image_emission_filtertype, image_emission_framerange, image_emission_frameoffset, image_emission_frameendaction, image_emission_out);
+    color image_basecolor_out_cm_out = color(0.0);
+    mx_srgb_texture_to_lin_rec709_color3(image_basecolor_out, image_basecolor_out_cm_out);
+    float extract_metallic_out = 0.0;
+    NG_extract_vector3(image_orm_out, extract_metallic_index, extract_metallic_out);
+    float extract_roughness_out = 0.0;
+    NG_extract_vector3(image_orm_out, extract_roughness_index, extract_roughness_out);
+    float extract_occlusion_out = 0.0;
+    NG_extract_vector3(image_orm_out, extract_occlusion_index, extract_occlusion_out);
+    vector pbr_normalmap_out = vector(0.0);
+    mx_normalmap(image_normal_out, pbr_normalmap_space, pbr_normalmap_scale, geomprop_Nworld_out, geomprop_Tworld_out, pbr_normalmap_out);
+    color image_emission_out_cm_out = color(0.0);
+    mx_srgb_texture_to_lin_rec709_color3(image_emission_out, image_emission_out_cm_out);
+    surfaceshader Material_MR_out = null_closure;
+    IMPL_gltf_pbr_surfaceshader(image_basecolor_out_cm_out, extract_metallic_out, extract_roughness_out, pbr_normalmap_out, extract_occlusion_out, Material_MR_transmission, Material_MR_specular, Material_MR_specular_color, Material_MR_ior, Material_MR_alpha, Material_MR_alpha_mode, Material_MR_alpha_cutoff, Material_MR_sheen_color, Material_MR_sheen_roughness, Material_MR_clearcoat, Material_MR_clearcoat_roughness, geomprop_Nworld_out, image_emission_out_cm_out, Material_MR_emissive_strength, Material_MR_thickness, Material_MR_attenuation_distance, Material_MR_attenuation_color, Material_MR_out);
+    MATERIAL MATERIAL_Material_MR_out = Material_MR_out;
+    out = MATERIAL_Material_MR_out;
+}
+
