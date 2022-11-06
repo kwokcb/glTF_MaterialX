@@ -1,0 +1,180 @@
+{
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 16704,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 4694,
+      "max": [
+        0.99999988079071,
+        0.523488998413086,
+        0.0415859334170818
+      ],
+      "min": [
+        -1.0,
+        -0.523488998413086,
+        -0.0415859334170818
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 4694,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 4694,
+      "type": "VEC2"
+    }
+  ],
+  "asset": {
+    "generator": "Substance Painter 2018.1.1",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 66816,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 56328,
+      "byteOffset": 66816,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 56328,
+      "byteOffset": 123144,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 37552,
+      "byteOffset": 179472,
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 217024,
+      "uri": "glTF.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "glTF.002_baseColor.png"
+    },
+    {
+      "uri": "glTF.002_occlusionRoughnessMetallic.png"
+    },
+    {
+      "uri": "glTF.002_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "alphaMode": "OPAQUE",
+      "name": "glTF.002",
+      "normalTexture": {
+        "index": 2
+      },
+      "occlusionTexture": {
+        "index": 1
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "glTF_Nov14.007_CUCurve.012",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 2,
+            "POSITION": 1,
+            "TEXCOORD_0": 3
+          },
+          "indices": 0,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "name": "glTF.obj",
+      "scale": [
+        2.19995069503784,
+        2.19995069503784,
+        2.19995069503784
+      ],
+      "translation": [
+        0.204485654830933,
+        0.49332994222641,
+        0.0545720048248768
+      ]
+    },
+    {
+      "children": [
+        2
+      ],
+      "name": "glTF_Nov14.007_CUCurve.012"
+    },
+    {
+      "mesh": 0,
+      "name": "glTF_Nov14.007_CUCurve.012"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9985,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}

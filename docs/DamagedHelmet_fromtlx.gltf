@@ -1,0 +1,75 @@
+{
+  "asset": {
+    "generator": "MaterialX 1.38.61.38.4 to glTF generator",
+    "version": "1.38.6",
+    "min_version": "1.38.6"
+  },
+  "images": [
+    {
+      "name": "image_basecolor",
+      "uri": "Default_albedo.jpg"
+    },
+    {
+      "name": "image_orm",
+      "uri": "Default_metalRoughness.jpg"
+    },
+    {
+      "name": "image_occlusion",
+      "uri": "Default_AO.jpg"
+    },
+    {
+      "name": "image_normal",
+      "uri": "Default_normal.jpg"
+    },
+    {
+      "name": "image_emission",
+      "uri": "Default_emissive.jpg"
+    }
+  ],
+  "materials": [
+    {
+      "name": "SHD_Material_MR",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      },
+      "normalTexture": {
+        "index": 3
+      },
+      "occlusionTexture": {
+        "index": 2,
+        "scale": 0
+      },
+      "emissiveTexture": {
+        "index": 4
+      },
+      "emissiveFactor": [1, 1, 1]
+    }
+  ],
+  "textures": [
+    {
+      "name": "image_basecolor",
+      "source": 0
+    },
+    {
+      "name": "image_orm",
+      "source": 1
+    },
+    {
+      "name": "image_occlusion",
+      "source": 2
+    },
+    {
+      "name": "image_normal",
+      "source": 3
+    },
+    {
+      "name": "image_emission",
+      "source": 4
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<materialx version="1.38">
+  <gltf_pbr name="SHD_IridescenceLamp" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor" />
+    <input name="metallic" type="float" value="1" nodename="image_orm" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="image_orm" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="image_orm" channels="x" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_IridescenceLamp" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_IridescenceLamp" />
+  </surfacematerial>
+  <gltf_image name="image_basecolor" type="color3">
+    <input name="file" type="filename" value="IridescenceLamp_BaseColor.png" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="image_orm" type="vector3">
+    <input name="file" type="filename" value="IridescenceLamp_OcclusionRoughnessMetalness.png" />
+  </gltf_image>
+  <gltf_pbr name="SHD_IridescenceLampTransmissionIridescence" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor2" />
+    <input name="metallic" type="float" value="1" nodename="image_orm2" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="image_orm2" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="image_orm2" channels="x" />
+    <input name="iridescence" type="float" value="1" />
+    <input name="iridescence_ior" type="float" value="1.67" />
+    <input name="iridescence_thickness" type="float" nodename="image_iridescence_thickness" />
+    <input name="transmission" type="float" value="1" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+    <input name="thickness" type="float" value="0.005" />
+    <input name="attenuation_color" type="color3" value="1, 1, 1" />
+    <input name="attenuation_distance" type="float" value="3.40282e+38" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_IridescenceLampTransmissionIridescence" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_IridescenceLampTransmissionIridescence" />
+  </surfacematerial>
+  <gltf_image name="image_basecolor2" type="color3">
+    <input name="file" type="filename" value="IridescenceLamp_BaseColor.png" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="image_orm2" type="vector3">
+    <input name="file" type="filename" value="IridescenceLamp_OcclusionRoughnessMetalness.png" />
+  </gltf_image>
+  <gltf_iridescence_thickness name="image_iridescence_thickness" type="float">
+    <input name="file" type="filename" value="IridescenceLamp_Iridescence.png" />
+    <input name="thicknessMin" type="float" value="395" />
+    <input name="thicknessMax" type="float" value="405" />
+  </gltf_iridescence_thickness>
+  <gltf_pbr name="SHD_IridescenceLampIridescence" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="image_basecolor3" />
+    <input name="metallic" type="float" value="1" nodename="image_orm3" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="image_orm3" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="image_orm3" channels="x" />
+    <input name="iridescence" type="float" value="1" />
+    <input name="iridescence_ior" type="float" value="1.8" />
+    <input name="iridescence_thickness" type="float" nodename="image_iridescence_thickness2" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_IridescenceLampIridescence" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_IridescenceLampIridescence" />
+  </surfacematerial>
+  <gltf_image name="image_basecolor3" type="color3">
+    <input name="file" type="filename" value="IridescenceLamp_BaseColor.png" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="image_orm3" type="vector3">
+    <input name="file" type="filename" value="IridescenceLamp_OcclusionRoughnessMetalness.png" />
+  </gltf_image>
+  <gltf_iridescence_thickness name="image_iridescence_thickness2" type="float">
+    <input name="file" type="filename" value="IridescenceLamp_Iridescence.png" />
+    <input name="thicknessMin" type="float" value="485" />
+    <input name="thicknessMax" type="float" value="515" />
+  </gltf_iridescence_thickness>
+  <look name="look1">
+    <materialassign name="materialassign1" material="MAT_IridescenceLampTransmissionIridescence" geom="lamp_transmission" />
+    <materialassign name="materialassign2" material="MAT_IridescenceLamp" geom="lamp" />
+    <materialassign name="materialassign3" material="MAT_IridescenceLampIridescence" geom="lamp_iridescence" />
+  </look>
+</materialx>

@@ -1,0 +1,34 @@
+{
+  "asset": {
+    "generator": "MaterialX 1.38.61.38.4 to glTF generator",
+    "version": "1.38.6",
+    "min_version": "1.38.6"
+  },
+  "materials": [
+    {
+      "name": "SHD_Orange",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 0,
+        "baseColorFactor": [0, 0, 0, 0]
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    },
+    {
+      "name": "SHD_Blue",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 0,
+        "baseColorFactor": [0, 0, 0, 0]
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_unlit"
+  ]
+}

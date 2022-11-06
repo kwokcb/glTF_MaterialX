@@ -1,0 +1,51 @@
+{
+  "asset": {
+    "generator": "MaterialX 1.38.61.38.4 to glTF generator",
+    "version": "1.38.6",
+    "min_version": "1.38.6"
+  },
+  "images": [
+    {
+      "name": "image_basecolor",
+      "uri": "glTF.002_baseColor.png"
+    },
+    {
+      "name": "image_orm",
+      "uri": "glTF.002_occlusionRoughnessMetallic.png"
+    },
+    {
+      "name": "image_normal",
+      "uri": "glTF.002_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "name": "SHD_glTF_002",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      },
+      "normalTexture": {
+        "index": 2
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "image_basecolor",
+      "source": 0
+    },
+    {
+      "name": "image_orm",
+      "source": 1
+    },
+    {
+      "name": "image_normal",
+      "source": 2
+    }
+  ]
+}
