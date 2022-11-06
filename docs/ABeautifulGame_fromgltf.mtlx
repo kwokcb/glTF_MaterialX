@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+<materialx version="1.38">
+  <gltf_pbr name="SHD_King_Black" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="king_black_base_color" />
+    <input name="metallic" type="float" value="1" nodename="King_black_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="King_black_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="King_black_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="King_black_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_King_Black" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_King_Black" />
+  </surfacematerial>
+  <gltf_image name="king_black_base_color" type="color3">
+    <input name="file" type="filename" value="king_black_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="King_black_ORM" type="vector3">
+    <input name="file" type="filename" value="King_black_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="King_black_normal" type="vector3">
+    <input name="file" type="filename" value="King_black_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_King_White" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="king_white_base_color" />
+    <input name="metallic" type="float" value="1" nodename="King_white_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="King_white_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="King_white_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="King_white_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_King_White" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_King_White" />
+  </surfacematerial>
+  <gltf_image name="king_white_base_color" type="color3">
+    <input name="file" type="filename" value="king_white_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="King_white_ORM" type="vector3">
+    <input name="file" type="filename" value="King_white_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="King_white_normal" type="vector3">
+    <input name="file" type="filename" value="King_white_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Queen_Black" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="queen_black_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Queen_black_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Queen_black_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Queen_black_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="Queen_black_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Queen_Black" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Queen_Black" />
+  </surfacematerial>
+  <gltf_image name="queen_black_base_color" type="color3">
+    <input name="file" type="filename" value="queen_black_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Queen_black_ORM" type="vector3">
+    <input name="file" type="filename" value="Queen_black_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Queen_black_normal" type="vector3">
+    <input name="file" type="filename" value="Queen_black_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Queen_White" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="queen_white_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Queen_white_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Queen_white_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Queen_white_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="Queen_white_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Queen_White" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Queen_White" />
+  </surfacematerial>
+  <gltf_image name="queen_white_base_color" type="color3">
+    <input name="file" type="filename" value="queen_white_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Queen_white_ORM" type="vector3">
+    <input name="file" type="filename" value="Queen_white_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Queen_white_normal" type="vector3">
+    <input name="file" type="filename" value="Queen_white_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Chessboard" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="chessboard_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Chessboard_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Chessboard_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Chessboard_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="chessboard_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Chessboard" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Chessboard" />
+  </surfacematerial>
+  <gltf_image name="chessboard_base_color" type="color3">
+    <input name="file" type="filename" value="chessboard_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Chessboard_ORM" type="vector3">
+    <input name="file" type="filename" value="Chessboard_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="chessboard_normal" type="vector3">
+    <input name="file" type="filename" value="chessboard_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Pawn_Top_White" type="surfaceshader">
+    <input name="base_color" type="color3" value="1, 1, 0.828" />
+    <input name="alpha" type="float" value="1" />
+    <input name="metallic" type="float" value="1" nodename="Pawn_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Pawn_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Pawn_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="Pawn_normal" />
+    <input name="transmission" type="float" value="1" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+    <input name="thickness" type="float" value="0.22" />
+    <input name="attenuation_color" type="color3" value="0.8, 0.8, 0.8" />
+    <input name="attenuation_distance" type="float" value="3.40282e+38" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Pawn_Top_White" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Pawn_Top_White" />
+  </surfacematerial>
+  <gltf_image name="Pawn_ORM" type="vector3">
+    <input name="file" type="filename" value="Pawn_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Pawn_normal" type="vector3">
+    <input name="file" type="filename" value="Pawn_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Pawn_Body_White" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="pawn_white_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Pawn_ORM2" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Pawn_ORM2" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Pawn_ORM2" channels="x" />
+    <input name="normal" type="vector3" nodename="Pawn_normal2" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Pawn_Body_White" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Pawn_Body_White" />
+  </surfacematerial>
+  <gltf_image name="pawn_white_base_color" type="color3">
+    <input name="file" type="filename" value="pawn_white_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Pawn_ORM2" type="vector3">
+    <input name="file" type="filename" value="Pawn_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Pawn_normal2" type="vector3">
+    <input name="file" type="filename" value="Pawn_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Pawn_Top_Black" type="surfaceshader">
+    <input name="base_color" type="color3" value="0.2995, 0.5, 0.45" />
+    <input name="alpha" type="float" value="1" />
+    <input name="metallic" type="float" value="1" nodename="Pawn_ORM3" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Pawn_ORM3" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Pawn_ORM3" channels="x" />
+    <input name="normal" type="vector3" nodename="Pawn_normal3" />
+    <input name="transmission" type="float" value="1" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+    <input name="thickness" type="float" value="0.22" />
+    <input name="attenuation_color" type="color3" value="0.8, 0.8, 0.8" />
+    <input name="attenuation_distance" type="float" value="3.40282e+38" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Pawn_Top_Black" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Pawn_Top_Black" />
+  </surfacematerial>
+  <gltf_image name="Pawn_ORM3" type="vector3">
+    <input name="file" type="filename" value="Pawn_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Pawn_normal3" type="vector3">
+    <input name="file" type="filename" value="Pawn_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Pawn_Body_Black" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="pawn_black_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Pawn_ORM4" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Pawn_ORM4" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Pawn_ORM4" channels="x" />
+    <input name="normal" type="vector3" nodename="Pawn_normal4" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Pawn_Body_Black" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Pawn_Body_Black" />
+  </surfacematerial>
+  <gltf_image name="pawn_black_base_color" type="color3">
+    <input name="file" type="filename" value="pawn_black_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Pawn_ORM4" type="vector3">
+    <input name="file" type="filename" value="Pawn_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Pawn_normal4" type="vector3">
+    <input name="file" type="filename" value="Pawn_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Castle_Black" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="castle_black_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Castle_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Castle_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Castle_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="Castle_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Castle_Black" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Castle_Black" />
+  </surfacematerial>
+  <gltf_image name="castle_black_base_color" type="color3">
+    <input name="file" type="filename" value="castle_black_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Castle_ORM" type="vector3">
+    <input name="file" type="filename" value="Castle_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Castle_normal" type="vector3">
+    <input name="file" type="filename" value="Castle_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Castle_White" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="castle_white_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Castle_ORM2" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Castle_ORM2" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Castle_ORM2" channels="x" />
+    <input name="normal" type="vector3" nodename="Castle_normal2" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Castle_White" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Castle_White" />
+  </surfacematerial>
+  <gltf_image name="castle_white_base_color" type="color3">
+    <input name="file" type="filename" value="castle_white_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Castle_ORM2" type="vector3">
+    <input name="file" type="filename" value="Castle_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Castle_normal2" type="vector3">
+    <input name="file" type="filename" value="Castle_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Knight_Black" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="knight_black_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Knight_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Knight_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Knight_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="Knight_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Knight_Black" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Knight_Black" />
+  </surfacematerial>
+  <gltf_image name="knight_black_base_color" type="color3">
+    <input name="file" type="filename" value="knight_black_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Knight_ORM" type="vector3">
+    <input name="file" type="filename" value="Knight_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Knight_normal" type="vector3">
+    <input name="file" type="filename" value="Knight_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Knight_White" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="knight_white_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Knight_ORM2" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Knight_ORM2" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Knight_ORM2" channels="x" />
+    <input name="normal" type="vector3" nodename="Knight_normal2" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Knight_White" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Knight_White" />
+  </surfacematerial>
+  <gltf_image name="knight_white_base_color" type="color3">
+    <input name="file" type="filename" value="knight_white_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Knight_ORM2" type="vector3">
+    <input name="file" type="filename" value="Knight_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="Knight_normal2" type="vector3">
+    <input name="file" type="filename" value="Knight_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Bishop_Black" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="bishop_black_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Bishop_black_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Bishop_black_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Bishop_black_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="bishop_black_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Bishop_Black" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Bishop_Black" />
+  </surfacematerial>
+  <gltf_image name="bishop_black_base_color" type="color3">
+    <input name="file" type="filename" value="bishop_black_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Bishop_black_ORM" type="vector3">
+    <input name="file" type="filename" value="Bishop_black_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="bishop_black_normal" type="vector3">
+    <input name="file" type="filename" value="bishop_black_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_pbr name="SHD_Bishop_White" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="bishop_white_base_color" />
+    <input name="metallic" type="float" value="1" nodename="Bishop_white_ORM" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="Bishop_white_ORM" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="Bishop_white_ORM" channels="x" />
+    <input name="normal" type="vector3" nodename="bishop_white_normal" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Bishop_White" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Bishop_White" />
+  </surfacematerial>
+  <gltf_image name="bishop_white_base_color" type="color3">
+    <input name="file" type="filename" value="bishop_white_base_color.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="Bishop_white_ORM" type="vector3">
+    <input name="file" type="filename" value="Bishop_white_ORM.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="bishop_white_normal" type="vector3">
+    <input name="file" type="filename" value="bishop_white_normal.jpg" />
+  </gltf_normalmap>
+  <look name="look1">
+    <materialassign name="materialassign1" material="MAT_Pawn_Body_Black" geom="Pawn_Body_B1, Pawn_Body_B2, Pawn_Body_B3, Pawn_Body_B4, Pawn_Body_B5, Pawn_Body_B6, Pawn_Body_B7, Pawn_Body_B8" />
+    <materialassign name="materialassign2" material="MAT_King_Black" geom="King_B" />
+    <materialassign name="materialassign3" material="MAT_Pawn_Body_White" geom="Pawn_Body_W1, Pawn_Body_W2, Pawn_Body_W3, Pawn_Body_W4, Pawn_Body_W5, Pawn_Body_W6, Pawn_Body_W7, Pawn_Body_W8" />
+    <materialassign name="materialassign4" material="MAT_King_White" geom="King_W" />
+    <materialassign name="materialassign5" material="MAT_Queen_Black" geom="Queen_B" />
+    <materialassign name="materialassign6" material="MAT_Pawn_Top_White" geom="Pawn_Body_W1/Pawn_Top_W1, Pawn_Body_W2/Pawn_Top_W2, Pawn_Body_W3/Pawn_Top_W3, Pawn_Body_W4/Pawn_Top_W4, Pawn_Body_W5/Pawn_Top_W5, Pawn_Body_W6/Pawn_Top_W6, Pawn_Body_W7/Pawn_Top_W7, Pawn_Body_W8/Pawn_Top_W8" />
+    <materialassign name="materialassign7" material="MAT_Chessboard" geom="Chessboard" />
+    <materialassign name="materialassign8" material="MAT_Queen_White" geom="Queen_W" />
+    <materialassign name="materialassign9" material="MAT_Pawn_Top_Black" geom="Pawn_Body_B1/Pawn_Top_B1, Pawn_Body_B2/Pawn_Top_B2, Pawn_Body_B3/Pawn_Top_B3, Pawn_Body_B4/Pawn_Top_B4, Pawn_Body_B5/Pawn_Top_B5, Pawn_Body_B6/Pawn_Top_B6, Pawn_Body_B7/Pawn_Top_B7, Pawn_Body_B8/Pawn_Top_B8" />
+    <materialassign name="materialassign10" material="MAT_Castle_Black" geom="Castle_B1, Castle_B2" />
+    <materialassign name="materialassign11" material="MAT_Castle_White" geom="Castle_W1, Castle_W2" />
+    <materialassign name="materialassign12" material="MAT_Knight_Black" geom="Knight_B1, Knight_B2" />
+    <materialassign name="materialassign13" material="MAT_Knight_White" geom="Knight_W1, Knight_W2" />
+    <materialassign name="materialassign14" material="MAT_Bishop_Black" geom="Bishop_B1, Bishop_B2" />
+    <materialassign name="materialassign15" material="MAT_Bishop_White" geom="Bishop_W1, Bishop_W2" />
+  </look>
+</materialx>

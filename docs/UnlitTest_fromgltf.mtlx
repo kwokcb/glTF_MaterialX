@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<materialx version="1.38">
+  <surface_unlit name="SHD_Orange" type="surfaceshader">
+    <input name="emission_color" type="color3" value="1, 0.217638, 0" />
+    <input name="opacity" type="float" value="1" />
+  </surface_unlit>
+  <surfacematerial name="MAT_Orange" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Orange" />
+  </surfacematerial>
+  <surface_unlit name="SHD_Blue" type="surfaceshader">
+    <input name="emission_color" type="color3" value="0, 0.217638, 1" />
+    <input name="opacity" type="float" value="1" />
+  </surface_unlit>
+  <surfacematerial name="MAT_Blue" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Blue" />
+  </surfacematerial>
+  <look name="look1">
+    <materialassign name="materialassign1" material="MAT_Orange" geom="Orange_Object" />
+    <materialassign name="materialassign2" material="MAT_Blue" geom="Blue_Object" />
+  </look>
+</materialx>

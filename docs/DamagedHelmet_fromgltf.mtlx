@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<materialx version="1.38">
+  <gltf_pbr name="SHD_Material_MR" type="surfaceshader">
+    <input name="occlusion" type="float" nodename="image_occlusion" />
+    <input name="base_color" type="color3" nodename="image_basecolor" />
+    <input name="metallic" type="float" value="1" nodename="image_orm" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="image_orm" channels="y" />
+    <input name="normal" type="vector3" nodename="image_normal" />
+    <input name="emissive" type="color3" nodename="image_emission" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Material_MR" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Material_MR" />
+  </surfacematerial>
+  <gltf_image name="image_occlusion" type="float">
+    <input name="file" type="filename" value="Default_AO.jpg" />
+  </gltf_image>
+  <gltf_image name="image_basecolor" type="color3">
+    <input name="file" type="filename" value="Default_albedo.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="image_orm" type="vector3">
+    <input name="file" type="filename" value="Default_metalRoughness.jpg" />
+  </gltf_image>
+  <gltf_normalmap name="image_normal" type="vector3">
+    <input name="file" type="filename" value="Default_normal.jpg" />
+  </gltf_normalmap>
+  <gltf_image name="image_emission" type="color3">
+    <input name="file" type="filename" value="Default_emissive.jpg" colorspace="srgb_texture" />
+  </gltf_image>
+  <look name="look1">
+    <materialassign name="materialassign1" material="MAT_Material_MR" geom="node_damagedHelmet__6514" />
+  </look>
+</materialx>
