@@ -149,7 +149,8 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                         result.assign(std::istreambuf_iterator<char>(errorStream),
                             std::istreambuf_iterator<char>());
 
-                        if (!result.empty())
+                        bool renderError = returnValue != 0 && !result.empty();
+                        if (renderError)
                         {
                             mx::StringVec errors;
                             std::cout << "- Errors: " << std::endl;
@@ -157,7 +158,7 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                             std::cout << "  - Command return code: " + std::to_string(returnValue) << std::endl;
                             std::cout << "  - Log: " << result << std::endl;
                         }
-                        CHECK(result.empty());
+                        CHECK(!renderError);
                     }
                 }
             }
