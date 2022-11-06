@@ -105,7 +105,7 @@ jobs:
       working-directory: build
 
     - name: CMake Test
-      if: matrix.test_render == 'ON'
+      if: matrix.run_test == 'ON'
       run: ctest -VV --output-on-failure --build-config Release -j1
       working-directory: build
 
