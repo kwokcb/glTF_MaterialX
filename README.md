@@ -109,7 +109,7 @@ This contains unit testing for the MaterialXglTF module. It performs bidirection
 
 ## 4. Support
 
-<img src="docs/bidirectional_workflow.png" width="50%"></img>
+<img src="docs/bidirectional_workflow.png" width="80%"></img>
 
 The basic import from glTF to MaterialX and MaterialX to glTF for  shading models: gltf_pbr or `unlit_surface` (if the material is marked as being unit`. Texture mapping is supported for import however texture transforms are not supported yet for export. 
 
@@ -130,6 +130,7 @@ Note that all renders are generated as part of unit tests using the core `Materi
 
 | Asset | MaterialX from glTF | glTF from MaterialX | Render |
 | -- | -- | -- | -- |   
+| glTF Logo | <a href="./docs/glTF_fromgltf.mtlx">MaterialX</a> | <a href="./docs/glTF_fromtlx.gltf">GLTF</a> | <img src="docs/glTF.png" width=70%></img> |
 | Chess Set | <a href="./docs/ABeautifulGame_fromgltf.mtlx">MaterialX</a> | <a href="./docs/ABeautifulGame_fromtlx.gltf">GLTF</a> | <img src="docs/ABeautifulGame.png" width=70%></img> |
 | Damaged Helmet | <a href="./docs/docs/DamagedHelmet_fromgltf.mtlx">MaterialX</a> | <a href="./docs/DamagedHelmet_fromtlx.gltf">GLTF</a> | <img src="docs/DamagedHelmet.png" width=70%></img> |
 | Boombox with Axes | <a href="./docs/docs/BoomBoxWithAxes_fromgltf.mtlx">MaterialX</a> | <a href="./docs/BoomBoxWithAxes_fromtlx.gltf">GLTF</a> | <img src="docs/BoomBoxWithAxes.png" width=70%></img> |

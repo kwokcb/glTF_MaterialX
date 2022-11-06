@@ -138,7 +138,7 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                             + " --material " + outputFileName
                             + " --screenWidth 512 --screenHeight 512 "
                             + " --captureFilename " + imageFileName
-                            + "- --envSampleCount 4"
+                            + " --envSampleCount 4"
                             + " > " + errorFile + redirectString;
 
                         std::cout << "- Render image: " + imageFileName << std::endl;
