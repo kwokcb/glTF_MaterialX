@@ -346,7 +346,7 @@ bool CgltfMaterialHandler::save(const FilePath& filePath)
         initialize_cgltf_texture_view(roughness.base_color_texture);
 
         // Handle base color
-        ValuePtr value = unlitNode->getInputValue("base_color");
+        ValuePtr value = unlitNode->getInputValue("emission_color");
         if (value)
         {
             Color3 color = value->asA<Color3>();
@@ -355,7 +355,7 @@ bool CgltfMaterialHandler::save(const FilePath& filePath)
             roughness.base_color_factor[2] = color[2];
         }
 
-        value = unlitNode->getInputValue("alpha");
+        value = unlitNode->getInputValue("opacity");
         if (value)
         {
             roughness.base_color_factor[3] = value->asA<float>();
