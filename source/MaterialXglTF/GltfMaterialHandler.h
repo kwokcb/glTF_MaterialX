@@ -12,11 +12,11 @@
 MATERIALX_NAMESPACE_BEGIN
 
 class MaterialHandler;
-class CgltfMaterialHandler;
+class GltfMaterialHandler;
 
-/// Shared pointer to a CgltfMateralLoader
+/// Shared pointer to a GltfMaterialHandler
 using MaterialHandlerPtr = std::shared_ptr<class MaterialHandler>;
-using CgltfMaterialHandlerPtr = std::shared_ptr<class CgltfMaterialHandler>;
+using GltfMaterialHandlerPtr = std::shared_ptr<class GltfMaterialHandler>;
 
 /// @class MaterialHandler
 /// Wrapper for handler to convert materials to / from MaterialX
@@ -42,6 +42,14 @@ class MX_GLTF_API MaterialHandler
     {
         return _extensions;
     }
+
+    /// <summary>
+    ///     Distill document to appropriate set of nodes / targets
+    ///     for export. Derived classes can override this method
+    ///     to perform actions such as shader translation and baking.
+    /// </summary>
+    /// <param name="doc">Document to modify</param>
+    virtual void distillDocument(DocumentPtr doc) {};
 
     /// <summary>
     ///     Set document containing MaterialX definitions. This includes core library
@@ -120,24 +128,24 @@ class MX_GLTF_API MaterialHandler
     bool _generateNodeDefs;
 };
 
-/// @class CgltfMateralLoader
-/// Wrapper for loader to read materials from GLTF files using the Cgltf library.
-class MX_GLTF_API CgltfMaterialHandler : public MaterialHandler
+/// @class GltfMaterialHandler
+/// Wrapper for handling import / export of materials to / from GLTF files
+class MX_GLTF_API GltfMaterialHandler : public MaterialHandler
 {
   public:
-    CgltfMaterialHandler() 
+    GltfMaterialHandler() 
         : MaterialHandler()
     {
         _extensions = { "glb", "GLB", "gltf", "GLTF" };
     }
-    virtual ~CgltfMaterialHandler() 
+    virtual ~GltfMaterialHandler() 
     {
         _materials = nullptr;
     }
 
 
     /// Create a new loader
-    static MaterialHandlerPtr create() { return std::make_shared<CgltfMaterialHandler>(); }
+    static MaterialHandlerPtr create() { return std::make_shared<GltfMaterialHandler>(); }
 
     /// Load materials from file path
 
@@ -154,6 +162,14 @@ class MX_GLTF_API CgltfMaterialHandler : public MaterialHandler
     /// <param name="filePath">File path</param>
     /// <returns>True on success</returns>
     bool save(const FilePath& filePath) override;
+
+    /// <summary>
+    ///     Distill document to appropriate set of nodes / targets
+    ///     for export. Derived classes can override this method
+    ///     to perform actions such as shader translation and baking.
+    /// </summary>
+    /// <param name="doc">Document to modify</param>
+    void distillDocument(DocumentPtr doc) override;
 
   private:
     NodePtr createColoredTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,

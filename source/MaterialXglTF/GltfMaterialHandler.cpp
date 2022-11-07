@@ -4,7 +4,8 @@
 #include <MaterialXCore/Library.h>
 #include <MaterialXFormat/XmlIo.h>
 #include <MaterialXFormat/Util.h>
-#include <MaterialXglTF/CgltfMaterialHandler.h>
+#include <MaterialXGenShader/ShaderTranslator.h>
+#include <MaterialXglTF/GltfMaterialHandler.h>
 
 #if defined(__GNUC__)
     #pragma GCC diagnostic push
@@ -169,12 +170,62 @@ void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, StringSet& mat
 
 }
 
-bool CgltfMaterialHandler::save(const FilePath& filePath)
+void GltfMaterialHandler::distillDocument(DocumentPtr doc)
+{
+    if (!doc)
+    {
+        return;
+    }
+
+    // Perform translation to MaterialX gltf_pbr if it exists.
+    // This basically expands ShaderTranslator::translateAllMaterials()
+    // so that documents with mixed shader types can be handled correctly.
+    //
+    const string TARGET_GLTF = "gltf_pbr";
+    ShaderTranslatorPtr translator = ShaderTranslator::create();
+    vector<TypedElementPtr> materialNodes;
+    std::unordered_set<ElementPtr> shaderOutputs;
+    findRenderableMaterialNodes(_materials, materialNodes, false, shaderOutputs);    
+    for (auto elem : materialNodes)
+    {
+        NodePtr materialNode = elem->asA<Node>();
+        if (!materialNode)
+        {
+            continue;
+        }
+        for (NodePtr shaderNode : getShaderNodes(materialNode))
+        {
+            try
+            {
+                const string& sourceCategory = shaderNode->getCategory();
+                if (sourceCategory == TARGET_GLTF)
+                {
+                    continue;
+                }
+                string translateNodeString = sourceCategory + "_to_" + TARGET_GLTF;
+                vector<NodeDefPtr> matchingNodeDefs = _materials->getMatchingNodeDefs(translateNodeString);
+                if (matchingNodeDefs.empty())
+                {
+                    continue;
+                }
+                translator->translateShader(shaderNode, TARGET_GLTF);
+            }
+            catch (std::exception& /*e*/)
+            {
+                //std::cout << "- Error in shader translation: " << e.what() << std::endl;
+            }
+        }
+    }
+}
+
+bool GltfMaterialHandler::save(const FilePath& filePath)
 {
     if (!_materials)
     {
         return false;
     }
+
+    distillDocument(_materials);
 
     const string input_filename = filePath.asString();
     const string ext = stringToLower(filePath.getExtension());
@@ -695,7 +746,7 @@ bool CgltfMaterialHandler::save(const FilePath& filePath)
     return true;
 }
 
-bool CgltfMaterialHandler::load(const FilePath& filePath)
+bool GltfMaterialHandler::load(const FilePath& filePath)
 {
     const std::string input_filename = filePath.asString();
     const std::string ext = stringToLower(filePath.getExtension());
@@ -729,7 +780,7 @@ bool CgltfMaterialHandler::load(const FilePath& filePath)
 }
 
 // Utilities
-NodePtr CgltfMaterialHandler::createColoredTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,
+NodePtr GltfMaterialHandler::createColoredTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,
                                                   const Color4& color, const std::string & colorspace)
 {
     std::string newTextureName = doc->createValidChildName(nodeName);
@@ -762,7 +813,7 @@ NodePtr CgltfMaterialHandler::createColoredTexture(DocumentPtr& doc, const std::
 }
 
 
-NodePtr CgltfMaterialHandler::createTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,
+NodePtr GltfMaterialHandler::createTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,
                                            const std::string& textureType, const std::string & colorspace, 
                                            const std::string& nodeType)
 {
@@ -906,7 +957,7 @@ void setImageProperties(NodePtr image, const cgltf_texture_view* textureView)
     }
 }
 
-void CgltfMaterialHandler::setNormalMapInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName,
+void GltfMaterialHandler::setNormalMapInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName,
     const void* textureViewIn, const std::string& inputImageNodeName)
 {
     const cgltf_texture_view* textureView = (const cgltf_texture_view*)(textureViewIn);
@@ -935,7 +986,7 @@ void CgltfMaterialHandler::setNormalMapInput(DocumentPtr materials, NodePtr shad
     }
 }
 
-void CgltfMaterialHandler::setColorInput(DocumentPtr materials, NodePtr shaderNode, const std::string& colorInputName, 
+void GltfMaterialHandler::setColorInput(DocumentPtr materials, NodePtr shaderNode, const std::string& colorInputName, 
                                        const Color3& color, float alpha, const std::string& alphaInputName, 
                                        const void* textureViewIn,
                                        const std::string& inputImageNodeName)
@@ -1026,7 +1077,7 @@ void CgltfMaterialHandler::setColorInput(DocumentPtr materials, NodePtr shaderNo
     }
 }
 
-void CgltfMaterialHandler::setFloatInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+void GltfMaterialHandler::setFloatInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
                                        float floatFactor, const void* textureViewIn,
                                        const std::string& inputImageNodeName)
 {
@@ -1062,7 +1113,7 @@ void CgltfMaterialHandler::setFloatInput(DocumentPtr materials, NodePtr shaderNo
     }
 }
 
-void CgltfMaterialHandler::setVector3Input(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+void GltfMaterialHandler::setVector3Input(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
                                        const Vector3& vecFactor, const void* textureViewIn,
                                        const std::string& inputImageNodeName)
 {
@@ -1101,7 +1152,7 @@ void CgltfMaterialHandler::setVector3Input(DocumentPtr materials, NodePtr shader
     }
 }
 
-void CgltfMaterialHandler::loadMaterials(void *vdata)
+void GltfMaterialHandler::loadMaterials(void *vdata)
 {
     cgltf_data* data = static_cast<cgltf_data*>(vdata);
 

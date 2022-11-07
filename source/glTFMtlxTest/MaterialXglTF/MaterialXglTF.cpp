@@ -1,7 +1,7 @@
 
 #include <glTFMtlxTest/Catch/catch.hpp>
 
-#include <MaterialXglTF/CgltfMaterialHandler.h>
+#include <MaterialXglTF/GltfMaterialHandler.h>
 #include <MaterialXFormat/Environ.h>
 #include <MaterialXFormat/Util.h>
 #include <MaterialXFormat/XmlIo.h>
@@ -16,7 +16,7 @@ namespace mx = MaterialX;
 mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definitions, 
                           bool createAssignments, bool fullDefinition)
 {
-    mx::MaterialHandlerPtr gltfMTLXLoader = mx::CgltfMaterialHandler::create();
+    mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
     gltfMTLXLoader->setDefinitions(definitions);
     gltfMTLXLoader->setGenerateAssignments(createAssignments);
     gltfMTLXLoader->setGenerateFullDefinitions(fullDefinition);
@@ -28,7 +28,7 @@ mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definiti
 // MaterialX to cgTF conversion
 bool mtlx2glTF(const mx::FilePath& filename, mx::DocumentPtr materials)
 {
-    mx::MaterialHandlerPtr gltfMTLXLoader = mx::CgltfMaterialHandler::create();
+    mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
     gltfMTLXLoader->setMaterials(materials);
     return gltfMTLXLoader->save(filename);
 }
@@ -38,6 +38,8 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
     mx::DocumentPtr libraries = mx::createDocument();
     mx::FileSearchPath searchPath;
     searchPath.append(mx::FilePath::getCurrentPath());
+    searchPath.append(mx::FilePath::getModulePath());
+    searchPath.append(mx::FilePath::getModulePath().getParentPath());
     mx::StringSet xincludeFiles = loadLibraries({ "libraries" }, searchPath, libraries);
 
     mx::XmlWriteOptions writeOptions;
@@ -52,6 +54,7 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
 
     // Scan for glTF sample mode files in resources directory
     mx::FilePath rootPath = "resources/";
+    rootPath = searchPath.find(rootPath);
 
     // Check if an environment variable was set as the root
     bool useSampleModels = false;
@@ -116,9 +119,9 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                     mx::writeToXmlFile(materials, outputFileName, &writeOptions);
 
                     const std::string outputFileName2 = fileName.asString() + "_fromtlx.gltf";
-                    bool converted = mtlx2glTF(outputFileName2, materials);
-                    CHECK(converted);
-                    if (converted)
+                    bool convertedToGLTF = mtlx2glTF(outputFileName2, materials);
+                    CHECK(convertedToGLTF);
+                    if (convertedToGLTF)
                     {
                         testedFiles.insert(outputFileName2);
                         std::cout << "- Wrote MTLX materials to glTF file : " << outputFileName2 << std::endl;
