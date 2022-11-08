@@ -26,15 +26,93 @@ mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definiti
 }
 
 // MaterialX to cgTF conversion
-bool mtlx2glTF(const mx::FilePath& filename, mx::DocumentPtr materials)
-{
-    mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
+bool mtlx2glTF(mx::MaterialHandlerPtr gltfMTLXLoader, const mx::FilePath& filename, mx::DocumentPtr materials)
+{    
     gltfMTLXLoader->setMaterials(materials);
     return gltfMTLXLoader->save(filename);
 }
 
-TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
+// MaterialX to glTF to MaterialX tests
+TEST_CASE("Validate export", "[gltf]")
 {
+    const std::string GLTF_EXTENSION("gltf");
+    const std::string MTLX_EXTENSION("mtlx");
+
+    mx::DocumentPtr libraries = mx::createDocument();
+    mx::FileSearchPath searchPath;
+    searchPath.append(mx::FilePath::getCurrentPath());
+    searchPath.append(mx::FilePath::getModulePath());
+    searchPath.append(mx::FilePath::getModulePath().getParentPath());
+    mx::StringSet xincludeFiles = loadLibraries({ "libraries" }, searchPath, libraries);
+
+    mx::XmlWriteOptions writeOptions;
+    writeOptions.elementPredicate = [](mx::ConstElementPtr elem)
+    {
+        if (elem->hasSourceUri())
+        {
+            return false;
+        }
+        return true;
+    };
+
+    bool useExternalPath = false;
+    mx::FilePath rootPath = mx::getEnviron("GLTF_SAMPLE_MODELS_ROOT");
+    if (!rootPath.isEmpty())
+    {
+        useExternalPath = true;
+        std::cout << "MaterialX export directory used: " << rootPath.asString() << std::endl;
+    }
+    else
+    {
+        rootPath = "resources/glTF_export";
+        rootPath = searchPath.find(rootPath);
+    }
+
+    mx::StringSet testedFiles;
+    for (const mx::FilePath& dir : rootPath.getSubDirectories())
+    {
+        for (const mx::FilePath& gltfFile : dir.getFilesInDirectory(MTLX_EXTENSION))
+        {
+            mx::FilePath fullPath = dir / gltfFile;
+
+            if (testedFiles.count(fullPath))
+            {
+                continue;
+            }
+
+            mx::DocumentPtr doc = mx::createDocument();
+            doc->importLibrary(libraries);
+            readFromXmlFile(doc, fullPath);
+            CHECK(doc->validate());
+
+            mx::FilePath fileName = fullPath.getBaseName();
+            fileName.removeExtension();
+            fileName = dir / fileName;
+
+            mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
+
+            // Perform shader translation
+            const std::string distilledFileName = fileName.asString() + "_distilled.mtlx";
+            gltfMTLXLoader->distillDocument(doc);
+            std::cout << "- Wrote distilled file : " << distilledFileName << std::endl;
+            mx::writeToXmlFile(doc, distilledFileName, &writeOptions);
+
+            const std::string outputFileName = fileName.asString() + "_fromtlx.gltf";
+            bool convertedToGLTF = mtlx2glTF(gltfMTLXLoader, outputFileName, doc);
+            if (convertedToGLTF)
+            {
+                std::cout << "Converted to gltf: " << outputFileName << std::endl;
+            }
+        }
+    }
+}
+
+// glTF to MaterialX to glTF tests
+TEST_CASE("Validate import", "[gltf]")
+{
+    const std::string GLTF_EXTENSION("gltf");
+    const std::string MTLX_EXTENSION("mtlx");
+
     mx::DocumentPtr libraries = mx::createDocument();
     mx::FileSearchPath searchPath;
     searchPath.append(mx::FilePath::getCurrentPath());
@@ -53,15 +131,22 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
     };
 
     // Scan for glTF sample mode files in resources directory
-    mx::FilePath rootPath = "resources/";
-    rootPath = searchPath.find(rootPath);
+    bool useSampleModels = false;
+    mx::FilePath rootPath = mx::getEnviron("GLTF_SAMPLE_MODELS_ROOT");
+    if (!rootPath.isEmpty())
+    {
+        useSampleModels = true;
+        std::cout << "glTF sample models directory used: " << rootPath.asString() << std::endl;
+    }
+    else
+    {
+        rootPath = "resources/glTF_import";
+        rootPath = searchPath.find(rootPath);
+    }
 
     // Check if an environment variable was set as the root
-    bool useSampleModels = false;
     if (!rootPath.exists())
     {
-        rootPath = mx::getEnviron("GLTF_SAMPLE_MODELS_ROOT");
-        std::cout << "glTF sample models directory used: " << rootPath.asString() << std::endl;
     }
     if (!rootPath.exists())
     {
@@ -71,11 +156,10 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
 
     bool createAssignments = true;
     bool fullDefinition = false;
-    const std::string GLTF_EXTENSION("gltf");
     mx::StringSet testedFiles;
     for (const mx::FilePath& dir : rootPath.getSubDirectories())
     {
-        // If sample models directory is set, then skip the following directories
+        // If sample models root is set, then skip the following directories
         if (useSampleModels)
         {
             if (std::string::npos != dir.asString().find("glTF-Binary") ||
@@ -118,8 +202,9 @@ TEST_CASE("glTF: Valid glTF -> MTLX", "[gltf]")
                     std::cout << "- Wrote " << std::to_string(nodes.size()) << " materials to file : " << outputFileName << std::endl;
                     mx::writeToXmlFile(materials, outputFileName, &writeOptions);
 
+                    mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
                     const std::string outputFileName2 = fileName.asString() + "_fromtlx.gltf";
-                    bool convertedToGLTF = mtlx2glTF(outputFileName2, materials);
+                    bool convertedToGLTF = mtlx2glTF(gltfMTLXLoader, outputFileName2, materials);
                     CHECK(convertedToGLTF);
                     if (convertedToGLTF)
                     {
