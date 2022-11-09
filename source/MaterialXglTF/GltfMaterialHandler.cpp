@@ -95,6 +95,65 @@ void initialize_cgtlf_texture(cgltf_texture& texture, const string& name, const 
     texture.image->uri = const_cast<char*>((new string(uri))->c_str());
 }
 
+/*
+void writeColorInput(const NodePtr pbrNode, const string& inputName, cgltf_texture& textureList)
+{
+    string filename;
+
+    NodePtr imageNode = pbrNode->getConnectedNode(inputName);
+    if (imageNode)
+    {
+        InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
+        filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
+            fileInput->getValueString() : EMPTY_STRING;
+        if (filename.empty())
+            imageNode = nullptr;
+    }
+    if (imageNode)
+    {
+        cgltf_texture* texture = &(textureList[imageIndex]);
+        roughness.base_color_texture.texture = texture;
+        initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
+            &(imageList[imageIndex]));
+
+        roughness.base_color_factor[0] = 1.0;
+        roughness.base_color_factor[1] = 1.0;
+        roughness.base_color_factor[2] = 1.0;
+        roughness.base_color_factor[3] = 1.0;
+
+        imageIndex++;
+
+        // Pull off color from gltf_colorImage node
+        ValuePtr value = pbrNode->getInputValue(COLOR_SEMANTIC);
+        if (value && value->isA<Color4>())
+        {
+            Color4 color = value->asA<Color4>();
+            roughness.base_color_factor[0] = color[0];
+            roughness.base_color_factor[1] = color[1];
+            roughness.base_color_factor[2] = color[2];
+            roughness.base_color_factor[3] = color[3];
+        }
+    }
+    else
+    {
+        ValuePtr value = pbrNode->getInputValue("base_color");
+        if (value)
+        {
+            Color3 color = value->asA<Color3>();
+            roughness.base_color_factor[0] = color[0];
+            roughness.base_color_factor[1] = color[1];
+            roughness.base_color_factor[2] = color[2];
+        }
+
+        value = pbrNode->getInputValue("alpha");
+        if (value)
+        {
+            roughness.base_color_factor[3] = value->asA<float>();
+        }
+    }
+}
+*/
+
 void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, StringSet& materialCPVList, void* cnodeIn, FilePath& path, unsigned int nodeCount,
                           unsigned int meshCount)
 {
@@ -174,7 +233,7 @@ void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, StringSet& mat
 
 }
 
-void GltfMaterialHandler::distillDocument(DocumentPtr doc)
+void GltfMaterialHandler::translateShaders(DocumentPtr doc)
 {
     if (!doc)
     {
@@ -370,10 +429,9 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
     {
         return false;
     }
-
     // Write materials
     /*
-    * typedef struct cgltf_material
+    typedef struct cgltf_material
     {
 	    char* name;
 	    cgltf_bool has_pbr_metallic_roughness;
@@ -381,27 +439,29 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
 	    cgltf_bool has_clearcoat;
 	    cgltf_bool has_transmission;
 	    cgltf_bool has_volume;
-	    cgltf_bool has_ior;
+	    cgltf_bool has_ior; 
 	    cgltf_bool has_specular;
 	    cgltf_bool has_sheen;
 	    cgltf_bool has_emissive_strength;
-	    cgltf_pbr_metallic_roughness pbr_metallic_roughness;
+	    cgltf_bool has_iridescence;
+	    cgltf_pbr_metallic_roughness pbr_metallic_roughness; // unmerged todo
 	    cgltf_pbr_specular_glossiness pbr_specular_glossiness;
-	    cgltf_clearcoat clearcoat;
-	    cgltf_ior ior;
-	    cgltf_specular specular;
-	    cgltf_sheen sheen;
-	    cgltf_transmission transmission;
-	    cgltf_volume volume;
-	    cgltf_emissive_strength emissive_strength;
-	    cgltf_texture_view normal_texture;
+	    cgltf_clearcoat clearcoat; // todo
+	    cgltf_ior ior; // todo
+	    cgltf_specular specular; // todo
+	    cgltf_sheen sheen; // DONE
+	    cgltf_transmission transmission; // todo
+	    cgltf_volume volume; // todo
+	    cgltf_emissive_strength emissive_strength; // done
+	    cgltf_iridescence iridescence; // todo
+	    cgltf_texture_view normal_texture; // done
 	    cgltf_texture_view occlusion_texture;
 	    cgltf_texture_view emissive_texture;
 	    cgltf_float emissive_factor[3];
 	    cgltf_alpha_mode alpha_mode;
 	    cgltf_float alpha_cutoff;
 	    cgltf_bool double_sided;
-	    cgltf_bool unlit;
+	    cgltf_bool unlit; // done
 	    cgltf_extras extras;
 	    cgltf_size extensions_count;
 	    cgltf_extension* extensions;
@@ -493,8 +553,9 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
         cgltf_pbr_metallic_roughness& roughness = material->pbr_metallic_roughness;
         initialize_cgltf_texture_view(roughness.base_color_texture);
 
-        // Handle base color
         string filename;
+
+        // Handle base color
         NodePtr imageNode = pbrNode->getConnectedNode("base_color");
         if (imageNode)
         {
@@ -631,7 +692,14 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
                     if (roughnessInputs[e])
                     {
                         value = pbrInput->getValue();
-                        *(roughnessInputs[e]) = value->asA<float>();
+                        if (value)
+                        {
+                            *(roughnessInputs[e]) = value->asA<float>();
+                        }
+                        else
+                        {
+                            *(roughnessInputs[e]) = 1.0f;
+                        }
                     }
                 }
             }

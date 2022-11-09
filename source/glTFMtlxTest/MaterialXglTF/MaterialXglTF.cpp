@@ -32,6 +32,51 @@ bool mtlx2glTF(mx::MaterialHandlerPtr gltfMTLXLoader, const mx::FilePath& filena
     return gltfMTLXLoader->save(filename);
 }
 
+bool translateShader(const mx::FilePath& inputFileName, const mx::FilePath& outputFilename, 
+                     unsigned int width, unsigned int height)
+{
+    // Run test renders on output
+    mx::FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
+    if (!shaderTranslator.isEmpty())
+    {
+//python d:\Work\materialx\bernard_MaterialX\build\installed\python\Scripts\translateshader.py 
+//build\bin\resources\glTF_export\Materials\Examples\StandardSurface\standard_surface_brass_tiled.mtlx final.mtlx gltf_pbr
+
+        const std::string errorFile = inputFileName.asString() + "_errors.txt";
+        const std::string redirectString(" 2>&1");
+        const std::string target = "gltf_pbr";
+
+        std::string command = "python " + shaderTranslator.asString()
+            + " --width " + std::to_string(width)
+            + " --height " + std::to_string(height)
+            + " " + inputFileName.asString()
+            + " " + outputFilename.asString()
+            + " " + target
+            + " > " + errorFile + redirectString;
+
+        std::cout << "- Translated MTLX: " + outputFilename.asString() << std::endl;
+        int returnValue = std::system(command.c_str());
+
+        std::ifstream errorStream(errorFile);
+        std::string result;
+        result.assign(std::istreambuf_iterator<char>(errorStream),
+            std::istreambuf_iterator<char>());
+
+        bool renderError = returnValue != 0 && !result.empty();
+        if (renderError)
+        {
+            mx::StringVec errors;
+            std::cout << "- Errors: " << std::endl;
+            std::cout << "  - Command string : " + command << std::endl;
+            std::cout << "  - Command return code: " + std::to_string(returnValue) << std::endl;
+            std::cout << "  - Log: " << result << std::endl;
+        }
+        return true;
+        //CHECK(!renderError);
+    }
+    return false;
+}
+
 // MaterialX to glTF to MaterialX tests
 TEST_CASE("Validate export", "[gltf]")
 {
@@ -64,7 +109,7 @@ TEST_CASE("Validate export", "[gltf]")
     }
     else
     {
-        rootPath = "resources/glTF_export";
+        rootPath = "resources/glTF_export/Materials/Examples";
         rootPath = searchPath.find(rootPath);
     }
 
@@ -75,8 +120,11 @@ TEST_CASE("Validate export", "[gltf]")
         {
             mx::FilePath fullPath = dir / gltfFile;
 
-            if (testedFiles.count(fullPath))
+            if (testedFiles.count(fullPath) || 
+                std::string::npos != fullPath.asString().find("distilled") ||
+                std::string::npos != fullPath.asString().find("baked"))
             {
+                std::cout << "------------ Skip file: " << fullPath.asString() << std::endl;
                 continue;
             }
 
@@ -91,17 +139,30 @@ TEST_CASE("Validate export", "[gltf]")
 
             mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
 
-            // Perform shader translation
+            // Perform shader translation in place
             const std::string distilledFileName = fileName.asString() + "_distilled.mtlx";
-            gltfMTLXLoader->distillDocument(doc);
+            gltfMTLXLoader->translatgeShaders(doc);
             std::cout << "- Wrote distilled file : " << distilledFileName << std::endl;
             mx::writeToXmlFile(doc, distilledFileName, &writeOptions);
+            testedFiles.insert(distilledFileName);
 
-            const std::string outputFileName = fileName.asString() + "_fromtlx.gltf";
-            bool convertedToGLTF = mtlx2glTF(gltfMTLXLoader, outputFileName, doc);
-            if (convertedToGLTF)
+            // Bake to a new document
+            const mx::FilePath bakedFileName = fileName.asString() + "_baked.mtlx";
+            translateShader(distilledFileName, bakedFileName, 512, 512);
+            testedFiles.insert(bakedFileName);
+            if (bakedFileName.exists())
             {
-                std::cout << "Converted to gltf: " << outputFileName << std::endl;
+                mx::DocumentPtr bakedDoc = mx::createDocument();
+                bakedDoc->importLibrary(libraries);
+                readFromXmlFile(bakedDoc, bakedFileName);
+                CHECK(doc->validate());
+
+                const std::string outputFileName = fileName.asString() + "_fromtlx.gltf";
+                bool convertedToGLTF = mtlx2glTF(gltfMTLXLoader, outputFileName, bakedDoc);
+                if (convertedToGLTF)
+                {
+                    std::cout << "Converted to gltf: " << outputFileName << std::endl;
+                }
             }
         }
     }

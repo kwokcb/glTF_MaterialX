@@ -44,12 +44,12 @@ class MX_GLTF_API MaterialHandler
     }
 
     /// <summary>
-    ///     Distill document to appropriate set of nodes / targets
+    ///     Translate shaders in the document to appropriate shading model(s)
     ///     for export. Derived classes can override this method
     ///     to perform actions such as shader translation and baking.
     /// </summary>
     /// <param name="doc">Document to modify</param>
-    virtual void distillDocument(DocumentPtr doc) {};
+    virtual void translateShaders(DocumentPtr doc) {};
 
     /// <summary>
     ///     Set document containing MaterialX definitions. This includes core library
@@ -164,12 +164,12 @@ class MX_GLTF_API GltfMaterialHandler : public MaterialHandler
     bool save(const FilePath& filePath) override;
 
     /// <summary>
-    ///     Distill document to appropriate set of nodes / targets
+    ///     Translate shaders in the document to appropriate shading model(s)
     ///     for export. Derived classes can override this method
     ///     to perform actions such as shader translation and baking.
     /// </summary>
     /// <param name="doc">Document to modify</param>
-    void distillDocument(DocumentPtr doc) override;
+    void translateShaders(DocumentPtr doc) override;
 
   private:
     NodePtr createColoredTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,
