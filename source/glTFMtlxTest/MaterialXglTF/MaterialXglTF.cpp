@@ -32,26 +32,54 @@ bool mtlx2glTF(mx::MaterialHandlerPtr gltfMTLXLoader, const mx::FilePath& filena
     return gltfMTLXLoader->save(filename);
 }
 
-bool translateShader(const mx::FilePath& inputFileName, const mx::FilePath& outputFilename, 
+bool haveSingleDocBake(const mx::FilePath& errorFile)
+{
+    mx::FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
+    if (shaderTranslator.isEmpty())
+    {
+        return false;
+    }
+
+    const std::string redirectString(" 2>&1");
+    std::string testcommand = "python " + shaderTranslator.asString()
+        + " --help"
+        +" > " + errorFile.asString() + redirectString;
+
+    int returnValue = std::system(testcommand.c_str());
+    if (returnValue != 0)
+    {
+        return false;
+    }
+
+    std::ifstream errorStream(errorFile.asString());
+    std::string result;
+    result.assign(std::istreambuf_iterator<char>(errorStream),
+        std::istreambuf_iterator<char>());
+    if (std::string::npos != result.find("writeSingleDocument"))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool bakeDocument(const mx::FilePath& inputFileName, const mx::FilePath& outputFilename, 
                      unsigned int width, unsigned int height)
 {
     // Run test renders on output
     mx::FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
     if (!shaderTranslator.isEmpty())
     {
-//python d:\Work\materialx\bernard_MaterialX\build\installed\python\Scripts\translateshader.py 
-//build\bin\resources\glTF_export\Materials\Examples\StandardSurface\standard_surface_brass_tiled.mtlx final.mtlx gltf_pbr
-
-        const std::string errorFile = inputFileName.asString() + "_errors.txt";
+        const std::string errorFile = outputFilename.asString() + "_errors.txt";
         const std::string redirectString(" 2>&1");
-        const std::string target = "gltf_pbr";
+
+        bool haveSingleBakeDocSupport = haveSingleDocBake(errorFile);
 
         std::string command = "python " + shaderTranslator.asString()
             + " --width " + std::to_string(width)
             + " --height " + std::to_string(height)
+            + (haveSingleBakeDocSupport ? " --writeSingleDocument " : mx::EMPTY_STRING)
             + " " + inputFileName.asString()
             + " " + outputFilename.asString()
-            + " " + target
             + " > " + errorFile + redirectString;
 
         std::cout << "- Translated MTLX: " + outputFilename.asString() << std::endl;
@@ -124,7 +152,7 @@ TEST_CASE("Validate export", "[gltf]")
                 std::string::npos != fullPath.asString().find("distilled") ||
                 std::string::npos != fullPath.asString().find("baked"))
             {
-                std::cout << "------------ Skip file: " << fullPath.asString() << std::endl;
+                //std::cout << "------------ Skip file: " << fullPath.asString() << std::endl;
                 continue;
             }
 
@@ -141,14 +169,14 @@ TEST_CASE("Validate export", "[gltf]")
 
             // Perform shader translation in place
             const std::string distilledFileName = fileName.asString() + "_distilled.mtlx";
-            gltfMTLXLoader->translatgeShaders(doc);
+            gltfMTLXLoader->translateShaders(doc);
             std::cout << "- Wrote distilled file : " << distilledFileName << std::endl;
             mx::writeToXmlFile(doc, distilledFileName, &writeOptions);
             testedFiles.insert(distilledFileName);
 
             // Bake to a new document
             const mx::FilePath bakedFileName = fileName.asString() + "_baked.mtlx";
-            translateShader(distilledFileName, bakedFileName, 512, 512);
+            bakeDocument(distilledFileName, bakedFileName, 512, 512);
             testedFiles.insert(bakedFileName);
             if (bakedFileName.exists())
             {

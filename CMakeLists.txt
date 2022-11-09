@@ -73,7 +73,7 @@ if (MATERIALX_TEST_RENDER)
 endif()
 add_definitions(-DMTLXVIEW_TEST_RENDER=\"${MTLXVIEW_TEST_RENDER}\")
 
-set(MTLX_TRANSLATE_SHADER "${MATERIALX_ROOT}/python/Scripts/translateshader.py")
+set(MTLX_TRANSLATE_SHADER "${MATERIALX_ROOT}/python/Scripts/baketextures.py")
 add_definitions(-DMTLX_TRANSLATE_SHADER=\"${MTLX_TRANSLATE_SHADER}\")
 
 message(STATUS "----- MTLXVIEW_TEST_RENDER: ${MTLXVIEW_TEST_RENDER}")
