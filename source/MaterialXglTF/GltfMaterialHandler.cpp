@@ -95,8 +95,11 @@ void initialize_cgtlf_texture(cgltf_texture& texture, const string& name, const 
     texture.image->uri = const_cast<char*>((new string(uri))->c_str());
 }
 
-/*
-void writeColorInput(const NodePtr pbrNode, const string& inputName, cgltf_texture& textureList)
+void writeColor3Input(const NodePtr pbrNode, const string& inputName, 
+                        cgltf_texture_view& texture_view, 
+                        cgltf_float* write_value,
+                        std::vector<cgltf_texture>& textureList,
+                        std::vector<cgltf_image>& imageList, size_t& imageIndex)
 {
     string filename;
 
@@ -107,52 +110,79 @@ void writeColorInput(const NodePtr pbrNode, const string& inputName, cgltf_textu
         filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
             fileInput->getValueString() : EMPTY_STRING;
         if (filename.empty())
+        {
             imageNode = nullptr;
+        }
     }
     if (imageNode)
     {
         cgltf_texture* texture = &(textureList[imageIndex]);
-        roughness.base_color_texture.texture = texture;
+        texture_view.texture = texture;
+        // Fix this to create a valid name...
         initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
-            &(imageList[imageIndex]));
+                                 &(imageList[imageIndex]));
 
-        roughness.base_color_factor[0] = 1.0;
-        roughness.base_color_factor[1] = 1.0;
-        roughness.base_color_factor[2] = 1.0;
-        roughness.base_color_factor[3] = 1.0;
+        write_value[0] = 1.0f;
+        write_value[1] = 1.0f;
+        write_value[2] = 1.0f;
 
         imageIndex++;
-
-        // Pull off color from gltf_colorImage node
-        ValuePtr value = pbrNode->getInputValue(COLOR_SEMANTIC);
-        if (value && value->isA<Color4>())
-        {
-            Color4 color = value->asA<Color4>();
-            roughness.base_color_factor[0] = color[0];
-            roughness.base_color_factor[1] = color[1];
-            roughness.base_color_factor[2] = color[2];
-            roughness.base_color_factor[3] = color[3];
-        }
     }
     else
     {
-        ValuePtr value = pbrNode->getInputValue("base_color");
+        ValuePtr value = pbrNode->getInputValue(inputName);
         if (value)
         {
             Color3 color = value->asA<Color3>();
-            roughness.base_color_factor[0] = color[0];
-            roughness.base_color_factor[1] = color[1];
-            roughness.base_color_factor[2] = color[2];
-        }
-
-        value = pbrNode->getInputValue("alpha");
-        if (value)
-        {
-            roughness.base_color_factor[3] = value->asA<float>();
+            write_value[0] = color[0];
+            write_value[1] = color[1];
+            write_value[2] = color[2];
         }
     }
 }
-*/
+
+void writeFloatInput(const NodePtr pbrNode, const string& inputName, 
+                        cgltf_texture_view& texture_view, 
+                        float* write_value,
+                        std::vector<cgltf_texture>& textureList,
+                        std::vector<cgltf_image>& imageList, size_t& imageIndex)
+{
+    string filename;
+
+    NodePtr imageNode = pbrNode->getConnectedNode(inputName);
+    if (imageNode)
+    {
+        InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
+        filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
+            fileInput->getValueString() : EMPTY_STRING;
+        if (filename.empty())
+        {
+            imageNode = nullptr;
+        }
+    }
+    if (imageNode)
+    {
+        cgltf_texture* texture = &(textureList[imageIndex]);
+        texture_view.texture = texture;
+        // Fix this to create a valid name...
+        initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
+                                 &(imageList[imageIndex]));
+
+        *write_value = 1.0f;
+        std::cout << ">>> Write input: " << inputName << " texture: " << filename << std::endl;
+
+        imageIndex++;
+    }
+    else
+    {
+        ValuePtr value = pbrNode->getInputValue(inputName);
+        if (value)
+        {
+            *write_value = value->asA<float>();
+            std::cout << ">>> Write input: " << inputName << " value: " << value->getValueString() << std::endl;
+        }
+    }
+}
 
 void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, StringSet& materialCPVList, void* cnodeIn, FilePath& path, unsigned int nodeCount,
                           unsigned int meshCount)
@@ -399,13 +429,13 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
 	    cgltf_pbr_specular_glossiness pbr_specular_glossiness;
 	    cgltf_clearcoat clearcoat; // todo
 	    cgltf_ior ior; // todo
-	    cgltf_specular specular; // todo
+	    cgltf_specular specular; // DONE
 	    cgltf_sheen sheen; // DONE
 	    cgltf_transmission transmission; // todo
 	    cgltf_volume volume; // todo
-	    cgltf_emissive_strength emissive_strength; // done
-	    cgltf_iridescence iridescence; // todo
-	    cgltf_texture_view normal_texture; // done
+	    cgltf_emissive_strength emissive_strength; // DONE
+	    cgltf_iridescence iridescence; // PARTIAL
+	    cgltf_texture_view normal_texture; // DONE
 	    cgltf_texture_view occlusion_texture;
 	    cgltf_texture_view emissive_texture;
 	    cgltf_float emissive_factor[3];
@@ -424,8 +454,10 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
 
     // Set of image nodes.
     // TODO: Fix to be dynamic
-    cgltf_texture textureList[1024];
-    cgltf_image imageList[1024];
+    std::vector<cgltf_texture> textureList;
+    textureList.reserve(64);
+    std::vector<cgltf_image> imageList;
+    imageList.reserve(64);
 
     size_t material_idx = 0;
     size_t imageIndex = 0;
@@ -686,117 +718,115 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
             imageIndex++;
         }
 
-        // Handle sheen
+        // Handle transmission
+        cgltf_transmission& transmission = material->transmission;
+        writeFloatInput(pbrNode, "transmission",
+            transmission.transmission_texture, &(transmission.transmission_factor),
+            textureList, imageList, imageIndex);
+        material->has_transmission = true;
+
+        // Handle specular color
+        cgltf_specular& specular = material->specular;
+        writeColor3Input(pbrNode, "specular_color",
+            specular.specular_color_texture, &(specular.specular_color_factor[0]),
+            textureList, imageList, imageIndex);
+        // - Handle specular
+        writeFloatInput(pbrNode, "specular",
+            specular.specular_texture, &(specular.specular_factor),
+            textureList, imageList, imageIndex);
+        material->has_specular = true;
+
+        // Handle ior
+        value = pbrNode->getInputValue("ior");
+        if (value)
+        {
+            material->ior.ior = value->asA<float>();
+            material->has_ior = true;
+        }
+
+        // Handle alphA mode, cutoff
+        cgltf_alpha_mode& alpha_mode = material->alpha_mode;
+        value = pbrNode->getInputValue("alpha_mode");
+        if (value)
+        {
+            alpha_mode = static_cast<cgltf_alpha_mode>(value->asA<int>());
+        }
+        value = pbrNode->getInputValue("alpha_cutoff");
+        if (value)
+        {
+            material->alpha_cutoff = value->asA<float>();
+        }
+
+        // Handle iridescence (partial)
+        cgltf_iridescence& iridescence = material->iridescence;
+        writeFloatInput(pbrNode, "iridescence",
+            iridescence.iridescence_texture, &(iridescence.iridescence_factor),
+            textureList, imageList, imageIndex);
+        material->has_iridescence = true;
+
+        // Handle sheen color
         cgltf_sheen& sheen = material->sheen;
+        writeColor3Input(pbrNode, "sheen_color",
+            sheen.sheen_color_texture, &(sheen.sheen_color_factor[0]),
+            textureList, imageList, imageIndex);
+        // - Handle sheen roughness
+        writeFloatInput(pbrNode, "sheen_roughness",
+            sheen.sheen_roughness_texture, &(sheen.sheen_roughness_factor),
+            textureList, imageList, imageIndex);
+        material->has_sheen = true;
+
+        // Handle clearcloat
+        cgltf_clearcoat& clearcoat = material->clearcoat;
+        writeFloatInput(pbrNode, "clearcoat",
+            clearcoat.clearcoat_texture, &(clearcoat.clearcoat_factor),
+            textureList, imageList, imageIndex);
+        writeFloatInput(pbrNode, "clearcoat_roughness",
+            clearcoat.clearcoat_roughness_texture, &(clearcoat.clearcoat_roughness_factor),
+            textureList, imageList, imageIndex);
+        // Handle clearcoat normal
         filename = EMPTY_STRING;
-        imageNode = pbrNode->getConnectedNode("sheen_color");
-        initialize_cgltf_texture_view(sheen.sheen_color_texture);
+        imageNode = pbrNode->getConnectedNode("clearcoat_normal");
+        initialize_cgltf_texture_view(material->normal_texture);
         if (imageNode)
         {
-            InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
-            filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-                fileInput->getValueString() : EMPTY_STRING;
-            if (filename.empty())
-                imageNode = nullptr;
+            // Read past normalmap node
+            if (imageNode->getCategory() == "normalmap")
+            {
+                imageNode = imageNode->getConnectedNode(IN_STRING);
+            }
+            if (imageNode)
+            {
+                InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
+                filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
+                    fileInput->getValueString() : EMPTY_STRING;
+                if (filename.empty())
+                    imageNode = nullptr;
+            }
         }
         if (imageNode)
         {
             cgltf_texture* texture = &(textureList[imageIndex]);
-            sheen.sheen_color_texture.texture = texture;
+            clearcoat.clearcoat_normal_texture.texture = texture;
             initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                 &(imageList[imageIndex]));            
 
-            sheen.sheen_color_factor[0] = 1.0;
-            sheen.sheen_color_factor[1] = 1.0;
-            sheen.sheen_color_factor[2] = 1.0;
-
             imageIndex++;
         }
-        else
-        {
-            value = pbrNode->getInputValue("sheen_color");
-            if (value)
-            {
-                Color3 color = value->asA<Color3>();
-                sheen.sheen_color_factor[0] = color[0];
-                sheen.sheen_color_factor[1] = color[1];
-                sheen.sheen_color_factor[2] = color[2];
-            }
-        }        
-
-        filename = EMPTY_STRING;
-        imageNode = pbrNode->getConnectedNode("sheen_roughness");
-        initialize_cgltf_texture_view(sheen.sheen_roughness_texture);
-        if (imageNode)
-        {
-            InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
-            filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-                fileInput->getValueString() : EMPTY_STRING;
-            if (filename.empty())
-                imageNode = nullptr;
-        }
-        if (imageNode)
-        {
-            cgltf_texture* texture = &(textureList[imageIndex]);
-            sheen.sheen_roughness_texture.texture = texture;
-            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
-                &(imageList[imageIndex]));            
-
-            sheen.sheen_roughness_factor = 1.0;
-
-            imageIndex++;
-        }
-        else
-        {
-            value = pbrNode->getInputValue("sheen_roughness");
-            if (value)
-            {
-                sheen.sheen_roughness_factor = value->asA<float>();
-            }
-        }
+        material->has_clearcoat = true;
 
         // Handle emissive
-        filename = EMPTY_STRING;
-        imageNode = pbrNode->getConnectedNode("emissive");
-        initialize_cgltf_texture_view(material->emissive_texture);
-        if (imageNode)
-        {
-            InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
-            filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-                fileInput->getValueString() : EMPTY_STRING;
-            if (filename.empty())
-                imageNode = nullptr;
-        }
-        if (imageNode)
-        {
-            cgltf_texture* texture = &(textureList[imageIndex]);
-            material->emissive_texture.texture = texture;
-            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
-                &(imageList[imageIndex]));            
-
-            material->emissive_factor[0] = 1.0;
-            material->emissive_factor[1] = 1.0;
-            material->emissive_factor[2] = 1.0;
-
-            imageIndex++;
-        }
-        else
-        {
-            value = pbrNode->getInputValue("emissive");
-            if (value)
-            {
-                Color3 color = value->asA<Color3>();
-                material->emissive_factor[0] = color[0];
-                material->emissive_factor[1] = color[1];
-                material->emissive_factor[2] = color[2];
-            }
-        }        
-        
+        writeColor3Input(pbrNode, "emissive",
+            material->emissive_texture, &(material->emissive_factor[0]),
+            textureList, imageList, imageIndex);
+        // - Handle emissive strength
         value = pbrNode->getInputValue("emissive_strength");
         if (value)
         {
             material->emissive_strength.emissive_strength = value->asA<float>();
+            material->has_emissive_strength = true;
         }
+
+        // TODO: Handle thickness, attenuation_distance / color
 
         material_idx++;
     }
@@ -1466,8 +1496,8 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
         }
 
         // Only 1.35.6 and newer has iridescence
-        std::tuple<int, int, int> version = getVersionIntegers();
-        if (version >= std::tuple<int,int,int>(1, 35, 6))
+        //std::tuple<int, int, int> version = getVersionIntegers();
+        //if (version >= std::tuple<int,int,int>(1, 35, 6))
         {
             // Parse iridescence
             // typedef struct cgltf_iridescence
