@@ -74,7 +74,7 @@ jobs:
           echo "CXX=clang++" >> $GITHUB_ENV
         fi        
 
-    - #name: Download MaterialX
+    #- name: Download MaterialX
       #run: |
       #  gh release download v1.38.6 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
       #env:
@@ -89,7 +89,7 @@ jobs:
       #  target: "MaterialX_Windows_VS2019_x64_Python38.zip"
       #  token: ${{ secrets.GITHUB_TOKEN }}        
     
-    - #name: Extract MaterialX
+    #- name: Extract MaterialX
       #run: |
       #  7z x -o${{github.workspace}}/MaterialX_Install ${{ matrix.install_file }}
       #  ls -l ${{github.workspace}}
