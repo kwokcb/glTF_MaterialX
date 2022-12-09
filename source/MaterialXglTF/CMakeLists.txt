@@ -43,11 +43,14 @@ set_target_properties(
 
 target_link_libraries(
     MaterialXglTF
-    ${MATERIALX_LIBRARIES})
-
-set(COMMON_LIBRARIES
-    ${MATERIALX_LIBRARIES}
+    MaterialXCore
+    MaterialXGenShader
+    MaterialXRender
     ${CMAKE_DL_LIBS})
+
+#set(COMMON_LIBRARIES
+#    ${MATERIALX_LIBRARIES}
+#    ${CMAKE_DL_LIBS})
 
 #if(MSVC)
 #    target_link_libraries(
@@ -70,13 +73,18 @@ set(COMMON_LIBRARIES
 #        ${X11_Xt_LIB})
 #endif()
 
+message(STATUS "------BIN: " ${CMAKE_CURRENT_BINARY_DIR}/../)
+
 target_include_directories(MaterialXglTF
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../../external/MaterialX/source/>
+        $<INSTALL_INTERFACE:${MATERIALX_INSTALL_INCLUDE_PATH}>
         $<INSTALL_INTERFACE:${GLTFMTLX_INSTALL_INCLUDE_PATH}>
     PRIVATE
         ${CMAKE_BINARY_DIR},
-        ${MATERIALX_INCLUDE_DIRS})
+        ${MATERIALX_INCLUDE_DIRS}
+        ${EXTERNAL_INCLUDE_DIRS})
 
 install(TARGETS MaterialXglTF
     EXPORT MaterialX

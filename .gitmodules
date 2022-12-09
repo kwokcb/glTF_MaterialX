@@ -1,0 +1,3 @@
+[submodule "MaterialX"]
+	path = MaterialX
+	url = https://github.com/kwokcb/MaterialX/

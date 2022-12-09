@@ -98,6 +98,7 @@ void initialize_cgtlf_texture(cgltf_texture& texture, const string& name, const 
 void writeColor3Input(const NodePtr pbrNode, const string& inputName, 
                         cgltf_texture_view& texture_view, 
                         cgltf_float* write_value,
+                        cgltf_bool& hasFlag,
                         std::vector<cgltf_texture>& textureList,
                         std::vector<cgltf_image>& imageList, size_t& imageIndex)
 {
@@ -127,6 +128,7 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
         write_value[2] = 1.0f;
 
         imageIndex++;
+        hasFlag = true;
     }
     else
     {
@@ -137,6 +139,8 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
             write_value[0] = color[0];
             write_value[1] = color[1];
             write_value[2] = color[2];
+
+            hasFlag = true;
         }
     }
 }
@@ -144,6 +148,7 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
 void writeFloatInput(const NodePtr pbrNode, const string& inputName, 
                         cgltf_texture_view& texture_view, 
                         float* write_value,
+                        cgltf_bool& hasFlag,
                         std::vector<cgltf_texture>& textureList,
                         std::vector<cgltf_image>& imageList, size_t& imageIndex)
 {
@@ -172,6 +177,7 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
         std::cout << ">>> Write input: " << inputName << " texture: " << filename << std::endl;
 
         imageIndex++;
+        hasFlag = true;
     }
     else
     {
@@ -180,6 +186,7 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
         {
             *write_value = value->asA<float>();
             std::cout << ">>> Write input: " << inputName << " value: " << value->getValueString() << std::endl;
+            hasFlag = true;
         }
     }
 }
@@ -722,19 +729,17 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
         cgltf_transmission& transmission = material->transmission;
         writeFloatInput(pbrNode, "transmission",
             transmission.transmission_texture, &(transmission.transmission_factor),
-            textureList, imageList, imageIndex);
-        material->has_transmission = true;
+            material->has_transmission, textureList, imageList, imageIndex);
 
         // Handle specular color
         cgltf_specular& specular = material->specular;
         writeColor3Input(pbrNode, "specular_color",
-            specular.specular_color_texture, &(specular.specular_color_factor[0]),
+            specular.specular_color_texture, &(specular.specular_color_factor[0]), material->has_specular,
             textureList, imageList, imageIndex);
         // - Handle specular
         writeFloatInput(pbrNode, "specular",
-            specular.specular_texture, &(specular.specular_factor),
+            specular.specular_texture, &(specular.specular_factor), material->has_specular, 
             textureList, imageList, imageIndex);
-        material->has_specular = true;
 
         // Handle ior
         value = pbrNode->getInputValue("ior");
@@ -761,28 +766,27 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
         cgltf_iridescence& iridescence = material->iridescence;
         writeFloatInput(pbrNode, "iridescence",
             iridescence.iridescence_texture, &(iridescence.iridescence_factor),
-            textureList, imageList, imageIndex);
-        material->has_iridescence = true;
+            material->has_iridescence, textureList, imageList, imageIndex);
 
         // Handle sheen color
         cgltf_sheen& sheen = material->sheen;
         writeColor3Input(pbrNode, "sheen_color",
             sheen.sheen_color_texture, &(sheen.sheen_color_factor[0]),
-            textureList, imageList, imageIndex);
+            material->has_sheen, textureList, imageList, imageIndex);
         // - Handle sheen roughness
         writeFloatInput(pbrNode, "sheen_roughness",
             sheen.sheen_roughness_texture, &(sheen.sheen_roughness_factor),
-            textureList, imageList, imageIndex);
-        material->has_sheen = true;
+            material->has_sheen, textureList, imageList, imageIndex);
 
         // Handle clearcloat
         cgltf_clearcoat& clearcoat = material->clearcoat;
         writeFloatInput(pbrNode, "clearcoat",
             clearcoat.clearcoat_texture, &(clearcoat.clearcoat_factor),
-            textureList, imageList, imageIndex);
+            material->has_clearcoat, textureList, imageList, imageIndex);
         writeFloatInput(pbrNode, "clearcoat_roughness",
             clearcoat.clearcoat_roughness_texture, &(clearcoat.clearcoat_roughness_factor),
-            textureList, imageList, imageIndex);
+            material->has_clearcoat, textureList, imageList, imageIndex);
+
         // Handle clearcoat normal
         filename = EMPTY_STRING;
         imageNode = pbrNode->getConnectedNode("clearcoat_normal");
@@ -811,13 +815,14 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
                 &(imageList[imageIndex]));            
 
             imageIndex++;
+            material->has_clearcoat = true;
         }
-        material->has_clearcoat = true;
 
         // Handle emissive
+        cgltf_bool dummy = false;
         writeColor3Input(pbrNode, "emissive",
             material->emissive_texture, &(material->emissive_factor[0]),
-            textureList, imageList, imageIndex);
+            dummy, textureList, imageList, imageIndex);
         // - Handle emissive strength
         value = pbrNode->getInputValue("emissive_strength");
         if (value)

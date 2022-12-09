@@ -30,9 +30,9 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../resources"
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/glTF2Mtlx.pdb"
         DESTINATION "bin" OPTIONAL)
 
-add_custom_command(TARGET glTF2Mtlx
-	COMMAND ${CMAKE_COMMAND} -E copy_directory
-	${CMAKE_CURRENT_SOURCE_DIR}/../../resources ${CMAKE_BINARY_DIR}/bin/resources)
-add_custom_command(TARGET glTF2Mtlx
-	COMMAND ${CMAKE_COMMAND} -E copy_directory
-	${MATERIALX_DEFINITIONS_DIR} ${CMAKE_BINARY_DIR}/bin/libraries)
+#add_custom_command(TARGET glTF2Mtlx
+#	COMMAND ${CMAKE_COMMAND} -E copy_directory
+#	${CMAKE_CURRENT_SOURCE_DIR}/../../resources ${CMAKE_BINARY_DIR}/bin/resources)
+#add_custom_command(TARGET glTF2Mtlx
+#	COMMAND ${CMAKE_COMMAND} -E copy_directory
+#	${MATERIALX_DEFINITIONS_DIR} ${CMAKE_BINARY_DIR}/bin/libraries)
