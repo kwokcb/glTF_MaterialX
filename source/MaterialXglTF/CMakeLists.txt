@@ -48,33 +48,6 @@ target_link_libraries(
     MaterialXRender
     ${CMAKE_DL_LIBS})
 
-#set(COMMON_LIBRARIES
-#    ${MATERIALX_LIBRARIES}
-#    ${CMAKE_DL_LIBS})
-
-#if(MSVC)
-#    target_link_libraries(
-#        MaterialXglTF
-#        ${COMMON_LIBRARIES}
-#        Opengl32)
-#elseif(APPLE)
-#    target_link_libraries(
-#        MaterialXglTF
-#        ${COMMON_LIBRARIES}
-#        ${OPENGL_LIBRARIES}
-#        "-framework Foundation"
-#        "-framework Cocoa")
-#elseif(UNIX)
-#    target_link_libraries(
-#        MaterialXglTF
-#        ${COMMON_LIBRARIES}
-#        ${OPENGL_LIBRARIES}
-#        ${X11_LIBRARIES}
-#        ${X11_Xt_LIB})
-#endif()
-
-message(STATUS "------BIN: " ${CMAKE_CURRENT_BINARY_DIR}/../)
-
 target_include_directories(MaterialXglTF
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>

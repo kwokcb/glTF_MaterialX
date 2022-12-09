@@ -5,8 +5,7 @@ add_executable(glTF2Mtlx ${materialx_source} ${materialx_headers})
 
 target_link_libraries(
     glTF2Mtlx
-    MaterialXglTF
-    ${MATERIALX_LIBRARIES})
+    MaterialXglTF)
 
 target_include_directories(glTF2Mtlx
     PUBLIC

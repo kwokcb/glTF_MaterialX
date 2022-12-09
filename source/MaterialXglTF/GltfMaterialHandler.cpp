@@ -6,10 +6,6 @@
 #include <MaterialXFormat/Util.h>
 #include <MaterialXGenShader/ShaderTranslator.h>
 #include <MaterialXglTF/GltfMaterialHandler.h>
-//#include <MaterialXRender/Image.h>
-//#include <MaterialXRender/ImageHandler.h>
-//#include <MaterialXRender/StbImageLoader.h>
-//#include <MaterialXRenderGlsl/TextureBaker.h>
 
 #if defined(__GNUC__)
     #pragma GCC diagnostic push
@@ -174,7 +170,7 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
                                  &(imageList[imageIndex]));
 
         *write_value = 1.0f;
-        std::cout << ">>> Write input: " << inputName << " texture: " << filename << std::endl;
+        //std::cout << ">>> Write input: " << inputName << " texture: " << filename << std::endl;
 
         imageIndex++;
         hasFlag = true;
@@ -185,7 +181,7 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
         if (value)
         {
             *write_value = value->asA<float>();
-            std::cout << ">>> Write input: " << inputName << " value: " << value->getValueString() << std::endl;
+            //std::cout << ">>> Write input: " << inputName << " value: " << value->getValueString() << std::endl;
             hasFlag = true;
         }
     }

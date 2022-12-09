@@ -2,6 +2,7 @@
 #include <glTFMtlxTest/Catch/catch.hpp>
 
 #include <MaterialXglTF/GltfMaterialHandler.h>
+#include <MaterialXglTF/GltfMaterialUtill.h>
 #include <MaterialXFormat/Environ.h>
 #include <MaterialXFormat/Util.h>
 #include <MaterialXFormat/XmlIo.h>
@@ -12,98 +13,6 @@
 #include <unordered_set>
 
 namespace mx = MaterialX;
-
-mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definitions, 
-                          bool createAssignments, bool fullDefinition)
-{
-    mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
-    gltfMTLXLoader->setDefinitions(definitions);
-    gltfMTLXLoader->setGenerateAssignments(createAssignments);
-    gltfMTLXLoader->setGenerateFullDefinitions(fullDefinition);
-    bool loadedMaterial = gltfMTLXLoader->load(filename);
-    mx::DocumentPtr materials = loadedMaterial ? gltfMTLXLoader->getMaterials() : nullptr;
-    return materials;
-}
-
-// MaterialX to cgTF conversion
-bool mtlx2glTF(mx::MaterialHandlerPtr gltfMTLXLoader, const mx::FilePath& filename, mx::DocumentPtr materials)
-{    
-    gltfMTLXLoader->setMaterials(materials);
-    return gltfMTLXLoader->save(filename);
-}
-
-bool haveSingleDocBake(const mx::FilePath& errorFile)
-{
-    mx::FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
-    if (shaderTranslator.isEmpty())
-    {
-        return false;
-    }
-
-    const std::string redirectString(" 2>&1");
-    std::string testcommand = "python " + shaderTranslator.asString()
-        + " --help"
-        +" > " + errorFile.asString() + redirectString;
-
-    int returnValue = std::system(testcommand.c_str());
-    if (returnValue != 0)
-    {
-        return false;
-    }
-
-    std::ifstream errorStream(errorFile.asString());
-    std::string result;
-    result.assign(std::istreambuf_iterator<char>(errorStream),
-        std::istreambuf_iterator<char>());
-    if (std::string::npos != result.find("writeSingleDocument"))
-    {
-        return true;
-    }
-    return false;
-}
-
-bool bakeDocument(const mx::FilePath& inputFileName, const mx::FilePath& outputFilename, 
-                     unsigned int width, unsigned int height, std::ostream& logFile)
-{
-    // Run test renders on output
-    mx::FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
-    if (!shaderTranslator.isEmpty())
-    {
-        const std::string errorFile = outputFilename.asString() + "_errors.txt";
-        const std::string redirectString(" 2>&1");
-
-        bool haveSingleBakeDocSupport = haveSingleDocBake(errorFile);
-
-        std::string command = "python " + shaderTranslator.asString()
-            + " --width " + std::to_string(width)
-            + " --height " + std::to_string(height)
-            + (haveSingleBakeDocSupport ? " --writeSingleDocument " : mx::EMPTY_STRING)
-            + " " + inputFileName.asString()
-            + " " + outputFilename.asString()
-            + " > " + errorFile + redirectString;
-
-        logFile << "- Translated MTLX: " + outputFilename.asString() << std::endl;
-        int returnValue = std::system(command.c_str());
-
-        std::ifstream errorStream(errorFile);
-        std::string result;
-        result.assign(std::istreambuf_iterator<char>(errorStream),
-            std::istreambuf_iterator<char>());
-
-        bool renderError = returnValue != 0 && !result.empty();
-        if (renderError)
-        {
-            mx::StringVec errors;
-            logFile << "- Errors: " << std::endl;
-            logFile << "  - Command string : " + command << std::endl;
-            logFile << "  - Command return code: " + std::to_string(returnValue) << std::endl;
-            logFile << "  - Log: " << result << std::endl;
-        }
-        return true;
-        //CHECK(!renderError);
-    }
-    return false;
-}
 
 // MaterialX to glTF to MaterialX tests
 TEST_CASE("Validate export", "[gltf]")
@@ -160,6 +69,7 @@ TEST_CASE("Validate export", "[gltf]")
             }
 
             logFile << "* Convert from MaterialX to gltF: " << fullPath.asString() << std::endl;
+            std::cerr << "* Convert from MaterialX to gltF: " << fullPath.asString() << std::endl;
 
             mx::DocumentPtr doc = mx::createDocument();
             doc->importLibrary(libraries);
@@ -181,7 +91,7 @@ TEST_CASE("Validate export", "[gltf]")
 
             // Bake to a new document
             const mx::FilePath bakedFileName = fileName.asString() + "_baked.mtlx";
-            bakeDocument(distilledFileName, bakedFileName, 512, 512, logFile);
+            mx::GltfMaterialUtil::bakeDocument(distilledFileName, bakedFileName, 512, 512, logFile);
             testedFiles.insert(bakedFileName);
             if (bakedFileName.exists())
             {
@@ -192,7 +102,7 @@ TEST_CASE("Validate export", "[gltf]")
                 CHECK(doc->validate());
 
                 const std::string outputFileName = fileName.asString() + "_fromtlx.gltf";
-                bool convertedToGLTF = mtlx2glTF(gltfMTLXLoader, outputFileName, bakedDoc);
+                bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName, bakedDoc);
                 if (convertedToGLTF)
                 {
                     logFile << "  * Converted to gltf: " << outputFileName << std::endl;
@@ -291,7 +201,10 @@ TEST_CASE("Validate import", "[gltf]")
                 continue;
             }
 
-            mx::DocumentPtr materials = glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition);
+            std::cerr << "* Convert from glTF to MTLX: " << fullPath.asString() << std::endl;
+            logFile << "* Convert from glTF to MTLX: " << fullPath.asString() << std::endl;
+
+            mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition);
             if (materials)
             {
                 std::vector<mx::NodePtr> nodes = materials->getMaterialNodes();
@@ -308,56 +221,23 @@ TEST_CASE("Validate import", "[gltf]")
                     fileName = dir / fileName;
 
                     const std::string outputFileName = fileName.asString() + "_fromgltf.mtlx";
-                    logFile << "- Wrote " << std::to_string(nodes.size()) << " materials to file : " << outputFileName << std::endl;
+                    logFile << "  * Wrote " << std::to_string(nodes.size()) << " materials to file : " << outputFileName << std::endl;
                     mx::writeToXmlFile(materials, outputFileName, &writeOptions);
 
                     mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
                     const std::string outputFileName2 = fileName.asString() + "_fromtlx.gltf";
-                    bool convertedToGLTF = mtlx2glTF(gltfMTLXLoader, outputFileName2, materials);
+                    bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName2, materials);
                     CHECK(convertedToGLTF);
                     if (convertedToGLTF)
                     {
                         testedFiles.insert(outputFileName2);
-                        logFile << "- Wrote MTLX materials to glTF file : " << outputFileName2 << std::endl;
+                        logFile << "  * Wrote MTLX materials to glTF file : " << outputFileName2 << std::endl;
                     }
 
-                    // Run test renders on output
-                    mx::FilePath materialXViewInstall(MTLXVIEW_TEST_RENDER);
-                    if (materialXViewInstall.isEmpty())
+                    bool runRender = true;
+                    if (runRender)
                     {
-                        materialXViewInstall = mx::getEnviron("MTLXVIEW_TEST_RENDER");
-                    }
-                    if (!materialXViewInstall.isEmpty())
-                    {
-                        const std::string imageFileName = fileName.asString() + ".png";
-                        const std::string errorFile = fileName.asString() + "_errors.txt";
-                        const std::string redirectString(" 2>&1");
-
-                        std::string command = materialXViewInstall.asString()
-                            + " --mesh " + fullPath.asString()
-                            + " --material " + outputFileName
-                            + " --screenWidth 512 --screenHeight 512 "
-                            + " --captureFilename " + imageFileName
-                            + " --envSampleCount 4"
-                            + " > " + errorFile + redirectString;
-
-                        logFile << "- Render image: " + imageFileName << std::endl;
-                        int returnValue = std::system(command.c_str());
-
-                        std::ifstream errorStream(errorFile);
-                        std::string result;
-                        result.assign(std::istreambuf_iterator<char>(errorStream),
-                            std::istreambuf_iterator<char>());
-
-                        bool renderError = returnValue != 0 && !result.empty();
-                        if (renderError)
-                        {
-                            mx::StringVec errors;
-                            logFile << "- Errors: " << std::endl;
-                            logFile << "  - Command string : " + command << std::endl;
-                            logFile << "  - Command return code: " + std::to_string(returnValue) << std::endl;
-                            logFile << "  - Log: " << result << std::endl;
-                        }
+                        bool renderError = mx::GltfMaterialUtil::renderCheck(fileName, fullPath, outputFileName, logFile);
                         CHECK(!renderError);
                     }
                 }
