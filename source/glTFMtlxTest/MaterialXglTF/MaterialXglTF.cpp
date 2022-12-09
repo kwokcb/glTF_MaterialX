@@ -106,6 +106,14 @@ TEST_CASE("Validate export", "[gltf]")
                 if (convertedToGLTF)
                 {
                     logFile << "  * Converted to gltf: " << outputFileName << std::endl;
+
+                    mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(outputFileName, libraries, true, false);
+                    if (materials)
+                    {
+                        logFile << "  * RE-converted back to MTLX: " << (outputFileName + "_reimmport.mtlx") << std::endl;
+                        std::cerr << "  * RE-converted back to MTLX: " << (outputFileName + "_reimmport.mtlx") << std::endl;
+                        mx::writeToXmlFile(materials, outputFileName + "_reimmport.mtlx");
+                    }
                 }
                 else
                 {

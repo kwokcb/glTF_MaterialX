@@ -88,7 +88,8 @@ void initialize_cgtlf_texture(cgltf_texture& texture, const string& name, const 
     texture.image->mime_type = nullptr;
     texture.image->name = const_cast<char*>((new string(name))->c_str());
     texture.name = texture.image->name;
-    texture.image->uri = const_cast<char*>((new string(uri))->c_str());
+    FilePath uriPath = uri;
+    texture.image->uri = const_cast<char*>((new string(uriPath.asString(FilePath::FormatPosix)))->c_str());
 }
 
 void writeColor3Input(const NodePtr pbrNode, const string& inputName, 
@@ -849,7 +850,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
 
 bool GltfMaterialHandler::load(const FilePath& filePath)
 {
-    const std::string input_filename = filePath.asString();
+    const std::string input_filename = filePath.asString(FilePath::FormatPosix);
     const std::string ext = stringToLower(filePath.getExtension());
     const std::string BINARY_EXTENSION = "glb";
     const std::string ASCII_EXTENSION = "gltf";
