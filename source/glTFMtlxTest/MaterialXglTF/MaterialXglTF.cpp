@@ -322,15 +322,18 @@ TEST_CASE("Validate import", "[gltf]")
                     }
 
                     // Run test renders on output
-                    mx::FilePath materialXInstallRoot(MTLXVIEW_TEST_RENDER);
-                    if (!materialXInstallRoot.isEmpty())
+                    mx::FilePath materialXViewInstall(MTLXVIEW_TEST_RENDER);
+                    if (materialXViewInstall.isEmpty())
                     {
-
+                        materialXViewInstall = mx::getEnviron("MTLXVIEW_TEST_RENDER");
+                    }
+                    if (!materialXViewInstall.isEmpty())
+                    {
                         const std::string imageFileName = fileName.asString() + ".png";
                         const std::string errorFile = fileName.asString() + "_errors.txt";
                         const std::string redirectString(" 2>&1");
 
-                        std::string command = materialXInstallRoot.asString()
+                        std::string command = materialXViewInstall.asString()
                             + " --mesh " + fullPath.asString()
                             + " --material " + outputFileName
                             + " --screenWidth 512 --screenHeight 512 "
