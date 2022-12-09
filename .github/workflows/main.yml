@@ -74,11 +74,11 @@ jobs:
           echo "CXX=clang++" >> $GITHUB_ENV
         fi        
 
-    - name: Download MaterialX
-      run: |
-        gh release download v1.38.6 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - #name: Download MaterialX
+      #run: |
+      #  gh release download v1.38.6 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
+      #env:
+      #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # This action is currently only support on Linux, so use gh CLI instead
       #uses: robinraju/release-downloader@v1.3
@@ -89,16 +89,16 @@ jobs:
       #  target: "MaterialX_Windows_VS2019_x64_Python38.zip"
       #  token: ${{ secrets.GITHUB_TOKEN }}        
     
-    - name: Extract MaterialX
-      run: |
-        7z x -o${{github.workspace}}/MaterialX_Install ${{ matrix.install_file }}
-        ls -l ${{github.workspace}}
+    - #name: Extract MaterialX
+      #run: |
+      #  7z x -o${{github.workspace}}/MaterialX_Install ${{ matrix.install_file }}
+      #  ls -l ${{github.workspace}}
 
     - name: Configure CMake
       run: |
         mkdir build
         cd build
-        cmake -DMATERIALX_ROOT="${{ github.workspace }}/MaterialX_Install" ${{matrix.cmake_config}} ..
+        cmake -DMATERIALX_TEST_RENDER=OFF ${{matrix.cmake_config}} ..
 
     - name: CMake Build
       run: cmake --build . --target install --config Release
@@ -106,7 +106,7 @@ jobs:
 
     - name: CMake Test
       if: matrix.run_test == 'ON'
-      run: ctest -VV --output-on-failure --build-config Release -j1
+      run: ctest -VV --output-on-failure --build-config Release -j1 -R glTF
       working-directory: build
 
     - name: Upload Installed Package
