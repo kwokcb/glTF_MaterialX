@@ -31,6 +31,7 @@ jobs:
           compiler_version: "13.3"
           python: 3.9
           install_file: MaterialX_MacOS_Xcode_13_Python39.zip
+          run_test: ON
 
         - name: Linux_GCC_11_Python39
           os: ubuntu-20.04
@@ -38,6 +39,7 @@ jobs:
           compiler_version: "11"
           python: 3.9
           install_file: MaterialX_Linux_GCC_11_Python39.zip
+          run_test: ON
 
     steps:
     - name: Sync Repository
@@ -73,27 +75,7 @@ jobs:
           echo "CC=clang" >> $GITHUB_ENV
           echo "CXX=clang++" >> $GITHUB_ENV
         fi        
-
-    #- name: Download MaterialX
-      #run: |
-      #  gh release download v1.38.6 -R "AcademySoftwareFoundation/MaterialX" --pattern ${{ matrix.install_file }}
-      #env:
-      #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # This action is currently only support on Linux, so use gh CLI instead
-      #uses: robinraju/release-downloader@v1.3
-      #with:
-      #  repo: ""
-      #  version: "v1.38.4"
-      #  file: "MaterialX_Windows_VS2019_x64_Python38.zip"
-      #  target: "MaterialX_Windows_VS2019_x64_Python38.zip"
-      #  token: ${{ secrets.GITHUB_TOKEN }}        
     
-    #- name: Extract MaterialX
-      #run: |
-      #  7z x -o${{github.workspace}}/MaterialX_Install ${{ matrix.install_file }}
-      #  ls -l ${{github.workspace}}
-
     - name: Configure CMake
       run: |
         mkdir build
