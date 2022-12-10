@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <nodegraph name="NG_wood1" fileprefix="../../../Images/">
+    <tiledimage name="image_color" type="color3">
+      <input name="file" type="filename" value="wood_color.jpg" colorspace="srgb_texture" />
+      <input name="uvtiling" type="vector2" value="4.0, 4.0" />
+    </tiledimage>
+    <tiledimage name="image_roughness" type="float">
+      <input name="file" type="filename" value="wood_roughness.jpg" />
+      <input name="uvtiling" type="vector2" value="4.0, 4.0" />
+    </tiledimage>
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base" type="float" value="1" />
+      <input name="base_color" type="color3" nodename="image_color" />
+      <input name="specular_roughness" type="float" nodename="image_roughness" />
+      <input name="coat" type="float" value="0.1" />
+      <input name="coat_roughness" type="float" value="0.2" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="SR_wood1" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_wood1" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_wood1" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_wood1" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_wood1" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_wood1" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_wood1" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_wood1" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_wood1" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_wood1" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_wood1" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_wood1" />
+  </gltf_pbr>
+  <surfacematerial name="Tiled_Wood" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SR_wood1" />
+  </surfacematerial>
+</materialx>

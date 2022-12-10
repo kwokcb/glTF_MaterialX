@@ -1,0 +1,326 @@
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <nodegraph name="NG_baked" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_B_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_B_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_B_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Bishop_B_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Bishop_B_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Bishop_B_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked2" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_W_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_W_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_W_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Bishop_W_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked2" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked2" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked2" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Bishop_W_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Bishop_W_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked3" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_B_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_B_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_B_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Castle_B_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked3" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked3" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked3" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Castle_B_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Castle_B_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked4" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_W_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_W_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_W_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Castle_W_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked4" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked4" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked4" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Castle_W_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Castle_W_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked5" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Chessboard_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Chessboard_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Chessboard_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Chessboard_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked5" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked5" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked5" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Chessboard_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Chessboard_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked6" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_B_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_B_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_B_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="King_B_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked6" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked6" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked6" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_King_B_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="King_B_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked7" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_W_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_W_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_W_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="King_W_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked7" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked7" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked7" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_King_W_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="King_W_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked8" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Knight_B_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Knight_B_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Knight_B_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked8" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked8" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Knight_B_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Knight_B_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked9" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Knight_W_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Knight_W_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Knight_W_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked9" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked9" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Knight_W_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Knight_W_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked10" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_B_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_B_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_B_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Pawn_Body_B_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked10" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked10" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked10" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Pawn_Body_B_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Pawn_Body_B_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked11" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_W_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_W_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_W_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Pawn_Body_W_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked11" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked11" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked11" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Pawn_Body_W_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Pawn_Body_W_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked12" colorspace="srgb_texture">
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Top_B_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Pawn_Top_B_baked" type="surfaceshader">
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked12" />
+    <input name="transmission" type="float" value="1" />
+    <input name="attenuation_color" type="color3" value="0.584314, 0.737255, 0.701961" colorspace="srgb_texture" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Pawn_Top_B_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Pawn_Top_B_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked13" colorspace="srgb_texture">
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Top_W_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Pawn_Top_W_baked" type="surfaceshader">
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked13" />
+    <input name="transmission" type="float" value="1" />
+    <input name="attenuation_color" type="color3" value="1, 1, 0.921569" colorspace="srgb_texture" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Pawn_Top_W_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Pawn_Top_W_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked14" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_B_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_B_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_B_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Queen_B_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked14" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked14" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked14" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Queen_B_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Queen_B_baked" />
+  </surfacematerial>
+  <nodegraph name="NG_baked15" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_W_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="metallic_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_W_gltf_pbr_metallic.png" />
+    </image>
+    <output name="metallic_output" type="float" nodename="metallic_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_W_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="Queen_W_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked15" />
+    <input name="metallic" type="float" output="metallic_output" nodegraph="NG_baked15" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked15" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="M_Queen_W_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Queen_W_baked" />
+  </surfacematerial>
+</materialx>

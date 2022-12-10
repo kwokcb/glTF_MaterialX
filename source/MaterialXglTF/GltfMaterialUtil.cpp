@@ -61,7 +61,7 @@ bool GltfMaterialUtil::haveSingleDocBake(const FilePath& errorFile)
 }
 
 bool GltfMaterialUtil::bakeDocument(const FilePath& inputFileName, const FilePath& outputFilename, 
-                     unsigned int width, unsigned int height, std::ostream& logFile)
+                                    unsigned int width, unsigned int height, std::ostream& logFile)
 {
     // Run test renders on output
     FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
@@ -80,7 +80,6 @@ bool GltfMaterialUtil::bakeDocument(const FilePath& inputFileName, const FilePat
             + " " + outputFilename.asString()
             + " > " + errorFile + redirectString;
 
-        logFile << "- Translated MTLX: " + outputFilename.asString() << std::endl;
         int returnValue = std::system(command.c_str());
 
         std::ifstream errorStream(errorFile);
@@ -97,31 +96,31 @@ bool GltfMaterialUtil::bakeDocument(const FilePath& inputFileName, const FilePat
             logFile << "  - Command return code: " + std::to_string(returnValue) << std::endl;
             logFile << "  - Log: " << result << std::endl;
         }
-        return true;
-        //CHECK(!renderError);
+        return renderError;
     }
     return false;
 }
 
-bool GltfMaterialUtil::renderCheck(const FilePath& materialXViewInstall, const FilePath& captureName, const FilePath& meshFile, 
+bool GltfMaterialUtil::renderImage(const FilePath& materialXViewInstall, const FilePath& captureName, const FilePath& meshFile, 
                                   const std::string& materialFile, std::ostream& logFile)
 {
     // Run test renders on output
     if (!materialXViewInstall.isEmpty())
     {
-        const std::string imageFileName = captureName.asString() + ".png";
-        const std::string errorFile = captureName.asString() + "_errors.txt";
+        const std::string imageFileName = captureName.asString();
+        const std::string errorFile = captureName.getBaseName() + "_errors.txt";
         const std::string redirectString(" 2>&1");
 
-        std::string command = materialXViewInstall.asString()
-            + " --mesh " + meshFile.asString()
-            + " --material " + materialFile
+        std::string command = materialXViewInstall.asString();
+        if (!meshFile.isEmpty())
+            command += " --mesh " + meshFile.asString();
+        command
+            += " --material " + materialFile
             + " --screenWidth 512 --screenHeight 512 "
             + " --captureFilename " + imageFileName
             + " --envSampleCount 4"
             + " > " + errorFile + redirectString;
 
-        logFile << "- Render image: " + imageFileName << std::endl;
         int returnValue = std::system(command.c_str());
 
         std::ifstream errorStream(errorFile);

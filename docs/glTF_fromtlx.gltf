@@ -1,8 +1,8 @@
 {
   "asset": {
-    "generator": "MaterialX 1.38.61.38.4 to glTF generator",
-    "version": "1.38.6",
-    "min_version": "1.38.6"
+    "copyright": "Created via glTF translation utilities found here: https://github.com/kwokcb/glTF_MaterialX",
+    "generator": "MaterialX 1.38.7 to glTF 2.0 generator",
+    "version": "2.0"
   },
   "images": [
     {
@@ -29,8 +29,24 @@
           "index": 1
         }
       },
-      "normalTexture": {
-        "index": 2
+      "extensions": {
+        "KHR_materials_clearcoat": {
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
       }
     }
   ],
@@ -47,5 +63,14 @@
       "name": "image_normal",
       "source": 2
     }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_clearcoat",
+    "KHR_materials_ior",
+    "KHR_materials_specular",
+    "KHR_materials_transmission",
+    "KHR_materials_sheen",
+    "KHR_materials_emissive_strength",
+    "KHR_materials_iridescence"
   ]
 }

@@ -1,0 +1,79 @@
+{
+  "asset": {
+    "copyright": "Created via glTF translation utilities found here: https://github.com/kwokcb/glTF_MaterialX",
+    "generator": "MaterialX 1.38.7 to glTF 2.0 generator",
+    "version": "2.0"
+  },
+  "images": [
+    {
+      "name": "NG_wood1/node1",
+      "uri": ""
+    },
+    {
+      "name": "NG_Greysphere_Calibration/node1",
+      "uri": ""
+    }
+  ],
+  "materials": [
+    {
+      "name": "SR_wood1",
+      "pbrMetallicRoughness": {
+        "metallicRoughnessTexture": {
+          "index": 0
+        },
+        "baseColorFactor": [0, 0, 0, 1]
+      },
+      "extensions": {
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    },
+    {
+      "name": "SR_Greysphere_Calibration",
+      "pbrMetallicRoughness": {
+        "metallicRoughnessTexture": {
+          "index": 1
+        },
+        "baseColorFactor": [0, 0, 0, 1]
+      },
+      "extensions": {
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "NG_wood1/node1",
+      "source": 0
+    },
+    {
+      "name": "NG_Greysphere_Calibration/node1",
+      "source": 1
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_ior",
+    "KHR_materials_specular",
+    "KHR_materials_emissive_strength",
+    "KHR_materials_iridescence"
+  ]
+}

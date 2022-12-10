@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <nodegraph name="NG_baked" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\Tiled_Wood_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\Tiled_Wood_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="SR_wood1_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked" />
+    <input name="clearcoat" type="float" value="0.0980392" />
+    <input name="clearcoat_roughness" type="float" value="0.2" />
+  </gltf_pbr>
+  <surfacematerial name="Tiled_Wood_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SR_wood1_baked" />
+  </surfacematerial>
+</materialx>

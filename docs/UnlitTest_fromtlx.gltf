@@ -1,8 +1,8 @@
 {
   "asset": {
-    "generator": "MaterialX 1.38.61.38.4 to glTF generator",
-    "version": "1.38.6",
-    "min_version": "1.38.6"
+    "copyright": "Created via glTF translation utilities found here: https://github.com/kwokcb/glTF_MaterialX",
+    "generator": "MaterialX 1.38.7 to glTF 2.0 generator",
+    "version": "2.0"
   },
   "materials": [
     {
@@ -10,7 +10,7 @@
       "pbrMetallicRoughness": {
         "metallicFactor": 0,
         "roughnessFactor": 0,
-        "baseColorFactor": [0, 0, 0, 0]
+        "baseColorFactor": [1, 0.217638001, 0, 1]
       },
       "extensions": {
         "KHR_materials_unlit": {}
@@ -21,7 +21,7 @@
       "pbrMetallicRoughness": {
         "metallicFactor": 0,
         "roughnessFactor": 0,
-        "baseColorFactor": [0, 0, 0, 0]
+        "baseColorFactor": [0, 0.217638001, 1, 1]
       },
       "extensions": {
         "KHR_materials_unlit": {}

@@ -34,7 +34,7 @@ class MX_GLTF_API GltfMaterialUtil
     static bool bakeDocument(const FilePath& inputFileName, const FilePath& outputFilename,
         unsigned int width, unsigned int height, std::ostream& logFile);
 
-    static bool renderCheck(const FilePath& materialXViewInstall, const FilePath& fileName, const FilePath& meshFile,
+    static bool renderImage(const FilePath& materialXViewInstall, const FilePath& fileName, const FilePath& meshFile,
         const std::string& outputFileName, std::ostream& logFile);
 };
 

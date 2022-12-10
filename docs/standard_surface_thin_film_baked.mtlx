@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <gltf_pbr name="SR_thin_film_baked" type="surfaceshader">
+    <input name="base_color" type="color3" value="0, 0, 0" colorspace="srgb_texture" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="0.0196078" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="ThinFilm_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SR_thin_film_baked" />
+  </surfacematerial>
+</materialx>

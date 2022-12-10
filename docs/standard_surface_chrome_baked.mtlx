@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <gltf_pbr name="SR_chrome_baked" type="surfaceshader">
+    <input name="roughness" type="float" value="0" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="Chrome_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SR_chrome_baked" />
+  </surfacematerial>
+</materialx>

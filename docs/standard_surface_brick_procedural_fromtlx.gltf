@@ -1,0 +1,70 @@
+{
+  "asset": {
+    "copyright": "Created via glTF translation utilities found here: https://github.com/kwokcb/glTF_MaterialX",
+    "generator": "MaterialX 1.38.7 to glTF 2.0 generator",
+    "version": "2.0"
+  },
+  "images": [
+    {
+      "name": "NG_baked/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_BrickPattern_gltf_pbr_base_color.png"
+    },
+    {
+      "name": "NG_baked/roughness_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_BrickPattern_gltf_pbr_roughness.png"
+    }
+  ],
+  "materials": [
+    {
+      "name": "N_StandardSurface_baked",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "NG_baked/base_color_baked",
+      "source": 0
+    },
+    {
+      "name": "NG_baked/roughness_baked",
+      "source": 1
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_clearcoat",
+    "KHR_materials_ior",
+    "KHR_materials_specular",
+    "KHR_materials_transmission",
+    "KHR_materials_sheen",
+    "KHR_materials_emissive_strength",
+    "KHR_materials_iridescence"
+  ]
+}
