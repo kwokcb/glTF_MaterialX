@@ -3,7 +3,6 @@ file(GLOB_RECURSE headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 
 target_sources(glTFMtlxTest PUBLIC ${source} ${headers})
 
-message(STATUS "*** Add test: " ${source})
 add_tests("${source}")
 
 assign_source_group("Source Files" ${source})

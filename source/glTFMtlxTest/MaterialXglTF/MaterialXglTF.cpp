@@ -187,8 +187,13 @@ TEST_CASE("Validate import", "[gltf_import]")
     mx::FilePath mtlxViewExe =  mx::getEnviron("MTLXVIEW_TEST_RENDER");
     if (mtlxViewExe.isEmpty())
     {
+#if defined(_MSC_VER)
         mtlxViewExe = mx::FilePath::getModulePath() / mx::FilePath("MaterialXView.exe");
+#else        
+        mtlxViewExe = mx::FilePath::getModulePath() / mx::FilePath("MaterialXView");
+#endif        
     }
+    std::cout << "** MaterialXView to use: " << mtlxViewExe.asString() << std::endl;
     bool runRenderTest = mtlxViewExe.exists();
 #else
     bool runRenderTest = false;

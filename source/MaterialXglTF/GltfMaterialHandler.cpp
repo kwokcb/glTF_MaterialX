@@ -876,7 +876,7 @@ bool GltfMaterialHandler::load(const FilePath& filePath)
 
     loadMaterials(data);
 
-    cgltf_free(data);
+    //cgltf_free(data);
 
     return true;
 }
