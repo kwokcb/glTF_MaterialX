@@ -3,7 +3,7 @@ enable_testing()
 
 set(GLTFMTLX_MAJOR_VERSION 1)
 set(GLTFMTLX_MINOR_VERSION 38)
-set(GLTFMTLX_BUILD_VERSION 5)
+set(GLTFMTLX_BUILD_VERSION 7)
 set(GLTFMTLX_LIBRARY_VERSION ${GLTFMTLX_MAJOR_VERSION}.${GLTFMTLX_MINOR_VERSION}.${GLTFMTLX_BUILD_VERSION})
 
 project(glTF2Mtlx VERSION ${GLTFMTLX_MAJOR_VERSION}.${GLTFMTLX_MINOR_VERSION})
@@ -65,11 +65,10 @@ endif()
 
 # Set definitions and options
 add_definitions(-DMATERIALX_ROOT=\"${MATERIALX_ROOT}\")
-option(MATERIALX_TEST_RENDER "Run rendering tests. GPU required for graphics validation." OFF)
-if (MATERIALX_TEST_RENDER)
-    set(MTLXVIEW_TEST_RENDER "${CMAKE_BINARY_DIR}/installed/bin/MaterialXView")
+option(GLTF_MATERIALX_TEST_RENDER "Run rendering tests. GPU required for graphics validation." OFF)
+if (GLTF_MATERIALX_TEST_RENDER)
+    add_definitions(-DGLTF_MATERIALX_TEST_RENDER)
 endif()
-add_definitions(-DMTLXVIEW_TEST_RENDER=\"${MTLXVIEW_TEST_RENDER}\")
 
 set(MTLX_TRANSLATE_SHADER "${MATERIALX_ROOT}/python/Scripts/baketextures.py")
 add_definitions(-DMTLX_TRANSLATE_SHADER=\"${MTLX_TRANSLATE_SHADER}\")

@@ -15,7 +15,7 @@
 namespace mx = MaterialX;
 
 // MaterialX to glTF to MaterialX tests
-TEST_CASE("Validate export", "[gltf]")
+TEST_CASE("Validate export", "[gltf_export]")
 {
     std::ofstream logFile;
     logFile.open("gltf_export_log.txt");
@@ -131,7 +131,7 @@ TEST_CASE("Validate export", "[gltf]")
 }
 
 // glTF to MaterialX to glTF tests
-TEST_CASE("Validate import", "[gltf]")
+TEST_CASE("Validate import", "[gltf_import]")
 {
     std::ofstream logFile;
     logFile.open("gltf_import_log.txt");
@@ -183,6 +183,17 @@ TEST_CASE("Validate import", "[gltf]")
 
     bool createAssignments = true;
     bool fullDefinition = false;
+#if defined(GLTF_MATERIALX_TEST_RENDER)
+    mx::FilePath mtlxViewExe =  mx::getEnviron("MTLXVIEW_TEST_RENDER");
+    if (mtlxViewExe.isEmpty())
+    {
+        mtlxViewExe = mx::FilePath::getModulePath() / mx::FilePath("MaterialXView.exe");
+    }
+    bool runRenderTest = mtlxViewExe.exists();
+#else
+    bool runRenderTest = false;
+    mx::FilePath mtlxViewExe;
+#endif
     mx::StringSet testedFiles;
     for (const mx::FilePath& dir : rootPath.getSubDirectories())
     {
@@ -242,10 +253,9 @@ TEST_CASE("Validate import", "[gltf]")
                         logFile << "  * Wrote MTLX materials to glTF file : " << outputFileName2 << std::endl;
                     }
 
-                    bool runRender = true;
-                    if (runRender)
+                    if (runRenderTest)
                     {
-                        bool renderError = mx::GltfMaterialUtil::renderCheck(fileName, fullPath, outputFileName, logFile);
+                        bool renderError = mx::GltfMaterialUtil::renderCheck(mtlxViewExe, fileName, fullPath, outputFileName, logFile);
                         CHECK(!renderError);
                     }
                 }
