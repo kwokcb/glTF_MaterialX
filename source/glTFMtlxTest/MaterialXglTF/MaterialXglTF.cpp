@@ -14,8 +14,31 @@
 
 namespace mx = MaterialX;
 
+mx::FilePath getRendererPath()
+{
+#if defined(GLTF_MATERIALX_TEST_RENDER)
+    mx::FilePath mtlxViewExe =  mx::getEnviron("MTLXVIEW_TEST_RENDER");
+    if (mtlxViewExe.isEmpty())
+    {
+#if defined(_MSC_VER)
+        mtlxViewExe = mx::FilePath::getModulePath() / mx::FilePath("MaterialXView.exe");
+#else        
+        mtlxViewExe = mx::FilePath::getModulePath() / mx::FilePath("MaterialXView");
+#endif        
+    }
+    if (!mtlxViewExe.exists())
+    {
+        mtlxViewExe = mx::EMPTY_STRING;
+    }
+#else
+    mtlxViewExe = mx::EMPTY_STRING;
+#endif
+
+    return mtlxViewExe;
+}
+
 // MaterialX to glTF to MaterialX tests
-TEST_CASE("Validate export", "[gltf_export]")
+TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
 {
     std::ofstream logFile;
     logFile.open("gltf_export_log.txt");
@@ -53,6 +76,14 @@ TEST_CASE("Validate export", "[gltf_export]")
         rootPath = searchPath.find(rootPath);
     }
 
+    // Check if we can run render tests
+    mx::FilePath mtlxViewExe = getRendererPath();
+    bool runRenderTest = !mtlxViewExe.isEmpty();
+    if (runRenderTest)
+    {
+        logFile << "** MaterialXView executable is: " << mtlxViewExe.asString() << std::endl;
+    }
+
     mx::StringSet testedFiles;
     for (const mx::FilePath& dir : rootPath.getSubDirectories())
     {
@@ -61,6 +92,7 @@ TEST_CASE("Validate export", "[gltf_export]")
             mx::FilePath fullPath = dir / gltfFile;
 
             if (testedFiles.count(fullPath) || 
+                std::string::npos != fullPath.asString().find("reimported") ||
                 std::string::npos != fullPath.asString().find("distilled") ||
                 std::string::npos != fullPath.asString().find("baked"))
             {
@@ -85,44 +117,59 @@ TEST_CASE("Validate export", "[gltf_export]")
             // Perform shader translation in place
             const std::string distilledFileName = fileName.asString() + "_distilled.mtlx";
             gltfMTLXLoader->translateShaders(doc);
+            CHECK(doc->validate());
+
+            // Try to bake
             logFile << "  * Wrote distilled file : " << distilledFileName << std::endl;
             mx::writeToXmlFile(doc, distilledFileName, &writeOptions);
             testedFiles.insert(distilledFileName);
 
-            // Bake to a new document
             const mx::FilePath bakedFileName = fileName.asString() + "_baked.mtlx";
             mx::GltfMaterialUtil::bakeDocument(distilledFileName, bakedFileName, 512, 512, logFile);
             testedFiles.insert(bakedFileName);
             if (bakedFileName.exists())
             {
-                logFile << "  * Created bake file: " << bakedFileName.asString() << std::endl;
-                mx::DocumentPtr bakedDoc = mx::createDocument();
-                bakedDoc->importLibrary(libraries);
-                readFromXmlFile(bakedDoc, bakedFileName);
-                CHECK(doc->validate());
+                logFile << "  * Baked to file: " << bakedFileName.asString() << std::endl;
+                doc= mx::createDocument();
+                doc->importLibrary(libraries);
+                readFromXmlFile(doc, bakedFileName);
+            }
+            else
+            {
+                logFile << "  * Did not perform bake" << std::endl;
+            }
 
-                const std::string outputFileName = fileName.asString() + "_fromtlx.gltf";
-                bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName, bakedDoc);
-                if (convertedToGLTF)
+            // Convert MTLX document to glTF
+            const std::string outputFileName = fileName.asString() + "_fromtlx.gltf";
+            bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName, doc);
+            if (convertedToGLTF)
+            {
+                logFile << "  * Converted to gltf: " << outputFileName << std::endl;
+                testedFiles.insert(outputFileName);
+
+                mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(outputFileName, libraries, true, false);
+                if (materials)
                 {
-                    logFile << "  * Converted to gltf: " << outputFileName << std::endl;
-
-                    mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(outputFileName, libraries, true, false);
-                    if (materials)
+                    mx::FilePath reimportedFile = outputFileName + "_reimport.mtlx";
+                    testedFiles.insert(reimportedFile);
+                    logFile << "  * RE-converted back to MTLX: " << reimportedFile.asString() << std::endl;
+                    std::cerr << "  * RE-converted back to MTLX: " << reimportedFile.asString() << std::endl;
+                    mx::writeToXmlFile(materials, reimportedFile, &writeOptions);
+                    if (runRenderTest)
                     {
-                        logFile << "  * RE-converted back to MTLX: " << (outputFileName + "_reimmport.mtlx") << std::endl;
-                        std::cerr << "  * RE-converted back to MTLX: " << (outputFileName + "_reimmport.mtlx") << std::endl;
-                        mx::writeToXmlFile(materials, outputFileName + "_reimmport.mtlx");
+                        std::cerr << "  * Render re-converted MTLX file" << std::endl;
+                        logFile << "  * Render re-converted MTLX file" << std::endl;
+                        const mx::FilePath captureName = reimportedFile.asString() + ".png";
+                        const mx::FilePath meshPath;
+                        const mx::FilePath materialPath = reimportedFile;
+                        bool renderError = mx::GltfMaterialUtil::renderImage(mtlxViewExe, captureName, meshPath, materialPath, logFile);
+                        CHECK(!renderError);
                     }
-                }
-                else
-                {
-                    logFile << "  * Failed to convert to gltf: " << outputFileName << std::endl;
                 }
             }
             else
             {
-                logFile << "  * Failed to bake: " << bakedFileName.asString() << std::endl;
+                logFile << "  * Failed to convert to gltf: " << outputFileName << std::endl;
             }
         }
     }
@@ -131,7 +178,7 @@ TEST_CASE("Validate export", "[gltf_export]")
 }
 
 // glTF to MaterialX to glTF tests
-TEST_CASE("Validate import", "[gltf_import]")
+TEST_CASE("Validate gltf to MaterialX import", "[gltf_import]")
 {
     std::ofstream logFile;
     logFile.open("gltf_import_log.txt");
@@ -173,32 +220,22 @@ TEST_CASE("Validate import", "[gltf_import]")
     // Check if an environment variable was set as the root
     if (!rootPath.exists())
     {
-    }
-    if (!rootPath.exists())
-    {
         logFile << "Test glTF directory not found: " << rootPath.asString() << ". Skipping test" << std::endl;
         logFile.close();
         return;
     }
 
+    // Check if we can run render tests
+    mx::FilePath mtlxViewExe = getRendererPath();
+    bool runRenderTest = !mtlxViewExe.isEmpty();
+    if (runRenderTest)
+    {
+        logFile << "** MaterialXView executable is: " << mtlxViewExe.asString() << std::endl;
+    }
+
     bool createAssignments = true;
     bool fullDefinition = false;
-#if defined(GLTF_MATERIALX_TEST_RENDER)
-    mx::FilePath mtlxViewExe =  mx::getEnviron("MTLXVIEW_TEST_RENDER");
-    if (mtlxViewExe.isEmpty())
-    {
-#if defined(_MSC_VER)
-        mtlxViewExe = mx::FilePath::getModulePath() / mx::FilePath("MaterialXView.exe");
-#else        
-        mtlxViewExe = mx::FilePath::getModulePath() / mx::FilePath("MaterialXView");
-#endif        
-    }
-    std::cout << "** MaterialXView to use: " << mtlxViewExe.asString() << std::endl;
-    bool runRenderTest = mtlxViewExe.exists();
-#else
-    bool runRenderTest = false;
-    mx::FilePath mtlxViewExe;
-#endif
+
     mx::StringSet testedFiles;
     for (const mx::FilePath& dir : rootPath.getSubDirectories())
     {
@@ -260,9 +297,10 @@ TEST_CASE("Validate import", "[gltf_import]")
 
                     if (runRenderTest)
                     {
-                        std::cerr << "Render material" << fullPath.asString() << " to image : " << fileName.asString() << std::endl;
-                        logFile << "Render material" << fullPath.asString() << " to image : " << fileName.asString() << std::endl;
-                        bool renderError = mx::GltfMaterialUtil::renderCheck(mtlxViewExe, fileName, fullPath, outputFileName, logFile);
+                        const mx::FilePath captureName = fileName.asString() + ".png";
+                        const mx::FilePath meshPath = fullPath;
+                        const mx::FilePath materialPath = outputFileName;
+                        bool renderError = mx::GltfMaterialUtil::renderImage(mtlxViewExe, captureName, meshPath, materialPath, logFile);
                         CHECK(!renderError);
                     }
                 }

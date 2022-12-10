@@ -125,7 +125,7 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
         write_value[2] = 1.0f;
 
         imageIndex++;
-        hasFlag = true;
+        hasFlag = false;
     }
     else
     {
@@ -137,7 +137,7 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
             write_value[1] = color[1];
             write_value[2] = color[2];
 
-            hasFlag = true;
+            hasFlag = false;
         }
     }
 }
@@ -307,9 +307,9 @@ void GltfMaterialHandler::translateShaders(DocumentPtr doc)
                 }
                 translator->translateShader(shaderNode, TARGET_GLTF);
             }
-            catch (std::exception& /*e*/)
+            catch (std::exception& e)
             {
-                //std::cout << "- Error in shader translation: " << e.what() << std::endl;
+                std::cerr << "- Error in shader translation: " << e.what() << std::endl;
             }
         }
     }
@@ -380,11 +380,11 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
 	data->bin = nullptr;
 	data->bin_size = 0;
 
-    ;
-    const string versionString = getVersionString();
-	data->asset.generator = const_cast<char*>((new string("MaterialX " + versionString + "1.38.4 to glTF generator"))->c_str());;
-    data->asset.version = const_cast<char*>((new string(versionString))->c_str());
-	data->asset.min_version = const_cast<char*>((new string(versionString))->c_str());;
+    const string mtlx_versionString = getVersionString();
+    const string gltf_versionString = "2.0";
+	data->asset.generator = const_cast<char*>((new string("MaterialX " + mtlx_versionString + " to glTF " + gltf_versionString + " generator"))->c_str());;
+    data->asset.version = const_cast<char*>((new string(gltf_versionString))->c_str());
+    data->asset.copyright = "Created via glTF translation utilities found here: https://github.com/kwokcb/glTF_MaterialX";
 
     // Scan for PBR shader nodes
     const string PBR_CATEGORY_STRING("gltf_pbr");
@@ -405,7 +405,6 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
             {
                 unlitNodes.insert(shaderNode);
             }
-            // TODO: Handle converson from other shading models to gltf pbr
         }
     }
 
@@ -414,7 +413,9 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
     {
         return false;
     }
+
     // Write materials
+    // TODO: Convert absoluate image paths to relative paths.
     /*
     typedef struct cgltf_material
     {
@@ -457,7 +458,6 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
     data->materials_count = materials_count;
 
     // Set of image nodes.
-    // TODO: Fix to be dynamic
     std::vector<cgltf_texture> textureList;
     textureList.reserve(64);
     std::vector<cgltf_image> imageList;
@@ -596,6 +596,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
         }
 
         // Handle metallic, roughness, occlusion
+        // Note : Assumes that metallic, roughbess, and occlusion have been baked into an upsteram map 
+        //        before-hand.
         initialize_cgltf_texture_view(roughness.metallic_roughness_texture);
         ValuePtr value;
         string extractInputs[3] =
@@ -761,6 +763,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
 
         // Handle iridescence (partial)
         cgltf_iridescence& iridescence = material->iridescence;
+        iridescence.iridescence_ior = 1.0f;
         writeFloatInput(pbrNode, "iridescence",
             iridescence.iridescence_texture, &(iridescence.iridescence_factor),
             material->has_iridescence, textureList, imageList, imageIndex);
