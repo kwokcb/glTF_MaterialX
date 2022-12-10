@@ -4,7 +4,8 @@
 #include <MaterialXFormat/Util.h>
 
 #include <iostream>
-#include <MaterialXglTF/CgltfMaterialHandler.h>
+#include <MaterialXglTF/GltfMaterialHandler.h>
+#include <MaterialXglTF/GltfMaterialUtill.h>
 
 namespace mx = MaterialX;
 
@@ -17,27 +18,6 @@ const std::string options =
 "    --fullDefinition               Specify to generatel full definitions for each node (all inputs)\n"
 "    --help                         Display the complete list of command-line options\n";
 
-
-// glTF to MaterialX conversion
-mx::DocumentPtr glTF2Mtlx(const mx::FilePath& filename, mx::DocumentPtr definitions, 
-                          bool createAssignments, bool fullDefinition)
-{
-    mx::MaterialHandlerPtr gltfMTLXLoader = mx::CgltfMaterialHandler::create();
-    gltfMTLXLoader->setDefinitions(definitions);
-    gltfMTLXLoader->setGenerateAssignments(createAssignments);
-    gltfMTLXLoader->setGenerateFullDefinitions(fullDefinition);
-    bool loadedMaterial = gltfMTLXLoader->load(filename);
-    mx::DocumentPtr materials = loadedMaterial ? gltfMTLXLoader->getMaterials() : nullptr;
-    return materials;
-}
-
-// MaterialX to cgTF conversion
-bool mtlx2glTF(const mx::FilePath& filename, mx::DocumentPtr materials)
-{
-    mx::MaterialHandlerPtr gltfMTLXLoader = mx::CgltfMaterialHandler::create();
-    gltfMTLXLoader->setMaterials(materials);
-    return gltfMTLXLoader->save(filename);
-}
 
 mx::FileSearchPath getDefaultSearchPath(const mx::FilePath& materialXLibraryPath)
 {
@@ -166,7 +146,9 @@ int main(int argc, char* const argv[])
         mx::readFromXmlFile(materials, mtlxFile);
         mx::FilePath outputFile = mtlxFile;
         outputFile.addExtension("_converted.gltf");
-        if (mtlx2glTF(outputFile, materials))
+
+        mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
+        if (mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFile, materials))
         {
             std::cout << "Wrote glTF file to: " << outputFile.asString() << std::endl;
         }
@@ -210,7 +192,7 @@ int main(int argc, char* const argv[])
         }
         mx::DocumentPtr materials = nullptr;
         try {
-             materials = glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition);
+             materials = mx::GltfMaterialUtil::glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition);
         }
         catch (std::exception&)
         {

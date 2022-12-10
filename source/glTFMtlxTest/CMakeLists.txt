@@ -42,3 +42,25 @@ set_target_properties(
 target_link_libraries(
     glTFMtlxTest
     ${CMAKE_DL_LIBS})
+
+#install(DIRECTORY ${MATERIALX_ROOT}/resources/Materials/Examples
+#        DESTINATION "resources/glTF_export/" )
+#install(DIRECTORY ${MATERIALX_ROOT}/resources/Images
+#        DESTINATION "resources/glTF_export" )
+
+# Copy the MaterialX Examples to test export from MTLX -> glTF
+add_custom_command(TARGET glTFMtlxTest POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${MATERIALX_ROOT}/resources/Materials/Examples/StandardSurface ${CMAKE_BINARY_DIR}/bin/resources/glTF_export/Materials/Examples/StandardSurface)
+add_custom_command(TARGET glTFMtlxTest POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${MATERIALX_ROOT}/resources/Images ${CMAKE_BINARY_DIR}/bin/resources/glTF_export/Images)
+
+# Copy glTF files to test glTF to MaterialX import
+#add_custom_command(TARGET glTFMtlxTest POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy_directory
+#    ${MATERIALX_ROOT}/resources/Materials/Examples ${CMAKE_BINARY_DIR}/bin/resources/glTF_import)
+
+add_custom_command(TARGET glTFMtlxTest POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../resources ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources)
