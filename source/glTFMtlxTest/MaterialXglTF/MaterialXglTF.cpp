@@ -31,7 +31,7 @@ mx::FilePath getRendererPath()
         mtlxViewExe = mx::EMPTY_STRING;
     }
 #else
-    mtlxViewExe = mx::EMPTY_STRING;
+    mx::FilePath mtlxViewExe = mx::EMPTY_STRING;
 #endif
 
     return mtlxViewExe;
