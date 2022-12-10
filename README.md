@@ -9,8 +9,7 @@ presentation](https://materialx.org/assets/ASWF_OSD2022_MaterialX_OSL_Final.pdf)
 
 The supported targets are:
  * glTF version [2.0.1](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html) 
-* Corresponding MaterialX version which supports this. The  
-minimal target release is [1.38.6.](https://github.com/AcademySoftwareFoundation/MaterialX/releases/tag/v1.38.6). 
+* Corresponding MaterialX version which supports this. The minimal target release is [1.38.6.](https://github.com/AcademySoftwareFoundation/MaterialX/releases/tag/v1.38.6). 
 
 Any future specification changes will go into MaterialX core as noted by issues logged [here](https://github.com/AcademySoftwareFoundation/MaterialX/issues)
 
@@ -98,7 +97,6 @@ Conversely for glTF assignments direct assignment are supported at any transform
 This is the main module containing core logic for bi-directional mapping.
 This module can be used directly.
 
-
 ### glTFMtlx
 
 This is a sample C++ program which uses the MaterialxglTF module to allow command line conversion. Run `glTF2Mtlx --help` for command line options.
@@ -106,6 +104,9 @@ This is a sample C++ program which uses the MaterialxglTF module to allow comman
 ### glTFMtlxTest
 
 This contains unit testing for the MaterialXglTF module. It performs bidirectional conversion from and to glTF for the set of input files specified in the `resources` direction. Currently this contains a basic set of [glTF Sample model](https://github.com/KhronosGroup/glTF-Sample-Models) files.
+
+### Developer Docs
+See [Developer Docs](documents/Developer.md) for more details.
 
 ## 4. Support
 

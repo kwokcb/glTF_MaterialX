@@ -103,19 +103,19 @@ bool GltfMaterialUtil::bakeDocument(const FilePath& inputFileName, const FilePat
     return false;
 }
 
-bool GltfMaterialUtil::renderCheck(const FilePath& materialXViewInstall, const FilePath& fileName, const FilePath& meshFile, 
-                                  const std::string& outputFileName,  std::ostream& logFile)
+bool GltfMaterialUtil::renderCheck(const FilePath& materialXViewInstall, const FilePath& captureName, const FilePath& meshFile, 
+                                  const std::string& materialFile, std::ostream& logFile)
 {
     // Run test renders on output
     if (!materialXViewInstall.isEmpty())
     {
-        const std::string imageFileName = fileName.asString() + ".png";
-        const std::string errorFile = fileName.asString() + "_errors.txt";
+        const std::string imageFileName = captureName.asString() + ".png";
+        const std::string errorFile = captureName.asString() + "_errors.txt";
         const std::string redirectString(" 2>&1");
 
         std::string command = materialXViewInstall.asString()
             + " --mesh " + meshFile.asString()
-            + " --material " + outputFileName
+            + " --material " + materialFile
             + " --screenWidth 512 --screenHeight 512 "
             + " --captureFilename " + imageFileName
             + " --envSampleCount 4"

@@ -255,6 +255,8 @@ TEST_CASE("Validate import", "[gltf_import]")
 
                     if (runRenderTest)
                     {
+                        std::cerr << "Render material" << fullPath.asString() << " to image : " << fileName.asString() << std::endl;
+                        logFile << "Render material" << fullPath.asString() << " to image : " << fileName.asString() << std::endl;
                         bool renderError = mx::GltfMaterialUtil::renderCheck(mtlxViewExe, fileName, fullPath, outputFileName, logFile);
                         CHECK(!renderError);
                     }
