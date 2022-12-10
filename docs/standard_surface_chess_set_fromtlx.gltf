@@ -6,191 +6,133 @@
   },
   "images": [
     {
-      "name": "king_black_base_color",
-      "uri": "king_black_base_color.jpg"
+      "name": "NG_baked9/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Knight_W_gltf_pbr_base_color.png"
     },
     {
-      "name": "King_black_ORM",
-      "uri": "King_black_ORM.jpg"
+      "name": "NG_baked9/roughness_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Knight_W_gltf_pbr_roughness.png"
     },
     {
-      "name": "King_black_normal",
-      "uri": "King_black_normal.jpg"
+      "name": "NG_baked/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Bishop_B_gltf_pbr_base_color.png"
     },
     {
-      "name": "castle_white_base_color",
-      "uri": "castle_white_base_color.jpg"
+      "name": "NG_baked/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Bishop_B_gltf_pbr_metallic.png"
     },
     {
-      "name": "Castle_ORM2",
-      "uri": "Castle_ORM.jpg"
+      "name": "NG_baked7/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_King_W_gltf_pbr_base_color.png"
     },
     {
-      "name": "Castle_normal2",
-      "uri": "Castle_normal.jpg"
+      "name": "NG_baked7/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_King_W_gltf_pbr_metallic.png"
     },
     {
-      "name": "king_white_base_color",
-      "uri": "king_white_base_color.jpg"
+      "name": "NG_baked2/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Bishop_W_gltf_pbr_base_color.png"
     },
     {
-      "name": "King_white_ORM",
-      "uri": "King_white_ORM.jpg"
+      "name": "NG_baked2/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Bishop_W_gltf_pbr_metallic.png"
     },
     {
-      "name": "King_white_normal",
-      "uri": "King_white_normal.jpg"
+      "name": "NG_baked6/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_King_B_gltf_pbr_base_color.png"
     },
     {
-      "name": "Pawn_ORM",
-      "uri": "Pawn_ORM.jpg"
+      "name": "NG_baked6/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_King_B_gltf_pbr_metallic.png"
     },
     {
-      "name": "Pawn_normal",
-      "uri": "Pawn_normal.jpg"
+      "name": "NG_baked8/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Knight_B_gltf_pbr_base_color.png"
     },
     {
-      "name": "pawn_black_base_color",
-      "uri": "pawn_black_base_color.jpg"
+      "name": "NG_baked8/roughness_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Knight_B_gltf_pbr_roughness.png"
     },
     {
-      "name": "Pawn_ORM4",
-      "uri": "Pawn_ORM.jpg"
+      "name": "NG_baked4/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Castle_W_gltf_pbr_base_color.png"
     },
     {
-      "name": "Pawn_normal4",
-      "uri": "Pawn_normal.jpg"
+      "name": "NG_baked4/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Castle_W_gltf_pbr_metallic.png"
     },
     {
-      "name": "queen_white_base_color",
-      "uri": "queen_white_base_color.jpg"
+      "name": "NG_baked3/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Castle_B_gltf_pbr_base_color.png"
     },
     {
-      "name": "Queen_white_ORM",
-      "uri": "Queen_white_ORM.jpg"
+      "name": "NG_baked3/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Castle_B_gltf_pbr_metallic.png"
     },
     {
-      "name": "Queen_white_normal",
-      "uri": "Queen_white_normal.jpg"
+      "name": "NG_baked5/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Chessboard_gltf_pbr_base_color.png"
     },
     {
-      "name": "queen_black_base_color",
-      "uri": "queen_black_base_color.jpg"
+      "name": "NG_baked5/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Chessboard_gltf_pbr_metallic.png"
     },
     {
-      "name": "Queen_black_ORM",
-      "uri": "Queen_black_ORM.jpg"
+      "name": "NG_baked13/roughness_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Pawn_Top_W_gltf_pbr_roughness.png"
     },
     {
-      "name": "Queen_black_normal",
-      "uri": "Queen_black_normal.jpg"
+      "name": "NG_baked12/roughness_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Pawn_Top_B_gltf_pbr_roughness.png"
     },
     {
-      "name": "pawn_white_base_color",
-      "uri": "pawn_white_base_color.jpg"
+      "name": "NG_baked14/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Queen_B_gltf_pbr_base_color.png"
     },
     {
-      "name": "Pawn_ORM2",
-      "uri": "Pawn_ORM.jpg"
+      "name": "NG_baked14/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Queen_B_gltf_pbr_metallic.png"
     },
     {
-      "name": "Pawn_normal2",
-      "uri": "Pawn_normal.jpg"
+      "name": "NG_baked11/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Pawn_Body_W_gltf_pbr_base_color.png"
     },
     {
-      "name": "castle_black_base_color",
-      "uri": "castle_black_base_color.jpg"
+      "name": "NG_baked11/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Pawn_Body_W_gltf_pbr_metallic.png"
     },
     {
-      "name": "Castle_ORM",
-      "uri": "Castle_ORM.jpg"
+      "name": "NG_baked15/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Queen_W_gltf_pbr_base_color.png"
     },
     {
-      "name": "Castle_normal",
-      "uri": "Castle_normal.jpg"
+      "name": "NG_baked15/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Queen_W_gltf_pbr_metallic.png"
     },
     {
-      "name": "knight_black_base_color",
-      "uri": "knight_black_base_color.jpg"
+      "name": "NG_baked10/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Pawn_Body_B_gltf_pbr_base_color.png"
     },
     {
-      "name": "Knight_ORM",
-      "uri": "Knight_ORM.jpg"
-    },
-    {
-      "name": "Knight_normal",
-      "uri": "Knight_normal.jpg"
-    },
-    {
-      "name": "Pawn_ORM3",
-      "uri": "Pawn_ORM.jpg"
-    },
-    {
-      "name": "Pawn_normal3",
-      "uri": "Pawn_normal.jpg"
-    },
-    {
-      "name": "chessboard_base_color",
-      "uri": "chessboard_base_color.jpg"
-    },
-    {
-      "name": "Chessboard_ORM",
-      "uri": "Chessboard_ORM.jpg"
-    },
-    {
-      "name": "chessboard_normal",
-      "uri": "chessboard_normal.jpg"
-    },
-    {
-      "name": "bishop_white_base_color",
-      "uri": "bishop_white_base_color.jpg"
-    },
-    {
-      "name": "Bishop_white_ORM",
-      "uri": "Bishop_white_ORM.jpg"
-    },
-    {
-      "name": "bishop_white_normal",
-      "uri": "bishop_white_normal.jpg"
-    },
-    {
-      "name": "knight_white_base_color",
-      "uri": "knight_white_base_color.jpg"
-    },
-    {
-      "name": "Knight_ORM2",
-      "uri": "Knight_ORM.jpg"
-    },
-    {
-      "name": "Knight_normal2",
-      "uri": "Knight_normal.jpg"
-    },
-    {
-      "name": "bishop_black_base_color",
-      "uri": "bishop_black_base_color.jpg"
-    },
-    {
-      "name": "Bishop_black_ORM",
-      "uri": "Bishop_black_ORM.jpg"
-    },
-    {
-      "name": "bishop_black_normal",
-      "uri": "bishop_black_normal.jpg"
+      "name": "NG_baked10/metallic_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_Pawn_Body_B_gltf_pbr_metallic.png"
     }
   ],
   "materials": [
     {
-      "name": "SHD_King_Black",
+      "name": "Knight_W_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 0
         },
         "metallicRoughnessTexture": {
           "index": 1
-        }
+        },
+        "metallicFactor": 0
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -210,17 +152,18 @@
       }
     },
     {
-      "name": "SHD_Castle_White",
+      "name": "Bishop_B_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 3
+          "index": 2
         },
         "metallicRoughnessTexture": {
-          "index": 4
+          "index": 3
         }
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -240,7 +183,38 @@
       }
     },
     {
-      "name": "SHD_King_White",
+      "name": "King_W_baked",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 4
+        },
+        "metallicRoughnessTexture": {
+          "index": 5
+        }
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    },
+    {
+      "name": "Bishop_W_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 6
@@ -251,6 +225,7 @@
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -270,46 +245,18 @@
       }
     },
     {
-      "name": "SHD_Pawn_Top_White",
-      "pbrMetallicRoughness": {
-        "metallicRoughnessTexture": {
-          "index": 9
-        },
-        "baseColorFactor": [1, 1, 0.828000009, 1]
-      },
-      "extensions": {
-        "KHR_materials_clearcoat": {
-        },
-        "KHR_materials_ior": {
-        },
-        "KHR_materials_specular": {
-        },
-        "KHR_materials_transmission": {
-          "transmissionFactor": 1
-        },
-        "KHR_materials_sheen": {
-        },
-        "KHR_materials_emissive_strength": {
-        },
-        "KHR_materials_iridescence": {
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
-        }
-      }
-    },
-    {
-      "name": "SHD_Pawn_Body_Black",
+      "name": "King_B_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 11
+          "index": 8
         },
         "metallicRoughnessTexture": {
-          "index": 12
+          "index": 9
         }
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -329,7 +276,70 @@
       }
     },
     {
-      "name": "SHD_Queen_White",
+      "name": "Knight_B_baked",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 10
+        },
+        "metallicRoughnessTexture": {
+          "index": 11
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    },
+    {
+      "name": "Castle_W_baked",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 12
+        },
+        "metallicRoughnessTexture": {
+          "index": 13
+        }
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    },
+    {
+      "name": "Castle_B_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 14
@@ -340,6 +350,7 @@
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -359,135 +370,47 @@
       }
     },
     {
-      "name": "SHD_Queen_Black",
+      "name": "Chessboard_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 17
+          "index": 16
         },
+        "metallicRoughnessTexture": {
+          "index": 17
+        }
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    },
+    {
+      "name": "Pawn_Top_W_baked",
+      "pbrMetallicRoughness": {
         "metallicRoughnessTexture": {
           "index": 18
-        }
+        },
+        "metallicFactor": 0
       },
       "extensions": {
         "KHR_materials_clearcoat": {
-        },
-        "KHR_materials_ior": {
-        },
-        "KHR_materials_specular": {
-        },
-        "KHR_materials_transmission": {
-        },
-        "KHR_materials_sheen": {
-        },
-        "KHR_materials_emissive_strength": {
-        },
-        "KHR_materials_iridescence": {
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
-        }
-      }
-    },
-    {
-      "name": "SHD_Pawn_Body_White",
-      "pbrMetallicRoughness": {
-        "baseColorTexture": {
-          "index": 20
-        },
-        "metallicRoughnessTexture": {
-          "index": 21
-        }
-      },
-      "extensions": {
-        "KHR_materials_clearcoat": {
-        },
-        "KHR_materials_ior": {
-        },
-        "KHR_materials_specular": {
-        },
-        "KHR_materials_transmission": {
-        },
-        "KHR_materials_sheen": {
-        },
-        "KHR_materials_emissive_strength": {
-        },
-        "KHR_materials_iridescence": {
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
-        }
-      }
-    },
-    {
-      "name": "SHD_Castle_Black",
-      "pbrMetallicRoughness": {
-        "baseColorTexture": {
-          "index": 23
-        },
-        "metallicRoughnessTexture": {
-          "index": 24
-        }
-      },
-      "extensions": {
-        "KHR_materials_clearcoat": {
-        },
-        "KHR_materials_ior": {
-        },
-        "KHR_materials_specular": {
-        },
-        "KHR_materials_transmission": {
-        },
-        "KHR_materials_sheen": {
-        },
-        "KHR_materials_emissive_strength": {
-        },
-        "KHR_materials_iridescence": {
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
-        }
-      }
-    },
-    {
-      "name": "SHD_Knight_Black",
-      "pbrMetallicRoughness": {
-        "baseColorTexture": {
-          "index": 26
-        },
-        "metallicRoughnessTexture": {
-          "index": 27
-        }
-      },
-      "extensions": {
-        "KHR_materials_clearcoat": {
-        },
-        "KHR_materials_ior": {
-        },
-        "KHR_materials_specular": {
-        },
-        "KHR_materials_transmission": {
-        },
-        "KHR_materials_sheen": {
-        },
-        "KHR_materials_emissive_strength": {
-        },
-        "KHR_materials_iridescence": {
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
-        }
-      }
-    },
-    {
-      "name": "SHD_Pawn_Top_Black",
-      "pbrMetallicRoughness": {
-        "metallicRoughnessTexture": {
-          "index": 29
-        },
-        "baseColorFactor": [0.299499989, 0.5, 0.449999988, 1]
-      },
-      "extensions": {
-        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -508,17 +431,48 @@
       }
     },
     {
-      "name": "SHD_Chessboard",
+      "name": "Pawn_Top_B_baked",
+      "pbrMetallicRoughness": {
+        "metallicRoughnessTexture": {
+          "index": 19
+        },
+        "metallicFactor": 0
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+          "transmissionFactor": 1
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    },
+    {
+      "name": "Queen_B_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 31
+          "index": 20
         },
         "metallicRoughnessTexture": {
-          "index": 32
+          "index": 21
         }
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -538,17 +492,18 @@
       }
     },
     {
-      "name": "SHD_Bishop_White",
+      "name": "Pawn_Body_W_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 34
+          "index": 22
         },
         "metallicRoughnessTexture": {
-          "index": 35
+          "index": 23
         }
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -568,17 +523,18 @@
       }
     },
     {
-      "name": "SHD_Knight_White",
+      "name": "Queen_W_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 37
+          "index": 24
         },
         "metallicRoughnessTexture": {
-          "index": 38
+          "index": 25
         }
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -598,17 +554,18 @@
       }
     },
     {
-      "name": "SHD_Bishop_Black",
+      "name": "Pawn_Body_B_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 40
+          "index": 26
         },
         "metallicRoughnessTexture": {
-          "index": 41
+          "index": 27
         }
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -630,176 +587,116 @@
   ],
   "textures": [
     {
-      "name": "king_black_base_color",
+      "name": "NG_baked9/base_color_baked",
       "source": 0
     },
     {
-      "name": "King_black_ORM",
+      "name": "NG_baked9/roughness_baked",
       "source": 1
     },
     {
-      "name": "King_black_normal",
+      "name": "NG_baked/base_color_baked",
       "source": 2
     },
     {
-      "name": "castle_white_base_color",
+      "name": "NG_baked/metallic_baked",
       "source": 3
     },
     {
-      "name": "Castle_ORM2",
+      "name": "NG_baked7/base_color_baked",
       "source": 4
     },
     {
-      "name": "Castle_normal2",
+      "name": "NG_baked7/metallic_baked",
       "source": 5
     },
     {
-      "name": "king_white_base_color",
+      "name": "NG_baked2/base_color_baked",
       "source": 6
     },
     {
-      "name": "King_white_ORM",
+      "name": "NG_baked2/metallic_baked",
       "source": 7
     },
     {
-      "name": "King_white_normal",
+      "name": "NG_baked6/base_color_baked",
       "source": 8
     },
     {
-      "name": "Pawn_ORM",
+      "name": "NG_baked6/metallic_baked",
       "source": 9
     },
     {
-      "name": "Pawn_normal",
+      "name": "NG_baked8/base_color_baked",
       "source": 10
     },
     {
-      "name": "pawn_black_base_color",
+      "name": "NG_baked8/roughness_baked",
       "source": 11
     },
     {
-      "name": "Pawn_ORM4",
+      "name": "NG_baked4/base_color_baked",
       "source": 12
     },
     {
-      "name": "Pawn_normal4",
+      "name": "NG_baked4/metallic_baked",
       "source": 13
     },
     {
-      "name": "queen_white_base_color",
+      "name": "NG_baked3/base_color_baked",
       "source": 14
     },
     {
-      "name": "Queen_white_ORM",
+      "name": "NG_baked3/metallic_baked",
       "source": 15
     },
     {
-      "name": "Queen_white_normal",
+      "name": "NG_baked5/base_color_baked",
       "source": 16
     },
     {
-      "name": "queen_black_base_color",
+      "name": "NG_baked5/metallic_baked",
       "source": 17
     },
     {
-      "name": "Queen_black_ORM",
+      "name": "NG_baked13/roughness_baked",
       "source": 18
     },
     {
-      "name": "Queen_black_normal",
+      "name": "NG_baked12/roughness_baked",
       "source": 19
     },
     {
-      "name": "pawn_white_base_color",
+      "name": "NG_baked14/base_color_baked",
       "source": 20
     },
     {
-      "name": "Pawn_ORM2",
+      "name": "NG_baked14/metallic_baked",
       "source": 21
     },
     {
-      "name": "Pawn_normal2",
+      "name": "NG_baked11/base_color_baked",
       "source": 22
     },
     {
-      "name": "castle_black_base_color",
+      "name": "NG_baked11/metallic_baked",
       "source": 23
     },
     {
-      "name": "Castle_ORM",
+      "name": "NG_baked15/base_color_baked",
       "source": 24
     },
     {
-      "name": "Castle_normal",
+      "name": "NG_baked15/metallic_baked",
       "source": 25
     },
     {
-      "name": "knight_black_base_color",
+      "name": "NG_baked10/base_color_baked",
       "source": 26
     },
     {
-      "name": "Knight_ORM",
+      "name": "NG_baked10/metallic_baked",
       "source": 27
-    },
-    {
-      "name": "Knight_normal",
-      "source": 28
-    },
-    {
-      "name": "Pawn_ORM3",
-      "source": 29
-    },
-    {
-      "name": "Pawn_normal3",
-      "source": 30
-    },
-    {
-      "name": "chessboard_base_color",
-      "source": 31
-    },
-    {
-      "name": "Chessboard_ORM",
-      "source": 32
-    },
-    {
-      "name": "chessboard_normal",
-      "source": 33
-    },
-    {
-      "name": "bishop_white_base_color",
-      "source": 34
-    },
-    {
-      "name": "Bishop_white_ORM",
-      "source": 35
-    },
-    {
-      "name": "bishop_white_normal",
-      "source": 36
-    },
-    {
-      "name": "knight_white_base_color",
-      "source": 37
-    },
-    {
-      "name": "Knight_ORM2",
-      "source": 38
-    },
-    {
-      "name": "Knight_normal2",
-      "source": 39
-    },
-    {
-      "name": "bishop_black_base_color",
-      "source": 40
-    },
-    {
-      "name": "Bishop_black_ORM",
-      "source": 41
-    },
-    {
-      "name": "bishop_black_normal",
-      "source": 42
     }
   ],
   "extensionsUsed": [

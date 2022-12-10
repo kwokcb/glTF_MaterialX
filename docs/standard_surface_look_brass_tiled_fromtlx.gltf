@@ -6,39 +6,49 @@
   },
   "images": [
     {
-      "name": "image_basecolor",
-      "uri": "glTF.002_baseColor.png"
+      "name": "NG_brass1/node1",
+      "uri": ""
     },
     {
-      "name": "image_orm",
-      "uri": "glTF.002_occlusionRoughnessMetallic.png"
-    },
-    {
-      "name": "image_normal",
-      "uri": "glTF.002_normal.png"
+      "name": "NG_Greysphere_Calibration/node1",
+      "uri": ""
     }
   ],
   "materials": [
     {
-      "name": "SHD_glTF_002",
+      "name": "SR_brass1",
       "pbrMetallicRoughness": {
-        "baseColorTexture": {
+        "metallicRoughnessTexture": {
           "index": 0
         },
-        "metallicRoughnessTexture": {
-          "index": 1
-        }
+        "baseColorFactor": [0, 0, 0, 1]
       },
       "extensions": {
-        "KHR_materials_clearcoat": {
-        },
         "KHR_materials_ior": {
         },
         "KHR_materials_specular": {
         },
-        "KHR_materials_transmission": {
+        "KHR_materials_emissive_strength": {
         },
-        "KHR_materials_sheen": {
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
+      }
+    },
+    {
+      "name": "SR_Greysphere_Calibration",
+      "pbrMetallicRoughness": {
+        "metallicRoughnessTexture": {
+          "index": 1
+        },
+        "baseColorFactor": [0, 0, 0, 1]
+      },
+      "extensions": {
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
         },
         "KHR_materials_emissive_strength": {
         },
@@ -52,24 +62,17 @@
   ],
   "textures": [
     {
-      "name": "image_basecolor",
+      "name": "NG_brass1/node1",
       "source": 0
     },
     {
-      "name": "image_orm",
+      "name": "NG_Greysphere_Calibration/node1",
       "source": 1
-    },
-    {
-      "name": "image_normal",
-      "source": 2
     }
   ],
   "extensionsUsed": [
-    "KHR_materials_clearcoat",
     "KHR_materials_ior",
     "KHR_materials_specular",
-    "KHR_materials_transmission",
-    "KHR_materials_sheen",
     "KHR_materials_emissive_strength",
     "KHR_materials_iridescence"
   ]

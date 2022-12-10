@@ -1,24 +1,24 @@
 {
   "asset": {
-    "generator": "MaterialX 1.38.61.38.4 to glTF generator",
-    "version": "1.38.6",
-    "min_version": "1.38.6"
+    "copyright": "Created via glTF translation utilities found here: https://github.com/kwokcb/glTF_MaterialX",
+    "generator": "MaterialX 1.38.7 to glTF 2.0 generator",
+    "version": "2.0"
   },
   "images": [
-    {
-      "name": "image_basecolor",
-      "uri": "IridescenceLamp_BaseColor.png"
-    },
-    {
-      "name": "image_orm",
-      "uri": "IridescenceLamp_OcclusionRoughnessMetalness.png"
-    },
     {
       "name": "image_basecolor2",
       "uri": "IridescenceLamp_BaseColor.png"
     },
     {
       "name": "image_orm2",
+      "uri": "IridescenceLamp_OcclusionRoughnessMetalness.png"
+    },
+    {
+      "name": "image_basecolor",
+      "uri": "IridescenceLamp_BaseColor.png"
+    },
+    {
+      "name": "image_orm",
       "uri": "IridescenceLamp_OcclusionRoughnessMetalness.png"
     },
     {
@@ -32,7 +32,7 @@
   ],
   "materials": [
     {
-      "name": "SHD_IridescenceLamp",
+      "name": "SHD_IridescenceLampTransmissionIridescence",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 0
@@ -40,16 +40,56 @@
         "metallicRoughnessTexture": {
           "index": 1
         }
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+          "transmissionFactor": 1
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceFactor": 1,
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
       }
     },
     {
-      "name": "SHD_IridescenceLampTransmissionIridescence",
+      "name": "SHD_IridescenceLamp",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 2
         },
         "metallicRoughnessTexture": {
           "index": 3
+        }
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
         }
       }
     },
@@ -62,24 +102,44 @@
         "metallicRoughnessTexture": {
           "index": 5
         }
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+          "iridescenceFactor": 1,
+          "iridescenceIor": 1,
+          "iridescenceThicknessMinimum": 0,
+          "iridescenceThicknessMaximum": 0
+        }
       }
     }
   ],
   "textures": [
     {
-      "name": "image_basecolor",
+      "name": "image_basecolor2",
       "source": 0
     },
     {
-      "name": "image_orm",
+      "name": "image_orm2",
       "source": 1
     },
     {
-      "name": "image_basecolor2",
+      "name": "image_basecolor",
       "source": 2
     },
     {
-      "name": "image_orm2",
+      "name": "image_orm",
       "source": 3
     },
     {
@@ -90,5 +150,14 @@
       "name": "image_orm3",
       "source": 5
     }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_clearcoat",
+    "KHR_materials_ior",
+    "KHR_materials_specular",
+    "KHR_materials_transmission",
+    "KHR_materials_sheen",
+    "KHR_materials_emissive_strength",
+    "KHR_materials_iridescence"
   ]
 }

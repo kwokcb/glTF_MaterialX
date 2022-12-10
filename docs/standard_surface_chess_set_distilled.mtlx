@@ -1,0 +1,768 @@
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <nodegraph name="NG_BishopBlack">
+    <image name="diffuse2" type="color3">
+      <input name="file" type="filename" value="chess_set/bishop_black_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="metallic2" type="float">
+      <input name="file" type="filename" value="chess_set/bishop_shared_metallic.jpg" />
+    </image>
+    <image name="roughness2" type="float">
+      <input name="file" type="filename" value="chess_set/bishop_black_roughness.jpg" />
+    </image>
+    <image name="normal2" type="vector3">
+      <input name="file" type="filename" value="chess_set/bishop_black_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap4" type="vector3">
+      <input name="in" type="vector3" nodename="normal2" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap4" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse2" />
+      <input name="metalness" type="float" nodename="metallic2" />
+      <input name="specular_roughness" type="float" nodename="roughness2" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Bishop_B" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_BishopBlack" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_BishopBlack" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_BishopBlack" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_BishopBlack" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_BishopBlack" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_BishopBlack" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_BishopBlack" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_BishopBlack" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_BishopBlack" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_BishopBlack" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_BishopBlack" />
+  </gltf_pbr>
+  <surfacematerial name="M_Bishop_B" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Bishop_B" />
+  </surfacematerial>
+  <nodegraph name="NG_BishopWhite">
+    <image name="diffuse3" type="color3">
+      <input name="file" type="filename" value="chess_set/bishop_white_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="metallic3" type="float">
+      <input name="file" type="filename" value="chess_set/bishop_shared_metallic.jpg" />
+    </image>
+    <image name="roughness3" type="float">
+      <input name="file" type="filename" value="chess_set/bishop_white_roughness.jpg" />
+    </image>
+    <image name="normal3" type="vector3">
+      <input name="file" type="filename" value="chess_set/bishop_white_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap5" type="vector3">
+      <input name="in" type="vector3" nodename="normal3" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap5" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse3" />
+      <input name="metalness" type="float" nodename="metallic3" />
+      <input name="specular_roughness" type="float" nodename="roughness3" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Bishop_W" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_BishopWhite" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_BishopWhite" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_BishopWhite" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_BishopWhite" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_BishopWhite" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_BishopWhite" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_BishopWhite" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_BishopWhite" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_BishopWhite" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_BishopWhite" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_BishopWhite" />
+  </gltf_pbr>
+  <surfacematerial name="M_Bishop_W" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Bishop_W" />
+  </surfacematerial>
+  <nodegraph name="NG_CastleBlack">
+    <image name="diffuse6" type="color3">
+      <input name="file" type="filename" value="chess_set/castle_black_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="metallic6" type="float">
+      <input name="file" type="filename" value="chess_set/castle_shared_metallic.jpg" />
+    </image>
+    <image name="roughness6" type="float">
+      <input name="file" type="filename" value="chess_set/castle_shared_roughness.jpg" />
+    </image>
+    <image name="normal6" type="vector3">
+      <input name="file" type="filename" value="chess_set/castle_shared_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap8" type="vector3">
+      <input name="in" type="vector3" nodename="normal6" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap8" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse6" />
+      <input name="metalness" type="float" nodename="metallic6" />
+      <input name="specular_roughness" type="float" nodename="roughness6" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Castle_B" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_CastleBlack" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_CastleBlack" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_CastleBlack" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_CastleBlack" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_CastleBlack" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_CastleBlack" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_CastleBlack" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_CastleBlack" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_CastleBlack" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_CastleBlack" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_CastleBlack" />
+  </gltf_pbr>
+  <surfacematerial name="M_Castle_B" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Castle_B" />
+  </surfacematerial>
+  <nodegraph name="NG_CastleWhite">
+    <image name="diffuse7" type="color3">
+      <input name="file" type="filename" value="chess_set/castle_white_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="metallic7" type="float">
+      <input name="file" type="filename" value="chess_set/castle_shared_metallic.jpg" />
+    </image>
+    <image name="roughness7" type="float">
+      <input name="file" type="filename" value="chess_set/castle_shared_roughness.jpg" />
+    </image>
+    <image name="normal7" type="vector3">
+      <input name="file" type="filename" value="chess_set/castle_shared_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap9" type="vector3">
+      <input name="in" type="vector3" nodename="normal7" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap9" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse7" />
+      <input name="metalness" type="float" nodename="metallic7" />
+      <input name="specular_roughness" type="float" nodename="roughness7" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Castle_W" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_CastleWhite" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_CastleWhite" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_CastleWhite" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_CastleWhite" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_CastleWhite" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_CastleWhite" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_CastleWhite" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_CastleWhite" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_CastleWhite" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_CastleWhite" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_CastleWhite" />
+  </gltf_pbr>
+  <surfacematerial name="M_Castle_W" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Castle_W" />
+  </surfacematerial>
+  <nodegraph name="NG_ChessBoard">
+    <image name="mtlximage13" type="color3">
+      <input name="file" type="filename" value="chess_set/chessboard_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="mtlximage16" type="float">
+      <input name="file" type="filename" value="chess_set/chessboard_metallic.jpg" />
+    </image>
+    <image name="mtlximage17" type="float">
+      <input name="file" type="filename" value="chess_set/chessboard_roughness.jpg" />
+    </image>
+    <image name="mtlximage15" type="vector3">
+      <input name="file" type="filename" value="chess_set/chessboard_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap12" type="vector3">
+      <input name="in" type="vector3" nodename="mtlximage15" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap12" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="mtlximage13" />
+      <input name="metalness" type="float" nodename="mtlximage16" />
+      <input name="specular_roughness" type="float" nodename="mtlximage17" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Chessboard" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_ChessBoard" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_ChessBoard" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_ChessBoard" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_ChessBoard" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_ChessBoard" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_ChessBoard" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_ChessBoard" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_ChessBoard" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_ChessBoard" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_ChessBoard" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_ChessBoard" />
+  </gltf_pbr>
+  <surfacematerial name="M_Chessboard" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Chessboard" />
+  </surfacematerial>
+  <nodegraph name="NG_KingBlack">
+    <image name="mtlximage1" type="color3">
+      <input name="file" type="filename" value="chess_set/king_black_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="mtlximage2" type="float">
+      <input name="file" type="filename" value="chess_set/king_shared_metallic.jpg" />
+    </image>
+    <image name="mtlximage4" type="float">
+      <input name="file" type="filename" value="chess_set/king_black_roughness.jpg" />
+    </image>
+    <image name="mtlximage3" type="float">
+      <input name="file" type="filename" value="chess_set/king_shared_scattering.jpg" />
+    </image>
+    <image name="mtlximage6" type="vector3">
+      <input name="file" type="filename" value="chess_set/king_black_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap1" type="vector3">
+      <input name="in" type="vector3" nodename="mtlximage6" />
+    </normalmap>
+    <output name="subsurface_output" type="float" nodename="mtlximage3" />
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap1" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="mtlximage1" />
+      <input name="metalness" type="float" nodename="mtlximage2" />
+      <input name="specular_roughness" type="float" nodename="mtlximage4" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="King_B" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_KingBlack" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_KingBlack" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_KingBlack" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_KingBlack" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_KingBlack" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_KingBlack" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_KingBlack" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_KingBlack" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_KingBlack" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_KingBlack" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_KingBlack" />
+  </gltf_pbr>
+  <surfacematerial name="M_King_B" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="King_B" />
+  </surfacematerial>
+  <nodegraph name="NG_KingWhite">
+    <image name="mtlximage7" type="color3">
+      <input name="file" type="filename" value="chess_set/king_white_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="mtlximage10" type="float">
+      <input name="file" type="filename" value="chess_set/king_shared_metallic.jpg" />
+    </image>
+    <image name="mtlximage11" type="float">
+      <input name="file" type="filename" value="chess_set/king_white_roughness.jpg" />
+    </image>
+    <image name="mtlximage8" type="float">
+      <input name="file" type="filename" value="chess_set/king_shared_scattering.jpg" />
+    </image>
+    <image name="mtlximage9" type="vector3">
+      <input name="file" type="filename" value="chess_set/king_white_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap11" type="vector3">
+      <input name="in" type="vector3" nodename="mtlximage9" />
+    </normalmap>
+    <output name="subsurface_output" type="float" nodename="mtlximage8" />
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap11" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="mtlximage7" />
+      <input name="metalness" type="float" nodename="mtlximage10" />
+      <input name="specular_roughness" type="float" nodename="mtlximage11" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="King_W" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_KingWhite" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_KingWhite" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_KingWhite" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_KingWhite" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_KingWhite" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_KingWhite" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_KingWhite" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_KingWhite" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_KingWhite" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_KingWhite" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_KingWhite" />
+  </gltf_pbr>
+  <surfacematerial name="M_King_W" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="King_W" />
+  </surfacematerial>
+  <nodegraph name="NG_KnightBlack">
+    <image name="diffuse4" type="color3">
+      <input name="file" type="filename" value="chess_set/knight_black_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="roughness4" type="float">
+      <input name="file" type="filename" value="chess_set/knight_black_roughness.jpg" />
+    </image>
+    <image name="normal4" type="vector3">
+      <input name="file" type="filename" value="chess_set/knight_black_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap6" type="vector3">
+      <input name="in" type="vector3" nodename="normal4" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap6" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse4" />
+      <input name="specular_roughness" type="float" nodename="roughness4" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Knight_B" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_KnightBlack" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_KnightBlack" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_KnightBlack" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_KnightBlack" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_KnightBlack" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_KnightBlack" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_KnightBlack" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_KnightBlack" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_KnightBlack" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_KnightBlack" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_KnightBlack" />
+  </gltf_pbr>
+  <surfacematerial name="M_Knight_B" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Knight_B" />
+  </surfacematerial>
+  <nodegraph name="NG_KnightWhite">
+    <image name="diffuse5" type="color3">
+      <input name="file" type="filename" value="chess_set/knight_white_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="roughness5" type="float">
+      <input name="file" type="filename" value="chess_set/knight_white_roughness.jpg" />
+    </image>
+    <image name="normal5" type="vector3">
+      <input name="file" type="filename" value="chess_set/knight_white_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap7" type="vector3">
+      <input name="in" type="vector3" nodename="normal5" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap7" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse5" />
+      <input name="specular_roughness" type="float" nodename="roughness5" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Knight_W" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_KnightWhite" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_KnightWhite" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_KnightWhite" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_KnightWhite" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_KnightWhite" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_KnightWhite" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_KnightWhite" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_KnightWhite" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_KnightWhite" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_KnightWhite" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_KnightWhite" />
+  </gltf_pbr>
+  <surfacematerial name="M_Knight_W" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Knight_W" />
+  </surfacematerial>
+  <nodegraph name="NG_PawnBodyBlack">
+    <image name="diffuse9" type="color3">
+      <input name="file" type="filename" value="chess_set/pawn_black_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="metallic9" type="float">
+      <input name="file" type="filename" value="chess_set/pawn_shared_metallic.jpg" />
+    </image>
+    <image name="roughness9" type="float">
+      <input name="file" type="filename" value="chess_set/pawn_shared_roughness.jpg" />
+    </image>
+    <image name="normal9" type="vector3">
+      <input name="file" type="filename" value="chess_set/pawn_shared_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap13" type="vector3">
+      <input name="in" type="vector3" nodename="normal9" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap13" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse9" />
+      <input name="metalness" type="float" nodename="metallic9" />
+      <input name="specular_roughness" type="float" nodename="roughness9" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Pawn_Body_B" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_PawnBodyBlack" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_PawnBodyBlack" />
+  </gltf_pbr>
+  <surfacematerial name="M_Pawn_Body_B" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Pawn_Body_B" />
+  </surfacematerial>
+  <nodegraph name="NG_PawnBodyWhite">
+    <image name="diffuse8" type="color3">
+      <input name="file" type="filename" value="chess_set/pawn_white_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="metallic8" type="float">
+      <input name="file" type="filename" value="chess_set/pawn_shared_metallic.jpg" />
+    </image>
+    <image name="roughness8" type="float">
+      <input name="file" type="filename" value="chess_set/pawn_shared_roughness.jpg" />
+    </image>
+    <image name="normal8" type="vector3">
+      <input name="file" type="filename" value="chess_set/pawn_shared_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap10" type="vector3">
+      <input name="in" type="vector3" nodename="normal8" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap10" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse8" />
+      <input name="metalness" type="float" nodename="metallic8" />
+      <input name="specular_roughness" type="float" nodename="roughness8" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Pawn_Body_W" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_PawnBodyWhite" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_PawnBodyWhite" />
+  </gltf_pbr>
+  <surfacematerial name="M_Pawn_Body_W" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Pawn_Body_W" />
+  </surfacematerial>
+  <nodegraph name="NG_PawnTopBlack">
+    <image name="mtlximage19" type="float">
+      <input name="file" type="filename" value="chess_set/pawn_shared_roughness.jpg" />
+    </image>
+    <image name="mtlximage18" type="vector3">
+      <input name="file" type="filename" value="chess_set/pawn_shared_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap14" type="vector3">
+      <input name="in" type="vector3" nodename="mtlximage18" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap14" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="specular_roughness" type="float" nodename="mtlximage19" />
+      <input name="base_color" type="color3" value="1, 1, 1" />
+      <input name="transmission" type="float" value="1" />
+      <input name="transmission_color" type="color3" value="0.2995, 0.5, 0.450276" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Pawn_Top_B" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_PawnTopBlack" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_PawnTopBlack" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_PawnTopBlack" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_PawnTopBlack" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_PawnTopBlack" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_PawnTopBlack" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_PawnTopBlack" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_PawnTopBlack" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_PawnTopBlack" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_PawnTopBlack" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_PawnTopBlack" />
+  </gltf_pbr>
+  <surfacematerial name="M_Pawn_Top_B" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Pawn_Top_B" />
+  </surfacematerial>
+  <nodegraph name="NG_PawnTopWhite">
+    <image name="mtlximage21" type="float">
+      <input name="file" type="filename" value="chess_set/pawn_shared_roughness.jpg" />
+    </image>
+    <image name="mtlximage20" type="vector3">
+      <input name="file" type="filename" value="chess_set/pawn_shared_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap15" type="vector3">
+      <input name="in" type="vector3" nodename="mtlximage20" />
+    </normalmap>
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap15" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="specular_roughness" type="float" nodename="mtlximage21" />
+      <input name="base_color" type="color3" value="1, 1, 1" />
+      <input name="transmission" type="float" value="1" />
+      <input name="transmission_color" type="color3" value="1, 1, 0.828" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Pawn_Top_W" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_PawnTopWhite" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_PawnTopWhite" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_PawnTopWhite" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_PawnTopWhite" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_PawnTopWhite" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_PawnTopWhite" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_PawnTopWhite" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_PawnTopWhite" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_PawnTopWhite" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_PawnTopWhite" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_PawnTopWhite" />
+  </gltf_pbr>
+  <surfacematerial name="M_Pawn_Top_W" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Pawn_Top_W" />
+  </surfacematerial>
+  <nodegraph name="NG_QueenBlack">
+    <image name="diffuse" type="color3">
+      <input name="file" type="filename" value="chess_set/queen_black_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="metallic" type="float">
+      <input name="file" type="filename" value="chess_set/queen_shared_metallic.jpg" />
+    </image>
+    <image name="roughness" type="float">
+      <input name="file" type="filename" value="chess_set/queen_black_roughness.jpg" />
+    </image>
+    <image name="sss" type="float">
+      <input name="file" type="filename" value="chess_set/queen_shared_scattering.jpg" />
+    </image>
+    <image name="normal" type="vector3">
+      <input name="file" type="filename" value="chess_set/queen_black_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap2" type="vector3">
+      <input name="in" type="vector3" nodename="normal" />
+    </normalmap>
+    <output name="subsurface_output" type="float" nodename="sss" />
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap2" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse" />
+      <input name="metalness" type="float" nodename="metallic" />
+      <input name="specular_roughness" type="float" nodename="roughness" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Queen_B" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_QueenBlack" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_QueenBlack" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_QueenBlack" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_QueenBlack" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_QueenBlack" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_QueenBlack" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_QueenBlack" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_QueenBlack" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_QueenBlack" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_QueenBlack" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_QueenBlack" />
+  </gltf_pbr>
+  <surfacematerial name="M_Queen_B" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Queen_B" />
+  </surfacematerial>
+  <nodegraph name="NG_QueenWhite">
+    <image name="diffuse1" type="color3">
+      <input name="file" type="filename" value="chess_set/queen_white_base_color.jpg" colorspace="srgb_texture" />
+    </image>
+    <image name="metallic1" type="float">
+      <input name="file" type="filename" value="chess_set/queen_shared_metallic.jpg" />
+    </image>
+    <image name="roughness1" type="float">
+      <input name="file" type="filename" value="chess_set/queen_white_roughness.jpg" />
+    </image>
+    <image name="sss1" type="float">
+      <input name="file" type="filename" value="chess_set/queen_shared_scattering.jpg" />
+    </image>
+    <image name="normal1" type="vector3">
+      <input name="file" type="filename" value="chess_set/queen_white_normal.jpg" />
+    </image>
+    <normalmap name="mtlxnormalmap3" type="vector3">
+      <input name="in" type="vector3" nodename="normal1" />
+    </normalmap>
+    <output name="subsurface_output" type="float" nodename="sss1" />
+    <output name="normal_output" type="vector3" nodename="mtlxnormalmap3" />
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base_color" type="color3" nodename="diffuse1" />
+      <input name="metalness" type="float" nodename="metallic1" />
+      <input name="specular_roughness" type="float" nodename="roughness1" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+  <gltf_pbr name="Queen_W" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="NG_QueenWhite" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="NG_QueenWhite" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="NG_QueenWhite" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="NG_QueenWhite" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="NG_QueenWhite" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="NG_QueenWhite" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="NG_QueenWhite" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="NG_QueenWhite" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="NG_QueenWhite" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="NG_QueenWhite" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="NG_QueenWhite" />
+  </gltf_pbr>
+  <surfacematerial name="M_Queen_W" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="Queen_W" />
+  </surfacematerial>
+  <look name="L_ChessSet">
+    <materialassign name="Chessboard" geom="Chessboard" material="M_Chessboard" />
+    <materialassign name="Bishop_B" geom="Bishop_B" material="M_Bishop_B" />
+    <materialassign name="Bishop_W" geom="Bishop_W" material="M_Bishop_W" />
+    <materialassign name="Castle_B" geom="Castle_B" material="M_Castle_B" />
+    <materialassign name="Castle_W" geom="Castle_W" material="M_Castle_W" />
+    <materialassign name="Knight_B" geom="Knight_B" material="M_Knight_B" />
+    <materialassign name="Knight_W" geom="Knight_W" material="M_Knight_W" />
+    <materialassign name="King_B" geom="King_B" material="M_King_B" />
+    <materialassign name="King_W" geom="King_W" material="M_King_W" />
+    <materialassign name="Pawn_Body_B" geom="Pawn_Body_B" material="M_Pawn_Body_B" />
+    <materialassign name="Pawn_Top_B" geom="Pawn_Top_B" material="M_Pawn_Top_B" />
+    <materialassign name="Pawn_Body_W" geom="Pawn_Body_W" material="M_Pawn_Body_W" />
+    <materialassign name="Pawn_Top_W" geom="Pawn_Top_W" material="M_Pawn_Top_W" />
+    <materialassign name="Queen_B" geom="Queen_B" material="M_Queen_B" />
+    <materialassign name="Queen_W" geom="Queen_W" material="M_Queen_W" />
+  </look>
+</materialx>

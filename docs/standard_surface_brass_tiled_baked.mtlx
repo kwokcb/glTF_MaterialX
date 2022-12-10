@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <nodegraph name="NG_baked" colorspace="srgb_texture">
+    <image name="base_color_baked" type="color3">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\Tiled_Brass_gltf_pbr_base_color.png" />
+    </image>
+    <output name="base_color_output" type="color3" nodename="base_color_baked" />
+    <image name="roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\Tiled_Brass_gltf_pbr_roughness.png" />
+    </image>
+    <output name="roughness_output" type="float" nodename="roughness_baked" />
+    <image name="clearcoat_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\Tiled_Brass_gltf_pbr_clearcoat.png" />
+    </image>
+    <output name="clearcoat_output" type="float" nodename="clearcoat_baked" />
+    <image name="clearcoat_roughness_baked" type="float">
+      <input name="file" type="filename" value="D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\Tiled_Brass_gltf_pbr_clearcoat_roughness.png" />
+    </image>
+    <output name="clearcoat_roughness_output" type="float" nodename="clearcoat_roughness_baked" />
+  </nodegraph>
+  <gltf_pbr name="SR_brass1_baked" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_output" nodegraph="NG_baked" />
+    <input name="roughness" type="float" output="roughness_output" nodegraph="NG_baked" />
+    <input name="clearcoat" type="float" output="clearcoat_output" nodegraph="NG_baked" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_output" nodegraph="NG_baked" />
+  </gltf_pbr>
+  <surfacematerial name="Tiled_Brass_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SR_brass1_baked" />
+  </surfacematerial>
+</materialx>

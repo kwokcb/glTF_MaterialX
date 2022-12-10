@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<materialx version="1.38">
+  <gltf_pbr name="SHD_Default" type="surfaceshader">
+    <input name="base_color" type="color3" value="0.8, 0.8, 0.8" />
+    <input name="alpha" type="float" value="1" />
+    <input name="metallic" type="float" value="0.1" />
+    <input name="roughness" type="float" value="0.99" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_Default" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_Default" />
+  </surfacematerial>
+  <look name="look1">
+    <materialassign name="materialassign1" material="MAT_Default" geom="RootNode/Cube" />
+  </look>
+</materialx>

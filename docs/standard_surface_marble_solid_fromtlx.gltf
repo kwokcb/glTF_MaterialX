@@ -6,39 +6,23 @@
   },
   "images": [
     {
-      "name": "image_basecolor",
-      "uri": "Default_albedo.jpg"
-    },
-    {
-      "name": "image_orm",
-      "uri": "Default_metalRoughness.jpg"
-    },
-    {
-      "name": "image_occlusion",
-      "uri": "Default_AO.jpg"
-    },
-    {
-      "name": "image_normal",
-      "uri": "Default_normal.jpg"
-    },
-    {
-      "name": "image_emission",
-      "uri": "Default_emissive.jpg"
+      "name": "NG_baked/base_color_baked",
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/Marble_3D_gltf_pbr_base_color.png"
     }
   ],
   "materials": [
     {
-      "name": "SHD_Material_MR",
+      "name": "SR_marble1_baked",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 0
         },
-        "metallicRoughnessTexture": {
-          "index": 1
-        }
+        "metallicFactor": 0,
+        "roughnessFactor": 0.0980392024
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -55,38 +39,13 @@
           "iridescenceThicknessMinimum": 0,
           "iridescenceThicknessMaximum": 0
         }
-      },
-      "occlusionTexture": {
-        "index": 2,
-        "scale": 0
-      },
-      "emissiveTexture": {
-        "index": 4,
-        "scale": 0
-      },
-      "emissiveFactor": [1, 1, 1]
+      }
     }
   ],
   "textures": [
     {
-      "name": "image_basecolor",
+      "name": "NG_baked/base_color_baked",
       "source": 0
-    },
-    {
-      "name": "image_orm",
-      "source": 1
-    },
-    {
-      "name": "image_occlusion",
-      "source": 2
-    },
-    {
-      "name": "image_normal",
-      "source": 3
-    },
-    {
-      "name": "image_emission",
-      "source": 4
     }
   ],
   "extensionsUsed": [

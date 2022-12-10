@@ -121,28 +121,138 @@ uses a heuristic of checking if the assigned geometry has a color channel to add
 | --- | --- | --- | 
 | <img src="./docs/flightHelmet.png" width=73%></img>  | <img src="./docs/VertexColorTest.png" width=100%></img> | <img src="./docs/AlphaBlendTest.png" width=100%></img> |
 
-## 5. Example Results
+## 5. Results
 
 The [current "Boombox" asset](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/resources/Materials/Examples/GltfPbr/gltf_pbr_boombox.mtlx) which is distributed as part of MaterialX is generated using the glTF to MaterialX utility.
 
-### Import / Re-export tests
+### 5.1 glTF Import 
+
+<details open><summary>Sample Results</summary>
 
 Note that all renders are generated as part of unit tests using the core `MaterialXView` program.
 
 | Asset | MaterialX from glTF | glTF from MaterialX | Render |
 | -- | -- | -- | -- |   
-| glTF Logo | <a href="./docs/glTF_fromgltf.mtlx">MaterialX</a> | <a href="./docs/glTF_fromtlx.gltf">GLTF</a> | <img src="docs/glTF.png" width=70%></img> |
-| Chess Set | <a href="./docs/ABeautifulGame_fromgltf.mtlx">MaterialX</a> | <a href="./docs/ABeautifulGame_fromtlx.gltf">GLTF</a> | <img src="docs/ABeautifulGame.png" width=70%></img> |
-| Damaged Helmet | <a href="./docs/DamagedHelmet_fromgltf.mtlx">MaterialX</a> | <a href="./docs/DamagedHelmet_fromtlx.gltf">GLTF</a> | <img src="docs/DamagedHelmet.png" width=70%></img> |
-| Boombox with Axes | <a href="./docs/BoomBoxWithAxes_fromgltf.mtlx">MaterialX</a> | <a href="./docs/BoomBoxWithAxes_fromtlx.gltf">GLTF</a> | <img src="docs/BoomBoxWithAxes.png" width=70%></img> |
-| Iridescence Lamp | <a href="./docs/IridescenceLamp_fromgltf.mtlx">MaterialX</a> | <a href="./docs/IridescenceLamp_fromtlx.gltf">GLTF</a> | <img src="docs/IridescenceLamp.png" width=70%></img> |
-| Texture Transform Test | <a href="./docs/TextureTransformTest_fromgltf.mtlx">MaterialX</a> | <a href="./docs/TextureTransformTest_fromtlx.gltf">GLTF</a> | <img src="docs/TextureTransformTest.png" width=70%></img> |
-| Unlit Test | <a href="./docs/UnlitTest_fromgltf.mtlx">MaterialX</a> | <a href="./docs/UnlitTest_fromtlx.gltf">GLTF</a> | <img src="docs/UnlitTest.png" width=70%></img> |
+| glTF Logo | <a href="./docs/glTF_fromgltf.mtlx">MaterialX</a> | <a href="./docs/glTF_fromtlx.gltf">GLTF</a> | <img src="docs/glTF.png" width=15%></img> |
+| Chess Set | <a href="./docs/ABeautifulGame_fromgltf.mtlx">MaterialX</a> | <a href="./docs/ABeautifulGame_fromtlx.gltf">GLTF</a> | <img src="docs/ABeautifulGame.png" width=15%></img> |
+| Damaged Helmet | <a href="./docs/DamagedHelmet_fromgltf.mtlx">MaterialX</a> | <a href="./docs/DamagedHelmet_fromtlx.gltf">GLTF</a> | <img src="docs/DamagedHelmet.png" width=15%></img> |
+| Boombox with Axes | <a href="./docs/BoomBoxWithAxes_fromgltf.mtlx">MaterialX</a> | <a href="./docs/BoomBoxWithAxes_fromtlx.gltf">GLTF</a> | <img src="docs/BoomBoxWithAxes.png" width=15%></img> |
+| Iridescence Lamp | <a href="./docs/IridescenceLamp_fromgltf.mtlx">MaterialX</a> | <a href="./docs/IridescenceLamp_fromtlx.gltf">GLTF</a> | <img src="docs/IridescenceLamp.png" width=15%></img> |
+| Texture Transform Test | <a href="./docs/TextureTransformTest_fromgltf.mtlx">MaterialX</a> | <a href="./docs/TextureTransformTest_fromtlx.gltf">GLTF</a> | <img src="docs/TextureTransformTest.png" width=15%></img> |
+| Unlit Test | <a href="./docs/UnlitTest_fromgltf.mtlx">MaterialX</a> | <a href="./docs/UnlitTest_fromtlx.gltf">GLTF</a> | <img src="docs/UnlitTest.png" width=15%></img> |
 
-## Export Tests
+</details>
+<p>
+
+### 5.2 glTF Export
+
+<details open><summary>Sample Results</summary>
 
 The results of converting the "stock" MaterialX materials to 
-glTF is forthcoming. It uses the `shader translation` graph
+glTF are going through further testing. Currently metallic-roughness-occlusion maps are not created by the baking 
+process and needs to be addressed. 
+
+| Asset | MaterialX to glTF | glTF to MaterialX | Render |
+| --- | --- | --- | --- |
+| Jade | <a href="./docs/standard_surface_jade_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_jade_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_jade_fromtlx.gltf_reimport.mtlx.png" width=15%></img> |
+| Marble | <a href="./docs/standard_surface_marble_solid_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_marble_solid_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_marble_solid_fromtlx.gltf_reimport.mtlx.png" width=15%></img> |
+| Plastic | <a href="./docs/standard_surface_plastic_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_plastic_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_plastic_fromtlx.gltf_reimport.mtlx.png" width=15%></img> |
+| Wood | <a href="./docs/standard_surface_wood_tiled_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_wood_tiled_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_wood_tiled_fromtlx.gltf_reimport.mtlx.png" width=15%></img> |
+
+</details>
+
+The setup uses the `shader translation` graph
 found [here](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/bxdf/translation/standard_surface_to_gltf_pbr.mtlx) to accomplish the workflow as presented in the ASWF presentation:
 
-<img src="docs/distillation_workflow.png" width=80%></img> |
+<img src="docs/distillation_workflow.png" width=70%></img> |
+
+An expanded example is shown here for Plastic
+
+<details>
+<summary>Shader translation graph inserted</summary>
+
+```xml
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <gltf_pbr name="SR_plastic" type="surfaceshader">
+    <input name="base_color" type="color3" output="base_color_out" nodegraph="nodegraph1" />
+    <input name="metallic" type="float" output="metallic_out" nodegraph="nodegraph1" />
+    <input name="roughness" type="float" output="roughness_out" nodegraph="nodegraph1" />
+    <input name="transmission" type="float" output="transmission_out" nodegraph="nodegraph1" />
+    <input name="thickness" type="float" output="thickness_out" nodegraph="nodegraph1" />
+    <input name="attenuation_color" type="color3" output="attenuation_color_out" nodegraph="nodegraph1" />
+    <input name="sheen_color" type="color3" output="sheen_color_out" nodegraph="nodegraph1" />
+    <input name="sheen_roughness" type="float" output="sheen_roughness_out" nodegraph="nodegraph1" />
+    <input name="clearcoat" type="float" output="clearcoat_out" nodegraph="nodegraph1" />
+    <input name="clearcoat_roughness" type="float" output="clearcoat_roughness_out" nodegraph="nodegraph1" />
+    <input name="emissive" type="color3" output="emissive_out" nodegraph="nodegraph1" />
+  </gltf_pbr>
+  <surfacematerial name="Plastic" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SR_plastic" />
+  </surfacematerial>
+  <nodegraph name="nodegraph1">
+    <standard_surface_to_gltf_pbr name="node1" type="multioutput" nodedef="ND_standard_surface_to_gltf_pbr">
+      <input name="base" type="float" value="1" />
+      <input name="base_color" type="color3" value="0.10470402, 0.24188282, 0.81800002" />
+      <input name="specular_roughness" type="float" value="0.32467532157897949" />
+    </standard_surface_to_gltf_pbr>
+    <output name="base_color_out" type="color3" nodename="node1" output="base_color_out" />
+    <output name="metallic_out" type="float" nodename="node1" output="metallic_out" />
+    <output name="roughness_out" type="float" nodename="node1" output="roughness_out" />
+    <output name="transmission_out" type="float" nodename="node1" output="transmission_out" />
+    <output name="thickness_out" type="float" nodename="node1" output="thickness_out" />
+    <output name="attenuation_color_out" type="color3" nodename="node1" output="attenuation_color_out" />
+    <output name="sheen_color_out" type="color3" nodename="node1" output="sheen_color_out" />
+    <output name="sheen_roughness_out" type="float" nodename="node1" output="sheen_roughness_out" />
+    <output name="clearcoat_out" type="float" nodename="node1" output="clearcoat_out" />
+    <output name="clearcoat_roughness_out" type="float" nodename="node1" output="clearcoat_roughness_out" />
+    <output name="emissive_out" type="color3" nodename="node1" output="emissive_out" />
+  </nodegraph>
+</materialx>
+
+```
+</details>
+<details><summary>Reuls of baking of graph</summary>
+
+```XML
+<?xml version="1.0"?>
+<materialx version="1.38" colorspace="lin_rec709">
+  <gltf_pbr name="SR_plastic_baked" type="surfaceshader">
+    <input name="base_color" type="color3" value="0.356863, 0.529412, 0.913725" colorspace="srgb_texture" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="0.32549" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+  </gltf_pbr>
+  <surfacematerial name="Plastic_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SR_plastic_baked" />
+  </surfacematerial>
+</materialx>
+```
+
+</details>
+<details><summary>Converted to glTF</summary>
+
+```JSON
+{
+  "asset": {
+    "copyright": "Created via glTF translation utilities found here: https://github.com/kwokcb/glTF_MaterialX",
+    "generator": "MaterialX 1.38.7 to glTF 2.0 generator",
+    "version": "2.0"
+  },
+  "materials": [
+    {
+      "name": "SR_plastic_baked",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 0.325489998,
+        "baseColorFactor": [0.356862992, 0.529411972, 0.913725019, 1]
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
+        }
+      }
+    }
+  ],
+}
+```

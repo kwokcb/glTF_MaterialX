@@ -4,33 +4,17 @@
     "generator": "MaterialX 1.38.7 to glTF 2.0 generator",
     "version": "2.0"
   },
-  "images": [
-    {
-      "name": "image_basecolor",
-      "uri": "glTF.002_baseColor.png"
-    },
-    {
-      "name": "image_orm",
-      "uri": "glTF.002_occlusionRoughnessMetallic.png"
-    },
-    {
-      "name": "image_normal",
-      "uri": "glTF.002_normal.png"
-    }
-  ],
   "materials": [
     {
-      "name": "SHD_glTF_002",
+      "name": "SR_velvet_baked",
       "pbrMetallicRoughness": {
-        "baseColorTexture": {
-          "index": 0
-        },
-        "metallicRoughnessTexture": {
-          "index": 1
-        }
+        "metallicFactor": 0,
+        "roughnessFactor": 0.694118023,
+        "baseColorFactor": [0.164706007, 0, 0.215685993, 1]
       },
       "extensions": {
         "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.0980392024
         },
         "KHR_materials_ior": {
         },
@@ -39,6 +23,8 @@
         "KHR_materials_transmission": {
         },
         "KHR_materials_sheen": {
+          "sheenColorFactor": [0.666666985, 0.266667008, 1],
+          "sheenRoughnessFactor": 0.298038989
         },
         "KHR_materials_emissive_strength": {
         },
@@ -48,20 +34,6 @@
           "iridescenceThicknessMaximum": 0
         }
       }
-    }
-  ],
-  "textures": [
-    {
-      "name": "image_basecolor",
-      "source": 0
-    },
-    {
-      "name": "image_orm",
-      "source": 1
-    },
-    {
-      "name": "image_normal",
-      "source": 2
     }
   ],
   "extensionsUsed": [
