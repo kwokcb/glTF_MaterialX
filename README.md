@@ -148,11 +148,9 @@ Note that all renders are generated as part of unit tests using the core `Materi
 
 <details open><summary>Sample Results</summary>
 
-The results of converting the "stock" MaterialX materials to 
-glTF are going through further testing. Currently metallic-roughness-occlusion maps are not created by the baking 
-process and needs to be addressed. 
+Conversion from "stock" MaterialX materials to glTF is available for "distilation". 
 
-Note that ORM maps are generated on the flow based on whether there are any connections for `occlusion`, `metallic` and `roughness`. If metallic and or roughness are mapped to different inputs then the upstream image (or uniform input) are merged. This allows (re)import to `<gltf_colorimage>` which is channel splitting built in.
+Metallic-roughness-occlusion (ORM) maps are generated based on whether there are any graph connections for `occlusion`, `metallic` and `roughness` inputs on a `<gtlf_pbr>` instance. If metallic and or roughness are mapped to different inputs then the upstream image(s) or uniform input(s) are merged. This allows for (re)import to `<gltf_colorimage>` which supports channel splitting of the merged image.
 
 | Asset | MaterialX to glTF | glTF to MaterialX | Render | Notes |
 | --- | --- | --- | --- | --- |
