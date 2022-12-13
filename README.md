@@ -157,15 +157,14 @@ Note that ORM maps are generated on the flow based on whether there are any conn
 | Asset | MaterialX to glTF | glTF to MaterialX | Render | Notes |
 | --- | --- | --- | --- | --- |
 | Jade | <a href="./docs/standard_surface_jade_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_jade_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_jade_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | |
-| Marble | <a href="./docs/standard_surface_marble_solid_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_marble_solid_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_marble_solid_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | Fidelity and control lost in baking process. <img src="docs/Marble_3D_gltf_pbr_base_color.png" width=80%></img> |
+| Marble | <a href="./docs/standard_surface_marble_solid_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_marble_solid_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_marble_solid_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | Fidelity and control lost in baking <img src="docs/Marble_3D_gltf_pbr_base_color.png" width=80%></img> |
 | Plastic | <a href="./docs/standard_surface_plastic_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_plastic_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_plastic_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | |
 | Wood | <a href="./docs/standard_surface_wood_tiled_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_wood_tiled_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_wood_tiled_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | ORM map created <img src="docs/Tiled_Wood_gltf_pbr_roughness_combined.png" width=80%></img> |
 | Brass | <a href="./docs/standard_surface_brass_tiled_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_brass_tiled_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_brass_tiled_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | ORM map created <img src="docs/Tiled_Brass_gltf_pbr_roughness_combined.png" width=80%></img> |
 | Chess Piece | <a href="./docs/standard_surface_chess_set_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_chess_set_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_chess_set_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | ORM map created <img src="docs/M_Chessboard_gltf_pbr_metallic_combined.png" width=80%></img> |
 | Brick | <a href="./docs/standard_surface_brick_procedural_fromtlx.gltf">glTF</a> | <a href="./docs/standard_surface_brick_procedural_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_brick_procedural_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | ORM map created <img src="docs/M_BrickPattern_gltf_pbr_roughness_combined.png" width=80%></img> |
-| Calibration | <a href="./docs/standard_surface_greysphere_calibration.gltf">glTF</a> | <a href="./docs/standard_surface_greysphere_calibration_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_greysphere_calibration_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | ORM map created <img src="docs/M_BrickPattern_gltf_pbr_roughness_combined.png" width=80%></img> |
+| Calibration | <a href="./docs/standard_surface_greysphere_calibration.gltf">glTF</a> | <a href="./docs/standard_surface_greysphere_calibration_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_greysphere_calibration_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | |
 | Velvet | <a href="./docs/standard_surface_velvet.gltf">glTF</a> | <a href="./docs/standard_surface_velvet_baked.mtlx">MTLX</a> | <img src="docs/standard_surface_velvet_fromtlx.gltf_reimport.mtlx.png" width=60%></img> | |
-|
 
 </details>
 
@@ -270,6 +269,7 @@ An expanded example is shown here for tiled brass.
 
 </details>
 <details><summary>Converted to glTF</summary>
+
 ORM map merging occurs during this step to create the "combined" BGRA image created and referenced.
 ```JSON
 {
