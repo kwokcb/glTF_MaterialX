@@ -8,7 +8,6 @@
     {
       "name": "SR_metal_brushed_baked",
       "pbrMetallicRoughness": {
-        "metallicFactor": 0,
         "roughnessFactor": 0.25097999,
         "baseColorFactor": [0.737254977, 0.737254977, 0.737254977, 1]
       },

@@ -1,0 +1,2 @@
+Processing material: Metal_Brushed
+Wrote baked document: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\standard_surface_metal_brushed_baked.mtlx

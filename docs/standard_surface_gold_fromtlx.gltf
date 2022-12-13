@@ -8,7 +8,6 @@
     {
       "name": "SR_gold_baked",
       "pbrMetallicRoughness": {
-        "metallicFactor": 0,
         "roughnessFactor": 0.0196077991,
         "baseColorFactor": [0.976471007, 0.894118011, 0.643136978, 1]
       },

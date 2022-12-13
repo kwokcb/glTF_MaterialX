@@ -5,7 +5,10 @@
 #include <MaterialXFormat/XmlIo.h>
 #include <MaterialXFormat/Util.h>
 #include <MaterialXGenShader/ShaderTranslator.h>
+#include <MaterialXRender/StbImageLoader.h>
 #include <MaterialXglTF/GltfMaterialHandler.h>
+
+#include <algorithm>
 
 #if defined(__GNUC__)
     #pragma GCC diagnostic push
@@ -267,7 +270,7 @@ void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, StringSet& mat
 
 }
 
-void GltfMaterialHandler::translateShaders(DocumentPtr doc)
+void GltfMaterialHandler::translateShaders(DocumentPtr doc, std::ostream& logger)
 {
     if (!doc)
     {
@@ -309,13 +312,13 @@ void GltfMaterialHandler::translateShaders(DocumentPtr doc)
             }
             catch (std::exception& e)
             {
-                std::cerr << "- Error in shader translation: " << e.what() << std::endl;
+                logger << "- Error in shader translation: " << e.what() << std::endl;
             }
         }
     }
 }
 
-bool GltfMaterialHandler::save(const FilePath& filePath)
+bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
 {
     if (!_materials)
     {
@@ -596,8 +599,9 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
         }
 
         // Handle metallic, roughness, occlusion
-        // Note : Assumes that metallic, roughbess, and occlusion have been baked into an upsteram map 
-        //        before-hand.
+        // Handle partially mapped or when different channels map to different images
+        // by merging into a single ORM image. Note that we save as BGR 24-bit fixed images
+        // thus we scan by that order which results in an MRO image being written to disk.
         initialize_cgltf_texture_view(roughness.metallic_roughness_texture);
         ValuePtr value;
         string extractInputs[3] =
@@ -606,6 +610,14 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
             "roughness",
             "occlusion"
         };
+        FilePath filenames[3] =
+        {
+            EMPTY_STRING, EMPTY_STRING, EMPTY_STRING
+        };
+        string imageNamePaths[3] =
+        {
+            EMPTY_STRING, EMPTY_STRING, EMPTY_STRING
+        };
         cgltf_float* roughnessInputs[3] =
         {
             &roughness.metallic_factor,
@@ -613,14 +625,15 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
             nullptr
         };
 
-        NodePtr ormNode = nullptr;
+        NodePtr ormNode= nullptr;
         imageNode = nullptr;
         const string extractCategory("extract");
-        string mrFileName;
-        for (size_t e=0; e<3; e++)
-        { 
+        bool fileNameMismatch = false;
+        bool separateOcclusion = false;
+        for (size_t e = 0; e < 3; e++)
+        {
             const string& inputName = extractInputs[e];
-            InputPtr pbrInput = pbrNode->getInput(inputName);            
+            InputPtr pbrInput = pbrNode->getInput(inputName);
             if (pbrInput)
             {
                 // Read past any extract node
@@ -642,54 +655,163 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
                     InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
                     filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
                         fileInput->getValueString() : EMPTY_STRING;
-                    if (inputName != "occlusion")
-                    {
-                        mrFileName = filename;
+                    filenames[e] = filename;
+                    imageNamePaths[e] = imageNode->getNamePath();
+                }
 
-                        // Only create the ORM texture once
-                        if (!ormNode)
-                        {
-                            ormNode = imageNode;
-                            cgltf_texture* texture = &(textureList[imageIndex]);
-                            roughness.metallic_roughness_texture.texture = texture;
-                            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
-                                &(imageList[imageIndex]));
-                            imageIndex++;
-                        }
+                // Write out constant factors. If there is an image node
+                // then ignore any value stored as the image takes precedence.
+                if (roughnessInputs[e])
+                {
+                    value = pbrInput->getValue();
+                    if (value)
+                    {
+                        //logger << "  --> wrote " << extractInputs[e] << ": " << value->asA<float>() << std::endl;
+                        *(roughnessInputs[e]) = value->asA<float>();
                     }
                     else
                     {
-                        // If the occlusion file is not the same as the metallic roughness,
-                        // then create another texture.
-                        if (mrFileName != filename)
-                        {
-                            cgltf_texture* texture = &(textureList[imageIndex]);
-                            material->occlusion_texture.texture = texture;
-                            initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
-                                &(imageList[imageIndex]));
-                            imageIndex++;
-                        }
-                    }
-
-                    if (roughnessInputs[e])
-                    {
+                        //logger << "  --> wrote " << extractInputs[e] << ": 1.0" <<  std::endl;
                         *(roughnessInputs[e]) = 1.0f;
                     }
                 }
-                else
+            }
+
+            // Set to default 1.0
+            else
+            {
+                if (roughnessInputs[e])
                 {
-                    if (roughnessInputs[e])
+                    logger << "wrote " << extractInputs[e] << ": 1.0" << std::endl;
+                    *(roughnessInputs[e]) = 1.0f;
+                }
+            }
+        }
+
+        // Determine how many images to export and if merging is required
+        const FilePath metallicFilename = filenames[0];
+        const FilePath roughnessFilename = filenames[1];
+        const FilePath occlusionFilename = filenames[2];
+
+        if (metallicFilename == roughnessFilename)
+        {
+            // Write one texture if filenames are all the same and not empty
+            if (roughnessFilename == occlusionFilename)
+            {
+                if (!metallicFilename.isEmpty())
+                {
+                    logger << "--> write SINGLE file for MRO: " << imageNamePaths[0] << std::endl;
+                    cgltf_texture* texture = &(textureList[imageIndex]);
+                    roughness.metallic_roughness_texture.texture = texture;
+                    material->occlusion_texture.texture = texture; // needed ?
+                    initialize_cgtlf_texture(*texture, imageNamePaths[0], metallicFilename,
+                        &(imageList[imageIndex]));
+                    imageIndex++;
+                }
+            }
+
+            else
+            {
+                // if metallic and roughness match but occlusion differs, Then export 2 textures if found
+                if (!metallicFilename.isEmpty())
+                {
+                    logger << "--> write SINGLE for MR only: " << imageNamePaths[0] << std::endl;
+                    cgltf_texture* texture = &(textureList[imageIndex]);
+                    roughness.metallic_roughness_texture.texture = texture;
+                    initialize_cgtlf_texture(*texture, imageNamePaths[0], metallicFilename,
+                        &(imageList[imageIndex]));
+                    imageIndex++;
+                }
+
+                if (!occlusionFilename.isEmpty())
+                {
+                    logger << "  --> AND write SINGLE for O only: " << imageNamePaths[0] << std::endl;
+                    cgltf_texture* texture = &(textureList[imageIndex]);
+                    material->occlusion_texture.texture = texture;
+                    initialize_cgtlf_texture(*texture, imageNamePaths[2], occlusionFilename,
+                        &(imageList[imageIndex]));
+                    imageIndex++;
+                }
+            }
+        }
+
+        // Metallic and roughness do no match and one or both are images. Merge as necessary
+        else if (!metallicFilename.isEmpty() || !roughnessFilename.isEmpty())
+        {
+            ImageLoaderPtr loader = StbImageLoader::create();
+            if (loader)
+            {
+                FilePath ormFilename = metallicFilename.isEmpty() ? roughnessFilename : metallicFilename;
+
+                logger << "  --> Write MERGEED metallic and roughness: " << ormFilename.asString() << std::endl;
+
+                Color4 color(0.0f);
+                unsigned int imageWidth = 0;
+                unsigned int imageHeight = 0;
+
+                ImagePtr roughnessImage = !roughnessFilename.isEmpty() ? loader->loadImage(roughnessFilename) : nullptr;
+                if (roughnessImage)
+                {
+                    imageWidth = std::max(roughnessImage->getWidth(), imageWidth);
+                    imageHeight = std::max(roughnessImage->getWidth(), imageWidth);
+                }
+                ImagePtr metallicImage = !metallicFilename.isEmpty() ? loader->loadImage(metallicFilename) : nullptr;
+                if (metallicImage)
+                {
+                    imageWidth = std::max(metallicImage->getWidth(), imageWidth);
+                    imageHeight = std::max(metallicImage->getWidth(), imageWidth);
+                }
+                logger << "  --> Find image size: w, h: " << std::to_string(imageWidth) <<
+                        std::to_string(imageHeight) << std::endl;
+
+                ImagePtr outputImage = nullptr;
+                if (imageWidth * imageHeight != 0)
+                {
+                    outputImage = createUniformImage(imageWidth, imageHeight, 3, Image::BaseType::UINT8, color);
+
+                    logger << "  -----> Merge roughness image: " << roughnessFilename.asString() << std::endl;
+                    float uniformColor = roughness.roughness_factor;
+                    if (roughnessImage)
                     {
-                        value = pbrInput->getValue();
-                        if (value)
+                        roughness.roughness_factor = 1.0f;
+                    }
+                    for (unsigned int y = 0; y < imageHeight; y++)
+                    {
+                        for (unsigned int x = 0; x < imageWidth; x++)
                         {
-                            *(roughnessInputs[e]) = value->asA<float>();
-                        }
-                        else
-                        {
-                            *(roughnessInputs[e]) = 1.0f;
+                            Color4 finalColor = outputImage->getTexelColor(x, y);
+                            finalColor[1] = roughnessImage ? roughnessImage->getTexelColor(x, y)[0] : uniformColor;
+                            outputImage->setTexelColor(x, y, finalColor);
                         }
                     }
+
+                    logger << "  -----> Merge metallic image: " << metallicFilename.asString() << std::endl;
+                    uniformColor = roughness.metallic_factor;
+                    if (metallicImage)
+                    {
+                        roughness.metallic_factor = 1.0f;
+                    }
+                    for (unsigned int y = 0; y < imageHeight; y++)
+                    {
+                        for (unsigned int x = 0; x < imageWidth; x++)
+                        {
+                            Color4 finalColor = outputImage->getTexelColor(x, y);
+                            finalColor[2] = metallicImage ? metallicImage->getTexelColor(x, y)[0] : uniformColor;
+                            outputImage->setTexelColor(x, y, finalColor);
+                        }
+                    }
+
+                    ormFilename.removeExtension();
+                    FilePath filePath = ormFilename.asString() + "_combined.png";
+                    bool saved = loader->saveImage(filePath, outputImage);
+                    logger << "  --> Write ORM image to disk: " << filePath.asString() << ". SUCCESS: " << std::to_string(saved) << std::endl;
+
+                    cgltf_texture* texture = &(textureList[imageIndex]);
+                    roughness.metallic_roughness_texture.texture = texture;
+                    initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filePath,
+                        &(imageList[imageIndex]));
+                    imageIndex++;
+                    logger << "  --> Write cgltf image name: " << filePath.asString() << std::endl;
                 }
             }
         }
@@ -851,7 +973,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
     return true;
 }
 
-bool GltfMaterialHandler::load(const FilePath& filePath)
+bool GltfMaterialHandler::load(const FilePath& filePath, std::ostream& /*logger*/)
 {
     const std::string input_filename = filePath.asString(FilePath::FormatPosix);
     const std::string ext = stringToLower(filePath.getExtension());

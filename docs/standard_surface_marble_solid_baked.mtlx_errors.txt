@@ -1,0 +1,3 @@
+Processing material: Marble_3D
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\Marble_3D_gltf_pbr_base_color.png
+Wrote baked document: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\standard_surface_marble_solid_baked.mtlx

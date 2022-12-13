@@ -1,0 +1,69 @@
+Processing material: M_Bishop_B
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_B_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_B_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_B_gltf_pbr_roughness.png
+
+Processing material: M_Bishop_W
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_W_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_W_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Bishop_W_gltf_pbr_roughness.png
+
+Processing material: M_Castle_B
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_B_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_B_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_B_gltf_pbr_roughness.png
+
+Processing material: M_Castle_W
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_W_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_W_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Castle_W_gltf_pbr_roughness.png
+
+Processing material: M_Chessboard
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Chessboard_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Chessboard_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Chessboard_gltf_pbr_roughness.png
+
+Processing material: M_King_B
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_B_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_B_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_B_gltf_pbr_roughness.png
+
+Processing material: M_King_W
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_W_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_W_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_King_W_gltf_pbr_roughness.png
+
+Processing material: M_Knight_B
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Knight_B_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Knight_B_gltf_pbr_roughness.png
+
+Processing material: M_Knight_W
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Knight_W_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Knight_W_gltf_pbr_roughness.png
+
+Processing material: M_Pawn_Body_B
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_B_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_B_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_B_gltf_pbr_roughness.png
+
+Processing material: M_Pawn_Body_W
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_W_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_W_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Body_W_gltf_pbr_roughness.png
+
+Processing material: M_Pawn_Top_B
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Top_B_gltf_pbr_roughness.png
+
+Processing material: M_Pawn_Top_W
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Pawn_Top_W_gltf_pbr_roughness.png
+
+Processing material: M_Queen_B
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_B_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_B_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_B_gltf_pbr_roughness.png
+
+Processing material: M_Queen_W
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_W_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_W_gltf_pbr_metallic.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_Queen_W_gltf_pbr_roughness.png
+Wrote baked document: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\standard_surface_chess_set_baked.mtlx

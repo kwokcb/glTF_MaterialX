@@ -148,7 +148,7 @@ int main(int argc, char* const argv[])
         outputFile.addExtension("_converted.gltf");
 
         mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
-        if (mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFile, materials))
+        if (mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFile, materials, std::cerr))
         {
             std::cout << "Wrote glTF file to: " << outputFile.asString() << std::endl;
         }
@@ -192,7 +192,7 @@ int main(int argc, char* const argv[])
         }
         mx::DocumentPtr materials = nullptr;
         try {
-             materials = mx::GltfMaterialUtil::glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition);
+             materials = mx::GltfMaterialUtil::glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition, std::cerr);
         }
         catch (std::exception&)
         {

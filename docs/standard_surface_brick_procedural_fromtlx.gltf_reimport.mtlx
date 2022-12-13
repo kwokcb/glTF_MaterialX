@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<materialx version="1.38">
+  <gltf_pbr name="SHD_N_StandardSurface_baked" type="surfaceshader">
+    <input name="base_color" type="color3" nodename="NG_baked_base_color_baked" />
+    <input name="metallic" type="float" value="0" nodename="NG_baked_roughness_baked" channels="z" />
+    <input name="roughness" type="float" value="1" nodename="NG_baked_roughness_baked" channels="y" />
+    <input name="occlusion" type="float" value="1" nodename="NG_baked_roughness_baked" channels="x" />
+    <input name="sheen_color" type="color3" value="0, 0, 0" />
+    <input name="sheen_roughness" type="float" value="0" />
+    <input name="iridescence" type="float" value="0" />
+    <input name="iridescence_ior" type="float" value="1" />
+    <input name="iridescence_thickness" type="float" value="100" />
+    <input name="clearcoat" type="float" value="0" />
+    <input name="clearcoat_roughness" type="float" value="0.0980392" />
+    <input name="transmission" type="float" value="0" />
+    <input name="specular_color" type="color3" value="1, 1, 1" />
+    <input name="specular" type="float" value="1" />
+    <input name="ior" type="float" value="1.5" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+    <input name="emissive_strength" type="float" value="1" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_N_StandardSurface_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_N_StandardSurface_baked" />
+  </surfacematerial>
+  <gltf_image name="NG_baked_base_color_baked" type="color3">
+    <input name="file" type="filename" value="D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_BrickPattern_gltf_pbr_base_color.png" colorspace="srgb_texture" />
+  </gltf_image>
+  <gltf_image name="NG_baked_roughness_baked" type="vector3">
+    <input name="file" type="filename" value="D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/M_BrickPattern_gltf_pbr_roughness_combined.png" />
+  </gltf_image>
+  <look name="look1" />
+</materialx>

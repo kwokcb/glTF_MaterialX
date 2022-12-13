@@ -1,0 +1,4 @@
+Processing material: M_BrickPattern
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_BrickPattern_gltf_pbr_base_color.png
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\M_BrickPattern_gltf_pbr_roughness.png
+Wrote baked document: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\standard_surface_brick_procedural_baked.mtlx
