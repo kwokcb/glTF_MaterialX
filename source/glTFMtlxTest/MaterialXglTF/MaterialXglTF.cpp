@@ -116,7 +116,7 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
 
             // Perform shader translation in place
             const std::string distilledFileName = fileName.asString() + "_distilled.mtlx";
-            gltfMTLXLoader->translateShaders(doc);
+            gltfMTLXLoader->translateShaders(doc, logFile);
             CHECK(doc->validate());
 
             // Try to bake
@@ -141,13 +141,13 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
 
             // Convert MTLX document to glTF
             const std::string outputFileName = fileName.asString() + "_fromtlx.gltf";
-            bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName, doc);
+            bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName, doc, logFile);
             if (convertedToGLTF)
             {
                 logFile << "  * Converted to gltf: " << outputFileName << std::endl;
                 testedFiles.insert(outputFileName);
 
-                mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(outputFileName, libraries, true, false);
+                mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(outputFileName, libraries, true, false, logFile);
                 if (materials)
                 {
                     mx::FilePath reimportedFile = outputFileName + "_reimport.mtlx";
@@ -265,7 +265,7 @@ TEST_CASE("Validate gltf to MaterialX import", "[gltf_import]")
             std::cerr << "* Convert from glTF to MTLX: " << fullPath.asString() << std::endl;
             logFile << "* Convert from glTF to MTLX: " << fullPath.asString() << std::endl;
 
-            mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition);
+            mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition, logFile);
             if (materials)
             {
                 std::vector<mx::NodePtr> nodes = materials->getMaterialNodes();
@@ -287,7 +287,7 @@ TEST_CASE("Validate gltf to MaterialX import", "[gltf_import]")
 
                     mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
                     const std::string outputFileName2 = fileName.asString() + "_fromtlx.gltf";
-                    bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName2, materials);
+                    bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName2, materials, logFile);
                     CHECK(convertedToGLTF);
                     if (convertedToGLTF)
                     {
