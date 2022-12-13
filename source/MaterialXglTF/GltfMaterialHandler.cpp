@@ -599,15 +599,16 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
         }
 
         // Handle metallic, roughness, occlusion
-        // Note : Assumes that metallic, roughbess, and occlusion have been baked into an upsteram map 
-        //        before-hand.
+        // Handle partially mapped or when different channels map to different images
+        // by merging into a single ORM image. Note that we save as BGR 24-bit fixed images
+        // thus we scan by that order which results in an MRO image being written to disk.
         initialize_cgltf_texture_view(roughness.metallic_roughness_texture);
         ValuePtr value;
         string extractInputs[3] =
         {
-            "occlusion"
-            "roughness",
             "metallic",
+            "roughness",
+            "occlusion"
         };
         string filenames[3] =
         {
@@ -615,9 +616,9 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
         };
         cgltf_float* roughnessInputs[3] =
         {
-            nullptr,
+            &roughness.metallic_factor,
             &roughness.roughness_factor,
-            &roughness.metallic_factor
+            nullptr
         };
 
         NodePtr ormNode= nullptr;
@@ -661,7 +662,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
                         {
                             ormFilename = filename;
                         }
-                        fileNameMismatch = true;
+                        if (e != 0)
+                            fileNameMismatch = true;
                     }
                 }
                 
@@ -716,7 +718,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
                     std::cerr << "Find w, h: " << std::to_string(imageWidth) << 
                         std::to_string(imageHeight) << std::endl;
 
-                    outputImage = createUniformImage(imageWidth, imageHeight, 4, Image::BaseType::FLOAT, color);
+                    outputImage = createUniformImage(imageWidth, imageHeight, 4, Image::BaseType::UINT8, color);
                     for (size_t e = 0; e < 3; e++)
                     {
                         ImagePtr image = imageNodeList[e];
@@ -750,9 +752,10 @@ bool GltfMaterialHandler::save(const FilePath& filePath)
                             std::cerr << "Image Copy constant: " << std::to_string(uniformColor) << std::endl;
                         }
                     }
+                    ormFilename.removeExtension();
                     FilePath filePath = ormFilename.asString() + "_combined.png";
-                    loader->saveImage(filePath, outputImage);
-                    std::cerr << "Write ORM image to disk: " << filePath.asString() << std::endl;
+                    bool saved  = loader->saveImage(filePath, outputImage);
+                    std::cerr << "Write ORM image to disk: " << filePath.asString() << ". SUCCESS: " << std::to_string(saved) << std::endl;
 
                     initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filePath,
                         &(imageList[imageIndex]));
