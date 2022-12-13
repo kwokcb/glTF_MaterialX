@@ -8,7 +8,6 @@
     {
       "name": "SR_copper_baked",
       "pbrMetallicRoughness": {
-        "metallicFactor": 0,
         "roughnessFactor": 0.25097999,
         "baseColorFactor": [0.984314024, 0.647059023, 0.545098007, 1]
       },

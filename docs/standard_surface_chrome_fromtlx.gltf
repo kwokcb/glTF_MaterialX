@@ -8,7 +8,6 @@
     {
       "name": "SR_chrome_baked",
       "pbrMetallicRoughness": {
-        "metallicFactor": 0,
         "roughnessFactor": 0
       },
       "extensions": {

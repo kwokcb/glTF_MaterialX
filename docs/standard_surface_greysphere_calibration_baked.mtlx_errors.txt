@@ -1,0 +1,3 @@
+Processing material: Greysphere_Calibration
+Wrote baked image: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\Greysphere_Calibration_gltf_pbr_base_color.png
+Wrote baked document: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\standard_surface_greysphere_calibration_baked.mtlx

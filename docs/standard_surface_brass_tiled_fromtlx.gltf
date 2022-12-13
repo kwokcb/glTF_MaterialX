@@ -11,7 +11,7 @@
     },
     {
       "name": "NG_baked/roughness_baked",
-      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/Tiled_Brass_gltf_pbr_roughness.png"
+      "uri": "D:/Work/materialx/glTF_MaterialX/build/bin/resources/glTF_export/Materials/Examples/StandardSurface/Tiled_Brass_gltf_pbr_roughness_combined.png"
     },
     {
       "name": "NG_baked/clearcoat_baked",
@@ -31,8 +31,7 @@
         },
         "metallicRoughnessTexture": {
           "index": 1
-        },
-        "metallicFactor": 0
+        }
       },
       "extensions": {
         "KHR_materials_clearcoat": {

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<materialx version="1.38">
+  <gltf_pbr name="SHD_SR_carpaint_baked" type="surfaceshader">
+    <input name="base_color" type="color3" value="0.25098, 0.580392, 0.682353" />
+    <input name="alpha" type="float" value="1" />
+    <input name="metallic" type="float" value="0" />
+    <input name="roughness" type="float" value="0.4" />
+    <input name="occlusion" type="float" value="1" />
+    <input name="sheen_color" type="color3" value="0, 0, 0" />
+    <input name="sheen_roughness" type="float" value="0" />
+    <input name="iridescence" type="float" value="0" />
+    <input name="iridescence_ior" type="float" value="1" />
+    <input name="iridescence_thickness" type="float" value="100" />
+    <input name="clearcoat" type="float" value="1" />
+    <input name="clearcoat_roughness" type="float" value="0" />
+    <input name="transmission" type="float" value="0" />
+    <input name="specular_color" type="color3" value="1, 1, 1" />
+    <input name="specular" type="float" value="1" />
+    <input name="ior" type="float" value="1.5" />
+    <input name="emissive" type="color3" value="0, 0, 0" />
+    <input name="emissive_strength" type="float" value="1" />
+  </gltf_pbr>
+  <surfacematerial name="MAT_SR_carpaint_baked" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SHD_SR_carpaint_baked" />
+  </surfacematerial>
+  <look name="look1" />
+</materialx>

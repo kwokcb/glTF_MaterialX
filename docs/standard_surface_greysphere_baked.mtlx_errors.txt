@@ -1,0 +1,2 @@
+Processing material: Greysphere
+Wrote baked document: D:\Work\materialx\glTF_MaterialX\build\bin\resources\glTF_export\Materials\Examples\StandardSurface\standard_surface_greysphere_baked.mtlx
