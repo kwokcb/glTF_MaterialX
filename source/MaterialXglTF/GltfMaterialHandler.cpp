@@ -666,12 +666,12 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
                     value = pbrInput->getValue();
                     if (value)
                     {
-                        logger << "wrote " << extractInputs[e] << ": " << value->asA<float>() << std::endl;
+                        //logger << "  --> wrote " << extractInputs[e] << ": " << value->asA<float>() << std::endl;
                         *(roughnessInputs[e]) = value->asA<float>();
                     }
                     else
                     {
-                        logger << "wrote " << extractInputs[e] << ": 1.0" <<  std::endl;
+                        //logger << "  --> wrote " << extractInputs[e] << ": 1.0" <<  std::endl;
                         *(roughnessInputs[e]) = 1.0f;
                     }
                 }
@@ -745,66 +745,62 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
 
                 logger << "  --> Write MERGEED metallic and roughness: " << ormFilename.asString() << std::endl;
 
-                Color4 color(1.0f);
-                ImagePtr outputImage = nullptr;
+                Color4 color(0.0f);
                 unsigned int imageWidth = 0;
                 unsigned int imageHeight = 0;
-                ImagePtr imageNodeList[2] = { nullptr, nullptr };
 
-                // Find size of image to create
-                for (size_t e = 0; e < 2; e++)
+                ImagePtr roughnessImage = !roughnessFilename.isEmpty() ? loader->loadImage(roughnessFilename) : nullptr;
+                if (roughnessImage)
                 {
-                    const FilePath filename = filenames[e];
-                    if (filename.exists())
-                    {
-                        ImagePtr image = loader->loadImage(filename);
-                        if (image)
-                        {
-                            imageWidth = std::max(image->getWidth(), imageWidth);
-                            imageHeight = std::max(image->getWidth(), imageWidth);
-                            imageNodeList[e] = image;
-                        }
-                    }
+                    imageWidth = std::max(roughnessImage->getWidth(), imageWidth);
+                    imageHeight = std::max(roughnessImage->getWidth(), imageWidth);
                 }
-                logger << "--> Find image size: w, h: " << std::to_string(imageWidth) <<
+                ImagePtr metallicImage = !metallicFilename.isEmpty() ? loader->loadImage(metallicFilename) : nullptr;
+                if (metallicImage)
+                {
+                    imageWidth = std::max(metallicImage->getWidth(), imageWidth);
+                    imageHeight = std::max(metallicImage->getWidth(), imageWidth);
+                }
+                logger << "  --> Find image size: w, h: " << std::to_string(imageWidth) <<
                         std::to_string(imageHeight) << std::endl;
 
+                ImagePtr outputImage = nullptr;
                 if (imageWidth * imageHeight != 0)
                 {
-                    outputImage = createUniformImage(imageWidth, imageHeight, 4, Image::BaseType::UINT8, color);
-                    for (size_t e = 0; e < 2; e++)
+                    outputImage = createUniformImage(imageWidth, imageHeight, 3, Image::BaseType::UINT8, color);
+
+                    logger << "  -----> Merge roughness image: " << roughnessFilename.asString() << std::endl;
+                    float uniformColor = roughness.roughness_factor;
+                    if (roughnessImage)
                     {
-                        ImagePtr image = imageNodeList[e];
-                        if (image)
+                        roughness.roughness_factor = 1.0f;
+                    }
+                    for (unsigned int y = 0; y < imageHeight; y++)
+                    {
+                        for (unsigned int x = 0; x < imageWidth; x++)
                         {
-                            for (unsigned int y = 0; y < imageHeight; y++)
-                            {
-                                for (unsigned int x = 0; x < imageWidth; x++)
-                                {
-                                    Color4 finalColor = outputImage->getTexelColor(x, y);
-                                    Color4 inColor = image->getTexelColor(x, y);
-                                    finalColor[3-e] = inColor[e];
-                                    outputImage->setTexelColor(x, y, finalColor);
-                                }
-                            }
-                            logger << "  -----> Image Copy channel: " << std::to_string(e) << std::endl;
-                        }
-                        else if (roughnessInputs[e])
-                        {
-                            float uniformColor = *(roughnessInputs[e]);
-                            *(roughnessInputs[e]) = 1.0f;
-                            for (unsigned int y = 0; y < imageHeight; y++)
-                            {
-                                for (unsigned int x = 0; x < imageWidth; x++)
-                                {
-                                    Color4 finalColor = outputImage->getTexelColor(x, y);
-                                    finalColor[3-e] = uniformColor;
-                                    outputImage->setTexelColor(x, y, finalColor);
-                                }
-                            }
-                            logger << "  -----> Image Copy constant: " << std::to_string(uniformColor) << std::endl;
+                            Color4 finalColor = outputImage->getTexelColor(x, y);
+                            finalColor[1] = roughnessImage ? roughnessImage->getTexelColor(x, y)[0] : uniformColor;
+                            outputImage->setTexelColor(x, y, finalColor);
                         }
                     }
+
+                    logger << "  -----> Merge metallic image: " << metallicFilename.asString() << std::endl;
+                    uniformColor = roughness.metallic_factor;
+                    if (metallicImage)
+                    {
+                        roughness.metallic_factor = 1.0f;
+                    }
+                    for (unsigned int y = 0; y < imageHeight; y++)
+                    {
+                        for (unsigned int x = 0; x < imageWidth; x++)
+                        {
+                            Color4 finalColor = outputImage->getTexelColor(x, y);
+                            finalColor[2] = metallicImage ? metallicImage->getTexelColor(x, y)[0] : uniformColor;
+                            outputImage->setTexelColor(x, y, finalColor);
+                        }
+                    }
+
                     ormFilename.removeExtension();
                     FilePath filePath = ormFilename.asString() + "_combined.png";
                     bool saved = loader->saveImage(filePath, outputImage);
