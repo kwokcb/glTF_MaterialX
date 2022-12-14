@@ -174,8 +174,6 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
                                  &(imageList[imageIndex]));
 
         *write_value = 1.0f;
-        //std::cout << ">>> Write input: " << inputName << " texture: " << filename << std::endl;
-
         imageIndex++;
         hasFlag = true;
     }
@@ -185,7 +183,6 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
         if (value)
         {
             *write_value = value->asA<float>();
-            //std::cout << ">>> Write input: " << inputName << " value: " << value->getValueString() << std::endl;
             hasFlag = true;
         }
     }
@@ -418,7 +415,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
     }
 
     // Write materials
-    // TODO: Convert absoluate image paths to relative paths.
+    // TODO: Convert absoluate image paths to relative paths to aoivd
+    // warnings. Can be done outside as well.
     /*
     typedef struct cgltf_material
     {
@@ -433,24 +431,24 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
 	    cgltf_bool has_sheen;
 	    cgltf_bool has_emissive_strength;
 	    cgltf_bool has_iridescence;
-	    cgltf_pbr_metallic_roughness pbr_metallic_roughness; // unmerged todo
-	    cgltf_pbr_specular_glossiness pbr_specular_glossiness;
-	    cgltf_clearcoat clearcoat; // todo
-	    cgltf_ior ior; // todo
+	    cgltf_pbr_metallic_roughness pbr_metallic_roughness; // DONE
+	    cgltf_pbr_specular_glossiness pbr_specular_glossiness; // Not applicable
+	    cgltf_clearcoat clearcoat; // DONE
+	    cgltf_ior ior; // DONE
 	    cgltf_specular specular; // DONE
 	    cgltf_sheen sheen; // DONE
-	    cgltf_transmission transmission; // todo
-	    cgltf_volume volume; // todo
+	    cgltf_transmission transmission; // DONE
+	    cgltf_volume volume; // NOT HANDLED
 	    cgltf_emissive_strength emissive_strength; // DONE
-	    cgltf_iridescence iridescence; // PARTIAL
+	    cgltf_iridescence iridescence; // DONE
 	    cgltf_texture_view normal_texture; // DONE
-	    cgltf_texture_view occlusion_texture;
-	    cgltf_texture_view emissive_texture;
+	    cgltf_texture_view occlusion_texture; // DONE
+	    cgltf_texture_view emissive_texture; // DONE
 	    cgltf_float emissive_factor[3];
-	    cgltf_alpha_mode alpha_mode;
-	    cgltf_float alpha_cutoff;
-	    cgltf_bool double_sided;
-	    cgltf_bool unlit; // done
+	    cgltf_alpha_mode alpha_mode; // DONE
+	    cgltf_float alpha_cutoff; // DONE
+	    cgltf_bool double_sided; // NOT APPLICABLE 
+	    cgltf_bool unlit; // DONE
 	    cgltf_extras extras;
 	    cgltf_size extensions_count;
 	    cgltf_extension* extensions;
@@ -883,12 +881,54 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
             material->alpha_cutoff = value->asA<float>();
         }
 
-        // Handle iridescence (partial)
+        // Handle iridescence
         cgltf_iridescence& iridescence = material->iridescence;
-        iridescence.iridescence_ior = 1.0f;
+        iridescence.iridescence_ior = 1.3f;
+        iridescence.iridescence_factor = 0.0f;
         writeFloatInput(pbrNode, "iridescence",
             iridescence.iridescence_texture, &(iridescence.iridescence_factor),
             material->has_iridescence, textureList, imageList, imageIndex);
+            
+        // Scan for upstream <gltf_iridescence_thickness> node.
+        // Note: This is the agreed upon upstream node to create to map
+        // to gltf_pbr as part of the core implementation. It basically
+        // represents this structure: 
+        // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_iridescence/README.md
+        iridescence.iridescence_thickness_max = 400.0f;
+        iridescence.iridescence_thickness_min = 100.0f;
+        initialize_cgltf_texture_view(iridescence.iridescence_thickness_texture);
+
+        InputPtr thicknessInput = pbrNode->getInput("iridescence_thickness");
+        if (thicknessInput)
+        {
+            NodePtr thicknessNode = thicknessInput->getConnectedNode();
+            FilePath thicknessFileName;
+            if (thicknessNode)
+            {
+                InputPtr fileInput = thicknessNode->getInput(Implementation::FILE_ATTRIBUTE);
+                thicknessFileName = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
+                    fileInput->getValueString() : EMPTY_STRING;
+
+                cgltf_texture* texture = &(textureList[imageIndex]);
+                iridescence.iridescence_thickness_texture.texture = texture;
+                initialize_cgtlf_texture(*texture, thicknessNode->getNamePath(), thicknessFileName,
+                    &(imageList[imageIndex]));
+                imageIndex++;
+
+                InputPtr thickessInput = thicknessNode->getInput("thicknessMin");
+                ValuePtr thicknessValue = thickessInput ? thickessInput->getValue() : nullptr;
+                if (thicknessValue)
+                {
+                    iridescence.iridescence_thickness_min = thicknessValue->asA<float>();
+                }
+                thickessInput = thicknessNode->getInput("thicknessMax");
+                thicknessValue = thickessInput ? thickessInput->getValue() : nullptr;
+                if (thicknessValue)
+                {
+                    iridescence.iridescence_thickness_max =  thicknessValue->asA<float>();
+                }
+            }
+        }
 
         // Handle sheen color
         cgltf_sheen& sheen = material->sheen;
@@ -952,8 +992,6 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
             material->emissive_strength.emissive_strength = value->asA<float>();
             material->has_emissive_strength = true;
         }
-
-        // TODO: Handle thickness, attenuation_distance / color
 
         material_idx++;
     }
