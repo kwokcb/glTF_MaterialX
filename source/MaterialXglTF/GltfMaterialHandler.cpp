@@ -415,7 +415,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
     }
 
     // Write materials
-    // TODO: Convert absoluate image paths to relative paths.
+    // TODO: Convert absoluate image paths to relative paths to aoivd
+    // warnings. Can be done outside as well.
     /*
     typedef struct cgltf_material
     {
@@ -439,7 +440,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
 	    cgltf_transmission transmission; // DONE
 	    cgltf_volume volume; // NOT HANDLED
 	    cgltf_emissive_strength emissive_strength; // DONE
-	    cgltf_iridescence iridescence; // PARTIAL
+	    cgltf_iridescence iridescence; // DONE
 	    cgltf_texture_view normal_texture; // DONE
 	    cgltf_texture_view occlusion_texture; // DONE
 	    cgltf_texture_view emissive_texture; // DONE
@@ -889,6 +890,10 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
             material->has_iridescence, textureList, imageList, imageIndex);
             
         // Scan for upstream <gltf_iridescence_thickness> node.
+        // Note: This is the agreed upon upstream node to create to map
+        // to gltf_pbr as part of the core implementation. It basically
+        // represents this structure: 
+        // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_iridescence/README.md
         iridescence.iridescence_thickness_max = 400.0f;
         iridescence.iridescence_thickness_min = 100.0f;
         initialize_cgltf_texture_view(iridescence.iridescence_thickness_texture);
@@ -987,8 +992,6 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
             material->emissive_strength.emissive_strength = value->asA<float>();
             material->has_emissive_strength = true;
         }
-
-        // TODO: Handle thickness, attenuation_distance / color
 
         material_idx++;
     }
