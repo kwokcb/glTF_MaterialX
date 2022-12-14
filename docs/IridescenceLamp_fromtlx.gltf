@@ -14,12 +14,8 @@
       "uri": "IridescenceLamp_OcclusionRoughnessMetalness.png"
     },
     {
-      "name": "image_basecolor",
-      "uri": "IridescenceLamp_BaseColor.png"
-    },
-    {
-      "name": "image_orm",
-      "uri": "IridescenceLamp_OcclusionRoughnessMetalness.png"
+      "name": "image_iridescence_thickness",
+      "uri": "IridescenceLamp_Iridescence.png"
     },
     {
       "name": "image_basecolor3",
@@ -27,6 +23,18 @@
     },
     {
       "name": "image_orm3",
+      "uri": "IridescenceLamp_OcclusionRoughnessMetalness.png"
+    },
+    {
+      "name": "image_iridescence_thickness2",
+      "uri": "IridescenceLamp_Iridescence.png"
+    },
+    {
+      "name": "image_basecolor",
+      "uri": "IridescenceLamp_BaseColor.png"
+    },
+    {
+      "name": "image_orm",
       "uri": "IridescenceLamp_OcclusionRoughnessMetalness.png"
     }
   ],
@@ -57,50 +65,26 @@
         },
         "KHR_materials_iridescence": {
           "iridescenceFactor": 1,
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
-        }
-      }
-    },
-    {
-      "name": "SHD_IridescenceLamp",
-      "pbrMetallicRoughness": {
-        "baseColorTexture": {
-          "index": 2
-        },
-        "metallicRoughnessTexture": {
-          "index": 3
+          "iridescenceThicknessMinimum": 395,
+          "iridescenceThicknessMaximum": 405,
+          "iridescenceThicknessTexture": {
+            "index": 2
+          }
         }
       },
-      "extensions": {
-        "KHR_materials_clearcoat": {
-        },
-        "KHR_materials_ior": {
-        },
-        "KHR_materials_specular": {
-        },
-        "KHR_materials_transmission": {
-        },
-        "KHR_materials_sheen": {
-        },
-        "KHR_materials_emissive_strength": {
-        },
-        "KHR_materials_iridescence": {
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
-        }
+      "occlusionTexture": {
+        "index": 1,
+        "scale": 0
       }
     },
     {
       "name": "SHD_IridescenceLampIridescence",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 4
+          "index": 3
         },
         "metallicRoughnessTexture": {
-          "index": 5
+          "index": 4
         }
       },
       "extensions": {
@@ -118,10 +102,47 @@
         },
         "KHR_materials_iridescence": {
           "iridescenceFactor": 1,
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
+          "iridescenceThicknessMinimum": 485,
+          "iridescenceThicknessMaximum": 515,
+          "iridescenceThicknessTexture": {
+            "index": 5
+          }
         }
+      },
+      "occlusionTexture": {
+        "index": 4,
+        "scale": 0
+      }
+    },
+    {
+      "name": "SHD_IridescenceLamp",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 6
+        },
+        "metallicRoughnessTexture": {
+          "index": 7
+        }
+      },
+      "extensions": {
+        "KHR_materials_clearcoat": {
+        },
+        "KHR_materials_ior": {
+        },
+        "KHR_materials_specular": {
+        },
+        "KHR_materials_transmission": {
+        },
+        "KHR_materials_sheen": {
+        },
+        "KHR_materials_emissive_strength": {
+        },
+        "KHR_materials_iridescence": {
+        }
+      },
+      "occlusionTexture": {
+        "index": 7,
+        "scale": 0
       }
     }
   ],
@@ -135,20 +156,28 @@
       "source": 1
     },
     {
-      "name": "image_basecolor",
+      "name": "image_iridescence_thickness",
       "source": 2
     },
     {
-      "name": "image_orm",
+      "name": "image_basecolor3",
       "source": 3
     },
     {
-      "name": "image_basecolor3",
+      "name": "image_orm3",
       "source": 4
     },
     {
-      "name": "image_orm3",
+      "name": "image_iridescence_thickness2",
       "source": 5
+    },
+    {
+      "name": "image_basecolor",
+      "source": 6
+    },
+    {
+      "name": "image_orm",
+      "source": 7
     }
   ],
   "extensionsUsed": [
