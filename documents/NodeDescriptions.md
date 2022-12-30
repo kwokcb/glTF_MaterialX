@@ -660,6 +660,8 @@ graph LR;
     style NG_gltf_iridescence_thickness_float_1_0_filtertype fill:#0bb, color:#111
 
 ```
+
+</p></details>
  
 ## Node: *standard_surface_to_gltf_pbr*
 <details open><summary>ND_standard_surface_to_gltf_pbr</summary>
