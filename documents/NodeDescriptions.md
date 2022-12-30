@@ -2,11 +2,11 @@
 
 ## Node Group Index
 ## pbr
-* [gltf_pbr](#gltf_pbr) 
+* [gltf_pbr](#node-gltf_pbr) 
 ## texture2d
-* [gltf_normalmap](#gltf_normalmap) [gltf_image](#gltf_image) [gltf_colorimage](#gltf_colorimage) [gltf_iridescence_thickness](#gltf_iridescence_thickness) 
+* [gltf_normalmap](#node-gltf_normalmap) [gltf_image](#node-gltf_image) [gltf_colorimage](#node-gltf_colorimage) [gltf_iridescence_thickness](#node-gltf_iridescence_thickness) 
 ## Translators
-* [standard_surface_to_gltf_pbr](#standard_surface_to_gltf_pbr) 
+* [standard_surface_to_gltf_pbr](#node-standard_surface_to_gltf_pbr) 
 
 # Node Descriptions
 Below is information about the current node definitions found [here](https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/libraries/bxdf/gltf_pbr.mtlx).
