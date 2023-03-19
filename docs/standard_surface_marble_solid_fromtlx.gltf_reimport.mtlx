@@ -8,7 +8,7 @@
     <input name="sheen_color" type="color3" value="0, 0, 0" />
     <input name="sheen_roughness" type="float" value="0" />
     <input name="iridescence" type="float" value="0" />
-    <input name="iridescence_ior" type="float" value="1" />
+    <input name="iridescence_ior" type="float" value="1.3" />
     <input name="iridescence_thickness" type="float" value="100" />
     <input name="clearcoat" type="float" value="0" />
     <input name="clearcoat_roughness" type="float" value="0.0980392" />

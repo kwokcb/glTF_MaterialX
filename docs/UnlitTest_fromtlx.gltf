@@ -6,22 +6,22 @@
   },
   "materials": [
     {
-      "name": "SHD_Orange",
+      "name": "SHD_Blue",
       "pbrMetallicRoughness": {
         "metallicFactor": 0,
         "roughnessFactor": 0,
-        "baseColorFactor": [1, 0.217638001, 0, 1]
+        "baseColorFactor": [0, 0.217638001, 1, 1]
       },
       "extensions": {
         "KHR_materials_unlit": {}
       }
     },
     {
-      "name": "SHD_Blue",
+      "name": "SHD_Orange",
       "pbrMetallicRoughness": {
         "metallicFactor": 0,
         "roughnessFactor": 0,
-        "baseColorFactor": [0, 0.217638001, 1, 1]
+        "baseColorFactor": [1, 0.217638001, 0, 1]
       },
       "extensions": {
         "KHR_materials_unlit": {}
