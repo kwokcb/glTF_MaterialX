@@ -43,10 +43,11 @@
         "KHR_materials_emissive_strength": {
         },
         "KHR_materials_iridescence": {
-          "iridescenceIor": 1,
-          "iridescenceThicknessMinimum": 0,
-          "iridescenceThicknessMaximum": 0
         }
+      },
+      "occlusionTexture": {
+        "index": 1,
+        "scale": 0
       }
     }
   ],
