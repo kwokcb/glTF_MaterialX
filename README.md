@@ -13,6 +13,8 @@ The supported targets are:
 
 Any future specification changes will go into MaterialX core as noted by issues logged [here](https://github.com/AcademySoftwareFoundation/MaterialX/issues)
 
+Some of the documentation for this site will be migrating to the [MaterialX Learning Site](https://kwokcb.github.io/MaterialX_Learn/) (As of August, 2023).
+**Stay Tuned**
 
 ## 2. Target MaterialX Representation
 
