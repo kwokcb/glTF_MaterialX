@@ -4,6 +4,7 @@
 #include <MaterialXCore/Library.h>
 #include <MaterialXFormat/XmlIo.h>
 #include <MaterialXFormat/Util.h>
+#include <MaterialXGenShader/Util.h>
 #include <MaterialXGenShader/ShaderTranslator.h>
 #include <MaterialXRender/StbImageLoader.h>
 #include <MaterialXglTF/GltfMaterialHandler.h>
@@ -280,9 +281,7 @@ void GltfMaterialHandler::translateShaders(DocumentPtr doc, std::ostream& logger
     //
     const string TARGET_GLTF = "gltf_pbr";
     ShaderTranslatorPtr translator = ShaderTranslator::create();
-    vector<TypedElementPtr> materialNodes;
-    std::unordered_set<ElementPtr> shaderOutputs;
-    findRenderableMaterialNodes(doc, materialNodes, false, shaderOutputs);    
+    vector<TypedElementPtr> materialNodes = findRenderableMaterialNodes(doc);
     for (auto elem : materialNodes)
     {
         NodePtr materialNode = elem->asA<Node>();
@@ -384,7 +383,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
     const string gltf_versionString = "2.0";
 	data->asset.generator = const_cast<char*>((new string("MaterialX " + mtlx_versionString + " to glTF " + gltf_versionString + " generator"))->c_str());;
     data->asset.version = const_cast<char*>((new string(gltf_versionString))->c_str());
-    data->asset.copyright = "Created via glTF translation utilities found here: https://github.com/kwokcb/glTF_MaterialX";
+    std::string *copyright = new string("Created via glTF translation utilities found here : https://github.com/kwokcb/glTF_MaterialX");
+    data->asset.copyright = const_cast<char*>((copyright)->c_str());
 
     // Scan for PBR shader nodes
     const string PBR_CATEGORY_STRING("gltf_pbr");
@@ -626,8 +626,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
         NodePtr ormNode= nullptr;
         imageNode = nullptr;
         const string extractCategory("extract");
-        bool fileNameMismatch = false;
-        bool separateOcclusion = false;
+        //bool fileNameMismatch = false;
+        //bool separateOcclusion = false;
         for (size_t e = 0; e < 3; e++)
         {
             const string& inputName = extractInputs[e];
@@ -800,16 +800,16 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
                     }
 
                     ormFilename.removeExtension();
-                    FilePath filePath = ormFilename.asString() + "_combined.png";
+                    FilePath ormfilePath = ormFilename.asString() + "_combined.png";
                     bool saved = loader->saveImage(filePath, outputImage);
                     logger << "  --> Write ORM image to disk: " << filePath.asString() << ". SUCCESS: " << std::to_string(saved) << std::endl;
 
                     cgltf_texture* texture = &(textureList[imageIndex]);
                     roughness.metallic_roughness_texture.texture = texture;
-                    initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filePath,
+                    initialize_cgtlf_texture(*texture, imageNode->getNamePath(), ormfilePath,
                         &(imageList[imageIndex]));
                     imageIndex++;
-                    logger << "  --> Write cgltf image name: " << filePath.asString() << std::endl;
+                    logger << "  --> Write cgltf image name: " << ormfilePath.asString() << std::endl;
                 }
             }
         }

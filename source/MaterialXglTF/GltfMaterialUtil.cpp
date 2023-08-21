@@ -34,6 +34,9 @@ bool GltfMaterialUtil::mtlx2glTF(MaterialHandlerPtr gltfMTLXLoader,
 
 bool GltfMaterialUtil::haveSingleDocBake(const FilePath& errorFile)
 {
+#ifndef MTLX_TRANSLATE_SHADER
+    return false;
+#endif
     FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
     if (shaderTranslator.isEmpty())
     {
