@@ -49,7 +49,7 @@ class MX_GLTF_API MaterialHandler
     ///     to perform actions such as shader translation and baking.
     /// </summary>
     /// <param name="doc">Document to modify</param>
-    virtual void translateShaders(DocumentPtr doc, std::ostream& log) {};
+    virtual void translateShaders(DocumentPtr /*doc*/, std::ostream& /*log*/) {};
 
     /// <summary>
     ///     Set document containing MaterialX definitions. This includes core library

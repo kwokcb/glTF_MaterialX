@@ -13,14 +13,25 @@ The supported targets are:
 
 Any future specification changes will go into MaterialX core as noted by issues logged [here](https://github.com/AcademySoftwareFoundation/MaterialX/issues)
 
+A [Khronos branch](https://github.com/KhronosGroup/MaterialX/tree/gltf_mtlx_interop) using this library is available in a branch. This
+currently includes integration in the MaterialXViewer and
+MaterialX GraphEditor. Note that no pipeline tools are integrated there (such as baking) hence export expects the target nodegraph denoted in the next section.
+
+<img src="docs/glTF_import_graphEditor.png" width=80%></img>
+<br>
+<img src="docs/gltf_import-graphEditor2.png" width=80%></img>
+<br>
+<sub>Figure: Snapshot of some sample assets imported into the MaterialX GraphEditor</sub>
+
 Some of the documentation for this site will be migrating to the [MaterialX Learning Site](https://kwokcb.github.io/MaterialX_Learn/) (As of August, 2023).
 **Stay Tuned**
 
 ## 2. Target MaterialX Representation
 
-There is a specific target MaterialX node graph configuration which is the target for distillation / export as well as remixing / import.
+There is a specific target MaterialX node graph configuration which is the target for distillation / export as well as remixing / import. These nodegraphs can be created in various editors including Maya, Houdini, etc and USD HDStorm integrations in general as long as the appropriate MaterialX library version is used.
 
 <img src="docs/gltf_target_graph.png" width=80%></img>
+<br><sub>Figure: Layout of "target" nodegraphs. Note that 0 or more upstream pattern graphs are supported for inputs to the root PBR shader</sub>
 
 The definitions for these nodes can be found as part of the [core MaterialX  library definitions](https://github.com/kwokcb/MaterialX/blob/main/libraries/bxdf/gltf_pbr.mtlx)
 
@@ -191,7 +202,7 @@ graph LR;
     style IMPL_gltf_pbr_surfaceshader_alpha_cutoff fill:#0bb, color:#111
 
 ```
-
+See [here](https://kwokcb.github.io/MaterialX_Learn/documents/definitions/gltf_pbr.html) for a description of the node.
 
 <!-- <img src="./docs/gltf_pbr_graph.png" width=80%></img> -->
 
