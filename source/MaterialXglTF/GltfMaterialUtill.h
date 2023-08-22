@@ -24,18 +24,18 @@ class MX_GLTF_API GltfMaterialUtil
     virtual ~GltfMaterialUtil() = default;
 
     static DocumentPtr glTF2Mtlx(const FilePath& filename, DocumentPtr definitions,
-        bool createAssignments, bool fullDefinition, std::ostream& logger);
+        bool createAssignments, bool fullDefinition, StringVec& logger);
 
     static bool mtlx2glTF(MaterialHandlerPtr gltfMTLXLoader,
-        const FilePath& filename, DocumentPtr materials, std::ostream& logger);
+        const FilePath& filename, DocumentPtr materials, StringVec& logger);
 
     static bool haveSingleDocBake(const FilePath& errorFile);
 
     static bool bakeDocument(const FilePath& inputFileName, const FilePath& outputFilename,
-        unsigned int width, unsigned int height, std::ostream& logger);
+        unsigned int width, unsigned int height, StringVec& logger);
 
     static bool renderImage(const FilePath& materialXViewInstall, const FilePath& fileName, const FilePath& meshFile,
-        const std::string& outputFileName, std::ostream& logger);
+        const std::string& outputFileName, StringVec& logger);
 };
 
 MATERIALX_NAMESPACE_END

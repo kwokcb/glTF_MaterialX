@@ -41,7 +41,6 @@
 #endif
 
 #include <cstring>
-#include <iostream>
 #include <limits>
 #include <algorithm>
 #include <sstream>
@@ -268,7 +267,7 @@ void computeMeshMaterials(GLTFMaterialMeshList& materialMeshList, StringSet& mat
 
 }
 
-void GltfMaterialHandler::translateShaders(DocumentPtr doc, std::ostream& logger)
+void GltfMaterialHandler::translateShaders(DocumentPtr doc, StringVec& logger)
 {
     if (!doc)
     {
@@ -308,13 +307,13 @@ void GltfMaterialHandler::translateShaders(DocumentPtr doc, std::ostream& logger
             }
             catch (std::exception& e)
             {
-                logger << "- Error in shader translation: " << e.what() << std::endl;
+                logger.push_back("- Error in shader translation: " + string(e.what()));
             }
         }
     }
 }
 
-bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
+bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
 {
     if (!_materials)
     {
@@ -460,9 +459,9 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
 
     // Set of image nodes.
     std::vector<cgltf_texture> textureList;
-    textureList.reserve(64);
+    textureList.resize(64);
     std::vector<cgltf_image> imageList;
-    imageList.reserve(64);
+    imageList.resize(64);
 
     size_t material_idx = 0;
     size_t imageIndex = 0;
@@ -664,12 +663,10 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
                     value = pbrInput->getValue();
                     if (value)
                     {
-                        //logger << "  --> wrote " << extractInputs[e] << ": " << value->asA<float>() << std::endl;
                         *(roughnessInputs[e]) = value->asA<float>();
                     }
                     else
                     {
-                        //logger << "  --> wrote " << extractInputs[e] << ": 1.0" <<  std::endl;
                         *(roughnessInputs[e]) = 1.0f;
                     }
                 }
@@ -680,7 +677,6 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
             {
                 if (roughnessInputs[e])
                 {
-                    logger << "wrote " << extractInputs[e] << ": 1.0" << std::endl;
                     *(roughnessInputs[e]) = 1.0f;
                 }
             }
@@ -698,7 +694,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
             {
                 if (!metallicFilename.isEmpty())
                 {
-                    logger << "--> write SINGLE file for MRO: " << imageNamePaths[0] << std::endl;
+                    logger.push_back("--> write SINGLE file for MRO: " + imageNamePaths[0]);
                     cgltf_texture* texture = &(textureList[imageIndex]);
                     roughness.metallic_roughness_texture.texture = texture;
                     material->occlusion_texture.texture = texture; // needed ?
@@ -713,7 +709,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
                 // if metallic and roughness match but occlusion differs, Then export 2 textures if found
                 if (!metallicFilename.isEmpty())
                 {
-                    logger << "--> write SINGLE for MR only: " << imageNamePaths[0] << std::endl;
+                    logger.push_back("--> write SINGLE for MR only: " + imageNamePaths[0]);
                     cgltf_texture* texture = &(textureList[imageIndex]);
                     roughness.metallic_roughness_texture.texture = texture;
                     initialize_cgtlf_texture(*texture, imageNamePaths[0], metallicFilename,
@@ -723,7 +719,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
 
                 if (!occlusionFilename.isEmpty())
                 {
-                    logger << "  --> AND write SINGLE for O only: " << imageNamePaths[0] << std::endl;
+                    logger.push_back("  --> AND write SINGLE for O only: " + imageNamePaths[0]);
                     cgltf_texture* texture = &(textureList[imageIndex]);
                     material->occlusion_texture.texture = texture;
                     initialize_cgtlf_texture(*texture, imageNamePaths[2], occlusionFilename,
@@ -741,7 +737,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
             {
                 FilePath ormFilename = metallicFilename.isEmpty() ? roughnessFilename : metallicFilename;
 
-                logger << "  --> Write MERGEED metallic and roughness: " << ormFilename.asString() << std::endl;
+                logger.push_back("  --> Write MERGEED metallic and roughness: " + ormFilename.asString());
 
                 Color4 color(0.0f);
                 unsigned int imageWidth = 0;
@@ -759,15 +755,15 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
                     imageWidth = std::max(metallicImage->getWidth(), imageWidth);
                     imageHeight = std::max(metallicImage->getWidth(), imageWidth);
                 }
-                logger << "  --> Find image size: w, h: " << std::to_string(imageWidth) <<
-                        std::to_string(imageHeight) << std::endl;
+                logger.push_back("  --> Find image size: w, h: " + std::to_string(imageWidth) +
+                    std::to_string(imageHeight));
 
                 ImagePtr outputImage = nullptr;
                 if (imageWidth * imageHeight != 0)
                 {
                     outputImage = createUniformImage(imageWidth, imageHeight, 3, Image::BaseType::UINT8, color);
 
-                    logger << "  -----> Merge roughness image: " << roughnessFilename.asString() << std::endl;
+                    logger.push_back("  -----> Merge roughness image: " + roughnessFilename.asString());
                     float uniformColor = roughness.roughness_factor;
                     if (roughnessImage)
                     {
@@ -783,7 +779,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
                         }
                     }
 
-                    logger << "  -----> Merge metallic image: " << metallicFilename.asString() << std::endl;
+                    logger.push_back("  -----> Merge metallic image: " +  metallicFilename.asString());
                     uniformColor = roughness.metallic_factor;
                     if (metallicImage)
                     {
@@ -802,14 +798,15 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
                     ormFilename.removeExtension();
                     FilePath ormfilePath = ormFilename.asString() + "_combined.png";
                     bool saved = loader->saveImage(filePath, outputImage);
-                    logger << "  --> Write ORM image to disk: " << filePath.asString() << ". SUCCESS: " << std::to_string(saved) << std::endl;
+                    logger.push_back("  --> Write ORM image to disk: " +  filePath.asString() + 
+                        ". SUCCESS: " +  std::to_string(saved));
 
                     cgltf_texture* texture = &(textureList[imageIndex]);
                     roughness.metallic_roughness_texture.texture = texture;
                     initialize_cgtlf_texture(*texture, imageNode->getNamePath(), ormfilePath,
                         &(imageList[imageIndex]));
                     imageIndex++;
-                    logger << "  --> Write cgltf image name: " << ormfilePath.asString() << std::endl;
+                    logger.push_back("  --> Write cgltf image name: " +  ormfilePath.asString());
                 }
             }
         }
@@ -1011,7 +1008,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, std::ostream& logger)
     return true;
 }
 
-bool GltfMaterialHandler::load(const FilePath& filePath, std::ostream& /*logger*/)
+bool GltfMaterialHandler::load(const FilePath& filePath, StringVec& /*logger*/)
 {
     const std::string input_filename = filePath.asString(FilePath::FormatPosix);
     const std::string ext = stringToLower(filePath.getExtension());
@@ -1107,7 +1104,7 @@ NodePtr GltfMaterialHandler::createTexture(DocumentPtr& doc, const std::string &
     }
     //else
     //{
-    //    std::cout << "Invalid texture type node created: " << textureType << std::endl;
+    //    std::cout << "Invalid texture type node created: " +  textureType ;
     //}
     return newTexture;
 }

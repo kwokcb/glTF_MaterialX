@@ -116,7 +116,12 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
 
             // Perform shader translation in place
             const std::string distilledFileName = fileName.asString() + "_distilled.mtlx";
-            gltfMTLXLoader->translateShaders(doc, logFile);
+            mx::StringVec log;
+            gltfMTLXLoader->translateShaders(doc, log);
+            for (const std::string& error : log)
+            {
+                logFile << error << std::endl;
+            }
             CHECK(doc->validate());
 
             // Try to bake
@@ -125,7 +130,12 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
             testedFiles.insert(distilledFileName);
 
             const mx::FilePath bakedFileName = fileName.asString() + "_baked.mtlx";
-            mx::GltfMaterialUtil::bakeDocument(distilledFileName, bakedFileName, 512, 512, logFile);
+            log.clear();
+            mx::GltfMaterialUtil::bakeDocument(distilledFileName, bakedFileName, 512, 512, log);
+            for (const std::string& error : log)
+            {
+                logFile << error << std::endl;
+            }
             testedFiles.insert(bakedFileName);
             if (bakedFileName.exists())
             {
@@ -141,13 +151,15 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
 
             // Convert MTLX document to glTF
             const std::string outputFileName = fileName.asString() + "_fromtlx.gltf";
-            bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName, doc, logFile);
+            log.clear();
+            bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName, doc, log);
             if (convertedToGLTF)
             {
                 logFile << "  * Converted to gltf: " << outputFileName << std::endl;
                 testedFiles.insert(outputFileName);
 
-                mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(outputFileName, libraries, true, false, logFile);
+                log.clear();
+                mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(outputFileName, libraries, true, false, log);
                 if (materials)
                 {
                     mx::FilePath reimportedFile = outputFileName + "_reimport.mtlx";
@@ -162,7 +174,12 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
                         const mx::FilePath captureName = reimportedFile.asString() + ".png";
                         const mx::FilePath meshPath;
                         const mx::FilePath materialPath = reimportedFile;
-                        bool renderError = mx::GltfMaterialUtil::renderImage(mtlxViewExe, captureName, meshPath, materialPath, logFile);
+                        log.clear();
+                        bool renderError = mx::GltfMaterialUtil::renderImage(mtlxViewExe, captureName, meshPath, materialPath, log);
+                        for (const std::string& error : log)
+                        {
+                            logFile << error << std::endl;
+                        }
                         CHECK(!renderError);
                     }
                 }
@@ -170,6 +187,10 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
             else
             {
                 logFile << "  * Failed to convert to gltf: " << outputFileName << std::endl;
+                for (const std::string& error : log)
+                {
+                    logFile << error << std::endl;
+                }
             }
         }
     }
@@ -265,7 +286,12 @@ TEST_CASE("Validate gltf to MaterialX import", "[gltf_import]")
             std::cerr << "* Convert from glTF to MTLX: " << fullPath.asString() << std::endl;
             logFile << "* Convert from glTF to MTLX: " << fullPath.asString() << std::endl;
 
-            mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition, logFile);
+            mx::StringVec log;
+            mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition, log);
+            for (const std::string& error : log)
+            {
+                logFile << error << std::endl;
+            }
             if (materials)
             {
                 std::vector<mx::NodePtr> nodes = materials->getMaterialNodes();
@@ -287,7 +313,12 @@ TEST_CASE("Validate gltf to MaterialX import", "[gltf_import]")
 
                     mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
                     const std::string outputFileName2 = fileName.asString() + "_fromtlx.gltf";
-                    bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName2, materials, logFile);
+                    log.clear();
+                    bool convertedToGLTF = mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFileName2, materials, log);
+                    for (const std::string& error : log)
+                    {
+                        logFile << error << std::endl;
+                    }
                     CHECK(convertedToGLTF);
                     if (convertedToGLTF)
                     {
@@ -300,7 +331,12 @@ TEST_CASE("Validate gltf to MaterialX import", "[gltf_import]")
                         const mx::FilePath captureName = fileName.asString() + ".png";
                         const mx::FilePath meshPath = fullPath;
                         const mx::FilePath materialPath = outputFileName;
-                        bool renderError = mx::GltfMaterialUtil::renderImage(mtlxViewExe, captureName, meshPath, materialPath, logFile);
+                        log.clear();
+                        bool renderError = mx::GltfMaterialUtil::renderImage(mtlxViewExe, captureName, meshPath, materialPath, log);
+                        for (const std::string& error : log)
+                        {
+                            logFile << error << std::endl;
+                        }
                         CHECK(!renderError);
                     }
                 }
