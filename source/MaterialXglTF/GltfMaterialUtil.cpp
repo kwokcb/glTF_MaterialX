@@ -2,7 +2,6 @@
 #include <MaterialXglTF/GltfMaterialUtill.h>
 
 #include <fstream>
-#include <iostream>
 #include <limits>
 #include <unordered_set>
 
@@ -11,7 +10,7 @@ MATERIALX_NAMESPACE_BEGIN
 DocumentPtr GltfMaterialUtil::glTF2Mtlx(
                 const FilePath& filename, DocumentPtr definitions, 
                 bool createAssignments, bool fullDefinition,
-                std::ostream& logger)
+                StringVec& logger)
 {
     MaterialHandlerPtr gltfMTLXLoader = GltfMaterialHandler::create();
     gltfMTLXLoader->setDefinitions(definitions);
@@ -26,17 +25,17 @@ DocumentPtr GltfMaterialUtil::glTF2Mtlx(
 
 bool GltfMaterialUtil::mtlx2glTF(MaterialHandlerPtr gltfMTLXLoader, 
                                  const FilePath& filename, DocumentPtr materials,
-                                 std::ostream& logger)
+                                 StringVec& logger)
 {    
     gltfMTLXLoader->setMaterials(materials);
     return gltfMTLXLoader->save(filename, logger);
 }
 
+// Temporary until have build rule for this.
+#define MTLX_TRANSLATE_SHADER EMPTY_STRING
+
 bool GltfMaterialUtil::haveSingleDocBake(const FilePath& errorFile)
 {
-#ifndef MTLX_TRANSLATE_SHADER
-    return false;
-#endif
     FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
     if (shaderTranslator.isEmpty())
     {
@@ -66,7 +65,7 @@ bool GltfMaterialUtil::haveSingleDocBake(const FilePath& errorFile)
 }
 
 bool GltfMaterialUtil::bakeDocument(const FilePath& inputFileName, const FilePath& outputFilename, 
-                                    unsigned int width, unsigned int height, std::ostream& logFile)
+                                    unsigned int width, unsigned int height, StringVec& logFile)
 {
     // Run test renders on output
     FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
@@ -96,10 +95,10 @@ bool GltfMaterialUtil::bakeDocument(const FilePath& inputFileName, const FilePat
         if (renderError)
         {
             StringVec errors;
-            logFile << "- Errors: " << std::endl;
-            logFile << "  - Command string : " + command << std::endl;
-            logFile << "  - Command return code: " + std::to_string(returnValue) << std::endl;
-            logFile << "  - Log: " << result << std::endl;
+            logFile.push_back("- Errors: ");
+            logFile.push_back("  - Command string : " + command);
+            logFile.push_back("  - Command return code: " + std::to_string(returnValue));
+            logFile.push_back("  - Log: " + result);
         }
         return renderError;
     }
@@ -107,7 +106,7 @@ bool GltfMaterialUtil::bakeDocument(const FilePath& inputFileName, const FilePat
 }
 
 bool GltfMaterialUtil::renderImage(const FilePath& materialXViewInstall, const FilePath& captureName, const FilePath& meshFile, 
-                                  const std::string& materialFile, std::ostream& logFile)
+                                  const std::string& materialFile, StringVec& logFile)
 {
     // Run test renders on output
     if (!materialXViewInstall.isEmpty())
@@ -137,10 +136,10 @@ bool GltfMaterialUtil::renderImage(const FilePath& materialXViewInstall, const F
         if (renderError)
         {
             StringVec errors;
-            logFile << "- Errors: " << std::endl;
-            logFile << "  - Command string : " + command << std::endl;
-            logFile << "  - Command return code: " + std::to_string(returnValue) << std::endl;
-            logFile << "  - Log: " << result << std::endl;
+            logFile.push_back("- Errors: ");
+            logFile.push_back("  - Command string : " + command);
+            logFile.push_back("  - Command return code: " + std::to_string(returnValue));
+            logFile.push_back("  - Log: " + result);
         }
         return renderError;
     }

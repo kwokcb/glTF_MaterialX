@@ -32,10 +32,10 @@ class MX_GLTF_API MaterialHandler
     virtual ~MaterialHandler() = default;
 
     /// Load materials from a given file
-    virtual bool load(const FilePath& filePath, std::ostream& log) = 0;
+    virtual bool load(const FilePath& filePath, StringVec& log) = 0;
 
     /// Save materials to a given file
-    virtual bool save(const FilePath& filePath, std::ostream& log) = 0;
+    virtual bool save(const FilePath& filePath, StringVec& log) = 0;
 
     /// Return file extensions supported
     const StringSet& extensionsSupported() const
@@ -49,7 +49,7 @@ class MX_GLTF_API MaterialHandler
     ///     to perform actions such as shader translation and baking.
     /// </summary>
     /// <param name="doc">Document to modify</param>
-    virtual void translateShaders(DocumentPtr /*doc*/, std::ostream& /*log*/) {};
+    virtual void translateShaders(DocumentPtr /*doc*/, StringVec& /*log*/) {};
 
     /// <summary>
     ///     Set document containing MaterialX definitions. This includes core library
@@ -154,14 +154,14 @@ class MX_GLTF_API GltfMaterialHandler : public MaterialHandler
     /// </summary>
     /// <param name="filePath">File path</param>
     /// <returns>True on success</returns>
-    bool load(const FilePath& filePath, std::ostream& log) override;
+    bool load(const FilePath& filePath, StringVec& log) override;
 
     /// <summary>
     ///     Convert glTF to MaterialX document and save to file path    
     /// </summary>
     /// <param name="filePath">File path</param>
     /// <returns>True on success</returns>
-    bool save(const FilePath& filePath, std::ostream& log) override;
+    bool save(const FilePath& filePath, StringVec& log) override;
 
     /// <summary>
     ///     Translate shaders in the document to appropriate shading model(s)
@@ -169,7 +169,7 @@ class MX_GLTF_API GltfMaterialHandler : public MaterialHandler
     ///     to perform actions such as shader translation and baking.
     /// </summary>
     /// <param name="doc">Document to modify</param>
-    void translateShaders(DocumentPtr doc, std::ostream& log) override;
+    void translateShaders(DocumentPtr doc, StringVec& log) override;
 
   private:
     NodePtr createColoredTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,

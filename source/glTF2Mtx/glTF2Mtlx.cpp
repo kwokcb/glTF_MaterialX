@@ -148,13 +148,18 @@ int main(int argc, char* const argv[])
         outputFile.addExtension("_converted.gltf");
 
         mx::MaterialHandlerPtr gltfMTLXLoader = mx::GltfMaterialHandler::create();
-        if (mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFile, materials, std::cerr))
+        mx::StringVec log;
+        if (mx::GltfMaterialUtil::mtlx2glTF(gltfMTLXLoader, outputFile, materials, log))
         {
             std::cout << "Wrote glTF file to: " << outputFile.asString() << std::endl;
         }
         else
         {
             std::cout << "Failed to write glTF file to: " << outputFile.asString() << std::endl;
+            for (const std::string& error : log)
+            {
+                std::cout << error << std::endl;
+            }
         }
     }
     else
@@ -191,12 +196,17 @@ int main(int argc, char* const argv[])
             std::cout << "Convert GLTF: " << glTFFile.asString() << std::endl;
         }
         mx::DocumentPtr materials = nullptr;
+        mx::StringVec log;
         try {
-             materials = mx::GltfMaterialUtil::glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition, std::cerr);
+             materials = mx::GltfMaterialUtil::glTF2Mtlx(glTFFile, stdLib, createAssignments, fullDefinition, log);
         }
         catch (std::exception&)
         {
             std::cerr << "Failed to translate" << std::endl;
+            for (const std::string& error : log)
+            {
+                std::cout << error << std::endl;
+            }
         }
         if (materials)
         {
