@@ -95,6 +95,33 @@ void initialize_cgtlf_texture(cgltf_texture& texture, const string& name, const 
     texture.image->uri = const_cast<char*>((new string(uriPath.asString(FilePath::FormatPosix)))->c_str());
 }
 
+void writeTexcoordIndex(cgltf_texture_view& texture_view, NodePtr imageNode)
+{
+    // Check for any upstream `texcoord` node and grab it's uv index if not 0.
+    int uvindex = 0;
+    InputPtr texcoordInput = imageNode->getInput("texcoord");
+    if (texcoordInput)
+    {
+        NodePtr texcoordNode = texcoordInput->getConnectedNode();
+        if (texcoordNode)
+        {
+            InputPtr uvindexInput = texcoordNode->getInput("index");
+            if (uvindexInput)
+            {
+                ValuePtr value = uvindexInput->getValue();
+                if (value)
+                {
+                    uvindex = value->asA<int>();
+                }
+            }
+        }
+    }
+    if (uvindex)
+    {
+        texture_view.texcoord = static_cast<cgltf_int>(uvindex);
+    }
+}
+
 void writeColor3Input(const NodePtr pbrNode, const string& inputName, 
                         cgltf_texture_view& texture_view, 
                         cgltf_float* write_value,
@@ -119,9 +146,9 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
     {
         cgltf_texture* texture = &(textureList[imageIndex]);
         texture_view.texture = texture;
-        // Fix this to create a valid name...
         initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                                  &(imageList[imageIndex]));
+        writeTexcoordIndex(texture_view, imageNode);
 
         write_value[0] = 1.0f;
         write_value[1] = 1.0f;
@@ -172,6 +199,7 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
         // Fix this to create a valid name...
         initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                                  &(imageList[imageIndex]));
+        writeTexcoordIndex(texture_view, imageNode);
 
         *write_value = 1.0f;
         imageIndex++;
@@ -558,6 +586,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             roughness.base_color_texture.texture = texture;
             initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                 &(imageList[imageIndex]));            
+            writeTexcoordIndex(roughness.base_color_texture, imageNode);
 
             roughness.base_color_factor[0] = 1.0;
             roughness.base_color_factor[1] = 1.0;
@@ -625,8 +654,6 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
         NodePtr ormNode= nullptr;
         imageNode = nullptr;
         const string extractCategory("extract");
-        //bool fileNameMismatch = false;
-        //bool separateOcclusion = false;
         for (size_t e = 0; e < 3; e++)
         {
             const string& inputName = extractInputs[e];
@@ -836,7 +863,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             cgltf_texture* texture = &(textureList[imageIndex]);
             material->normal_texture.texture = texture;
             initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
-                &(imageList[imageIndex]));            
+                &(imageList[imageIndex]));
+            writeTexcoordIndex(material->normal_texture, imageNode);
 
             imageIndex++;
         }
@@ -910,6 +938,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
                 iridescence.iridescence_thickness_texture.texture = texture;
                 initialize_cgtlf_texture(*texture, thicknessNode->getNamePath(), thicknessFileName,
                     &(imageList[imageIndex]));
+                writeTexcoordIndex(iridescence.iridescence_thickness_texture, thicknessNode);
                 imageIndex++;
 
                 InputPtr thickessInput = thicknessNode->getInput("thicknessMin");
@@ -971,7 +1000,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             cgltf_texture* texture = &(textureList[imageIndex]);
             clearcoat.clearcoat_normal_texture.texture = texture;
             initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
-                &(imageList[imageIndex]));            
+                &(imageList[imageIndex]));
+            writeTexcoordIndex(material->normal_texture, imageNode);
 
             imageIndex++;
             material->has_clearcoat = true;
@@ -1109,6 +1139,32 @@ NodePtr GltfMaterialHandler::createTexture(DocumentPtr& doc, const std::string &
     return newTexture;
 }
 
+void addTexCoordNode(NodePtr image, int uvindex)
+{
+    ElementPtr parent = image->getParent();
+    GraphElementPtr parentGraph = parent ? parent->asA<GraphElement>() : nullptr;
+    if (parentGraph)
+    {
+        const string texcoordName = parent->createValidChildName("texcoord");
+        NodePtr texcoordNode = parentGraph->addNode("texcoord", texcoordName, "vector2");
+        if (texcoordNode)
+        {
+            InputPtr uvIndexInput = texcoordNode->addInputFromNodeDef("uvindex");
+            if (uvIndexInput)
+            {
+                uvIndexInput->setValue<int>(uvindex);
+            }
+
+            // Connect to image node
+            InputPtr texcoordInput = image->addInputFromNodeDef("texcoord");
+            if (texcoordInput)
+            {
+                texcoordInput->setAttribute("nodename", texcoordNode->getName());
+            }
+        }
+    }
+}
+
 void setImageProperties(NodePtr image, const cgltf_texture_view* textureView)
 {
     cgltf_texture* texture = textureView ? textureView->texture : nullptr;
@@ -1121,8 +1177,8 @@ void setImageProperties(NodePtr image, const cgltf_texture_view* textureView)
     InputPtr uvIndexInput = nullptr;
     if (textureView->texcoord != 0)
     {
-        uvIndexInput = image->addInputFromNodeDef("uvindex");
-        uvIndexInput->setValue<int>(textureView->texcoord);
+        // Add upstream texcoord node if needed
+        addTexCoordNode(image, textureView->texcoord);
     }
 
     // Handle transform
@@ -1157,13 +1213,10 @@ void setImageProperties(NodePtr image, const cgltf_texture_view* textureView)
         // Handle uvset index
         if (transform.has_texcoord)
         {
-            if (!uvIndexInput)
+            if (transform.texcoord != 0)
             {
-                uvIndexInput = image->addInputFromNodeDef("uvindex");
-            }
-            if (uvIndexInput)
-            {
-                uvIndexInput->setValue<int>(transform.texcoord);
+                // Add upstream texcoord node if needed
+                addTexCoordNode(image, textureView->texcoord);
             }
         }
 
