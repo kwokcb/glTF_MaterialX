@@ -1149,7 +1149,7 @@ void addTexCoordNode(NodePtr image, int uvindex)
         NodePtr texcoordNode = parentGraph->addNode("texcoord", texcoordName, "vector2");
         if (texcoordNode)
         {
-            InputPtr uvIndexInput = texcoordNode->addInputFromNodeDef("uvindex");
+            InputPtr uvIndexInput = texcoordNode->addInputFromNodeDef("index");
             if (uvIndexInput)
             {
                 uvIndexInput->setValue<int>(uvindex);
