@@ -31,11 +31,11 @@ bool GltfMaterialUtil::mtlx2glTF(MaterialHandlerPtr gltfMTLXLoader,
     return gltfMTLXLoader->save(filename, logger);
 }
 
-// Temporary until have build rule for this.
-#define MTLX_TRANSLATE_SHADER EMPTY_STRING
-
 bool GltfMaterialUtil::haveSingleDocBake(const FilePath& errorFile)
 {
+#ifndef MTLX_TRANSLATE_SHADER
+    return false;
+#endif
     FilePath shaderTranslator(MTLX_TRANSLATE_SHADER);
     if (shaderTranslator.isEmpty())
     {
