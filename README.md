@@ -211,7 +211,7 @@ As Khronos extensions are added the subversion will be incremented.
 ### `2.2 <gltf_image>`
 This node provides an interface which matches how image lookup are performed within glTF 2.0 based on this [spec](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_texture_transform/README.md)
 
-<details><summary>Details</summary>
+<details open><summary>Details</summary>
 <p>
 
 This includes handling these differences:
@@ -222,7 +222,10 @@ This includes handling these differences:
 * The default transformation order is TRS for glTF and not SRT.
 
 This is supported for all variants of this node: vector3, float, color3, and color4. No vector2 variant is required at this time.
-One texture coordinate set referenced by set index is allowed, with the default set being 0. U and V address modes and filter type are accessible with the defaults for glTF and MaterialX matching.
+* One texture coordinate set referenced by set name, with the default set being "UV0" which is equal to set 0.
+  * Names are used to support **OpenUSD** workflows where al sets are named.
+  * A `<texcoord>` node which a different index can be connected to provide index based workflows as found for glTF.
+* U and V address modes and filter type are accessible with the defaults for glTF and MaterialX matching.
 
 The color4 output is split into color3 and alpha outputs which can be directly mapped to a `gltf_pbr` node.
 
