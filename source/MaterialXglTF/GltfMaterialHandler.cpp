@@ -136,7 +136,7 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
     {
         InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
         filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-            fileInput->getValueString() : EMPTY_STRING;
+            fileInput->getResolvedValueString() : EMPTY_STRING;
         if (filename.empty())
         {
             imageNode = nullptr;
@@ -186,7 +186,7 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
     {
         InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
         filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-            fileInput->getValueString() : EMPTY_STRING;
+            fileInput->getResolvedValueString() : EMPTY_STRING;
         if (filename.empty())
         {
             imageNode = nullptr;
@@ -576,7 +576,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
         {
             InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
             filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-                fileInput->getValueString() : EMPTY_STRING;
+                fileInput->getResolvedValueString() : EMPTY_STRING;
             if (filename.empty())
                 imageNode = nullptr;
         }
@@ -678,7 +678,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
                 {
                     InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
                     filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-                        fileInput->getValueString() : EMPTY_STRING;
+                        fileInput->getResolvedValueString() : EMPTY_STRING;
                     filenames[e] = filename;
                     imageNamePaths[e] = imageNode->getNamePath();
                 }
@@ -853,7 +853,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             {
                 InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
                 filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-                    fileInput->getValueString() : EMPTY_STRING;
+                    fileInput->getResolvedValueString() : EMPTY_STRING;
                 if (filename.empty())
                     imageNode = nullptr;
             }
@@ -932,7 +932,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             {
                 InputPtr fileInput = thicknessNode->getInput(Implementation::FILE_ATTRIBUTE);
                 thicknessFileName = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-                    fileInput->getValueString() : EMPTY_STRING;
+                    fileInput->getResolvedValueString() : EMPTY_STRING;
 
                 cgltf_texture* texture = &(textureList[imageIndex]);
                 iridescence.iridescence_thickness_texture.texture = texture;
@@ -990,7 +990,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             {
                 InputPtr fileInput = imageNode->getInput(Implementation::FILE_ATTRIBUTE);
                 filename = fileInput && fileInput->getAttribute(TypedElement::TYPE_ATTRIBUTE) == FILENAME_TYPE_STRING ?
-                    fileInput->getValueString() : EMPTY_STRING;
+                    fileInput->getResolvedValueString() : EMPTY_STRING;
                 if (filename.empty())
                     imageNode = nullptr;
             }
