@@ -51,7 +51,7 @@ MATERIALX_NAMESPACE_BEGIN
 namespace
 {
 const float TO_DEGREE = 180.0f / 3.1415926535f;
-//const float TO_RADIAN = 3.1415926535f / 180.0f;
+const float TO_RADIAN = 3.1415926535f / 180.0f;
 const std::string SPACE_STRING = " ";
 const std::string IN_STRING = "in";
 const std::string FLOAT_STRING = "float";
@@ -95,9 +95,10 @@ void initialize_cgtlf_texture(cgltf_texture& texture, const string& name, const 
     texture.image->uri = const_cast<char*>((new string(uriPath.asString(FilePath::FormatPosix)))->c_str());
 }
 
-void writeTexcoordIndex(cgltf_texture_view& texture_view, NodePtr imageNode)
+void writeImageProperties(cgltf_texture_view& textureView, NodePtr imageNode, 
+                          std::vector<cgltf_sampler>& samplerList, size_t& samplerIndex)
 {
-    // Check for any upstream `texcoord` node and grab it's uv index if not 0.
+    // Handle uvset index
     int uvindex = 0;
     InputPtr texcoordInput = imageNode->getInput("texcoord");
     if (texcoordInput)
@@ -116,9 +117,113 @@ void writeTexcoordIndex(cgltf_texture_view& texture_view, NodePtr imageNode)
             }
         }
     }
-    if (uvindex)
+    textureView.texcoord = static_cast<cgltf_int>(uvindex);
+
+    // Handle transform
+    // See: https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_texture_transform/README.md
+    cgltf_texture_transform& transform = textureView.transform;
+
+    InputPtr offsetInput = imageNode->getInput("offset");
+    if (offsetInput)
     {
-        texture_view.texcoord = static_cast<cgltf_int>(uvindex);
+        ValuePtr offsetInputValue = offsetInput->getValue();
+        if (offsetInputValue)
+        {
+            Vector2 val = offsetInputValue->asA<Vector2>();
+            transform.offset[0] = val[0];
+            transform.offset[1] = val[1];
+            textureView.has_transform = true;
+        }
+    }
+    InputPtr rotationInput = imageNode->getInput("rotate");
+    if (rotationInput)
+    {
+        ValuePtr rotationInputValue = rotationInput->getValue();
+        if (rotationInputValue)
+        {
+            float val = rotationInputValue->asA<float>();
+            // Note: Rotation in glTF is in radians and degrees in MaterialX
+            transform.rotation = val * TO_RADIAN;
+            textureView.has_transform = true;
+        }
+    }
+    InputPtr scaleInput = imageNode->getInput("scale");
+    if (scaleInput)
+    {
+        ValuePtr scaleInputValue = scaleInput->getValue();
+        if (scaleInputValue)
+        {
+            Vector2 val = scaleInputValue->asA<Vector2>();
+            transform.scale[0] = val[0];
+            transform.scale[1] = val[1];
+            textureView.has_transform = true;
+        }
+    }
+
+    if (textureView.texcoord != 0)
+    {
+        transform.has_texcoord = true;
+        transform.texcoord = textureView.texcoord;
+    }
+
+    // Handle sampler.
+    // Based on: https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/schema/sampler.schema.json
+    cgltf_texture* texture = textureView.texture;
+    if (texture)
+    {
+        InputPtr uaddressInput = imageNode->addInputFromNodeDef("uaddressmode");
+        ValuePtr uaddressInputValue = uaddressInput ? uaddressInput->getValue() : nullptr;
+        InputPtr vaddressInput = imageNode->addInputFromNodeDef("vaddressmode");
+        ValuePtr vaddressInputValue = vaddressInput ? vaddressInput->getValue() : nullptr;
+        InputPtr filterInput = imageNode->addInputFromNodeDef("filtertype");
+        ValuePtr filterInputValue = filterInput ? filterInput->getValue() : nullptr;
+
+        if (uaddressInputValue || vaddressInputValue || filterInputValue)
+        {
+            texture->sampler = &(samplerList[samplerIndex]);
+            samplerIndex++;
+
+            textureView.texture = texture;
+            std::unordered_map<string, int> wrapMap;
+            wrapMap["clamp"] = 33071;
+            wrapMap["mirror"] = 33648;
+            wrapMap["periodic"] = 10497;
+
+            if (uaddressInputValue && wrapMap.count(uaddressInputValue->asA<string>()))
+            {
+                texture->sampler->wrap_s = wrapMap[uaddressInputValue->asA<string>()];
+            }
+            else
+            {
+                texture->sampler->wrap_s = 10497;
+            }
+            if (vaddressInputValue && wrapMap.count(vaddressInputValue->asA<string>()))
+            {
+                texture->sampler->wrap_t = wrapMap[vaddressInputValue->asA<string>()];
+            }
+            else
+            {
+                texture->sampler->wrap_t = 10497;
+            }
+
+            std::unordered_map<string, int> filterMap;
+            filterMap["closest"] = 9728;
+            filterMap["linear"] = 9729;
+            filterMap["cubic"] = 9984;
+            filterMap["closest"] = 9985;
+            filterMap["linear"] = 9986;
+            filterMap["cubic"] = 9987;
+            if (filterInputValue && filterMap.count(filterInputValue->asA<string>()))
+            {
+                texture->sampler->mag_filter = filterMap[filterInputValue->asA<string>()];
+                texture->sampler->min_filter = filterMap[filterInputValue->asA<string>()];
+            }
+            else
+            {
+                texture->sampler->mag_filter = 9729;
+                texture->sampler->min_filter = 9986;
+            }
+        }
     }
 }
 
@@ -127,7 +232,8 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
                         cgltf_float* write_value,
                         cgltf_bool& hasFlag,
                         std::vector<cgltf_texture>& textureList,
-                        std::vector<cgltf_image>& imageList, size_t& imageIndex)
+                        std::vector<cgltf_image>& imageList, size_t& imageIndex,
+                        std::vector<cgltf_sampler>& samplerList, size_t& samplerIndex)
 {
     string filename;
 
@@ -148,7 +254,7 @@ void writeColor3Input(const NodePtr pbrNode, const string& inputName,
         texture_view.texture = texture;
         initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                                  &(imageList[imageIndex]));
-        writeTexcoordIndex(texture_view, imageNode);
+        writeImageProperties(texture_view, imageNode, samplerList, samplerIndex);
 
         write_value[0] = 1.0f;
         write_value[1] = 1.0f;
@@ -177,7 +283,8 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
                         float* write_value,
                         cgltf_bool& hasFlag,
                         std::vector<cgltf_texture>& textureList,
-                        std::vector<cgltf_image>& imageList, size_t& imageIndex)
+                        std::vector<cgltf_image>& imageList, size_t& imageIndex,
+                        std::vector<cgltf_sampler>& samplerList, size_t& samplerIndex)
 {
     string filename;
 
@@ -196,10 +303,9 @@ void writeFloatInput(const NodePtr pbrNode, const string& inputName,
     {
         cgltf_texture* texture = &(textureList[imageIndex]);
         texture_view.texture = texture;
-        // Fix this to create a valid name...
         initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                                  &(imageList[imageIndex]));
-        writeTexcoordIndex(texture_view, imageNode);
+        writeImageProperties(texture_view, imageNode, samplerList, samplerIndex);
 
         *write_value = 1.0f;
         imageIndex++;
@@ -490,9 +596,12 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
     textureList.resize(64);
     std::vector<cgltf_image> imageList;
     imageList.resize(64);
+    std::vector<cgltf_sampler> samplerList;
+    samplerList.resize(64);
 
     size_t material_idx = 0;
     size_t imageIndex = 0;
+    size_t samplerIndex = 0;
 
     // Handle unlit nodes
     for (const NodePtr& unlitNode : unlitNodes)
@@ -586,7 +695,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             roughness.base_color_texture.texture = texture;
             initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                 &(imageList[imageIndex]));            
-            writeTexcoordIndex(roughness.base_color_texture, imageNode);
+            writeImageProperties(roughness.base_color_texture, imageNode, samplerList, samplerIndex);
 
             roughness.base_color_factor[0] = 1.0;
             roughness.base_color_factor[1] = 1.0;
@@ -864,7 +973,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             material->normal_texture.texture = texture;
             initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                 &(imageList[imageIndex]));
-            writeTexcoordIndex(material->normal_texture, imageNode);
+            writeImageProperties(material->normal_texture, imageNode, samplerList, samplerIndex);
 
             imageIndex++;
         }
@@ -873,17 +982,17 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
         cgltf_transmission& transmission = material->transmission;
         writeFloatInput(pbrNode, "transmission",
             transmission.transmission_texture, &(transmission.transmission_factor),
-            material->has_transmission, textureList, imageList, imageIndex);
+            material->has_transmission, textureList, imageList, imageIndex, samplerList, samplerIndex);
 
         // Handle specular color
         cgltf_specular& specular = material->specular;
         writeColor3Input(pbrNode, "specular_color",
             specular.specular_color_texture, &(specular.specular_color_factor[0]), material->has_specular,
-            textureList, imageList, imageIndex);
+            textureList, imageList, imageIndex, samplerList, samplerIndex);
         // - Handle specular
         writeFloatInput(pbrNode, "specular",
             specular.specular_texture, &(specular.specular_factor), material->has_specular, 
-            textureList, imageList, imageIndex);
+            textureList, imageList, imageIndex, samplerList, samplerIndex);
 
         // Handle ior
         value = pbrNode->getInputValue("ior");
@@ -912,7 +1021,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
         iridescence.iridescence_factor = 0.0f;
         writeFloatInput(pbrNode, "iridescence",
             iridescence.iridescence_texture, &(iridescence.iridescence_factor),
-            material->has_iridescence, textureList, imageList, imageIndex);
+            material->has_iridescence, textureList, imageList, imageIndex, samplerList, samplerIndex);
             
         // Scan for upstream <gltf_iridescence_thickness> node.
         // Note: This is the agreed upon upstream node to create to map
@@ -938,7 +1047,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
                 iridescence.iridescence_thickness_texture.texture = texture;
                 initialize_cgtlf_texture(*texture, thicknessNode->getNamePath(), thicknessFileName,
                     &(imageList[imageIndex]));
-                writeTexcoordIndex(iridescence.iridescence_thickness_texture, thicknessNode);
+                writeImageProperties(iridescence.iridescence_thickness_texture, thicknessNode, samplerList, samplerIndex);
                 imageIndex++;
 
                 InputPtr thickessInput = thicknessNode->getInput("thicknessMin");
@@ -960,20 +1069,20 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
         cgltf_sheen& sheen = material->sheen;
         writeColor3Input(pbrNode, "sheen_color",
             sheen.sheen_color_texture, &(sheen.sheen_color_factor[0]),
-            material->has_sheen, textureList, imageList, imageIndex);
+            material->has_sheen, textureList, imageList, imageIndex, samplerList, samplerIndex);
         // - Handle sheen roughness
         writeFloatInput(pbrNode, "sheen_roughness",
             sheen.sheen_roughness_texture, &(sheen.sheen_roughness_factor),
-            material->has_sheen, textureList, imageList, imageIndex);
+            material->has_sheen, textureList, imageList, imageIndex, samplerList, samplerIndex);
 
         // Handle clearcloat
         cgltf_clearcoat& clearcoat = material->clearcoat;
         writeFloatInput(pbrNode, "clearcoat",
             clearcoat.clearcoat_texture, &(clearcoat.clearcoat_factor),
-            material->has_clearcoat, textureList, imageList, imageIndex);
+            material->has_clearcoat, textureList, imageList, imageIndex, samplerList, samplerIndex);
         writeFloatInput(pbrNode, "clearcoat_roughness",
             clearcoat.clearcoat_roughness_texture, &(clearcoat.clearcoat_roughness_factor),
-            material->has_clearcoat, textureList, imageList, imageIndex);
+            material->has_clearcoat, textureList, imageList, imageIndex, samplerList, samplerIndex);
 
         // Handle clearcoat normal
         filename = EMPTY_STRING;
@@ -1001,7 +1110,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
             clearcoat.clearcoat_normal_texture.texture = texture;
             initialize_cgtlf_texture(*texture, imageNode->getNamePath(), filename,
                 &(imageList[imageIndex]));
-            writeTexcoordIndex(material->normal_texture, imageNode);
+            writeImageProperties(material->normal_texture, imageNode, samplerList, samplerIndex);
 
             imageIndex++;
             material->has_clearcoat = true;
@@ -1011,7 +1120,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
         cgltf_bool dummy = false;
         writeColor3Input(pbrNode, "emissive",
             material->emissive_texture, &(material->emissive_factor[0]),
-            dummy, textureList, imageList, imageIndex);
+            dummy, textureList, imageList, imageIndex, samplerList, samplerIndex);
         // - Handle emissive strength
         value = pbrNode->getInputValue("emissive_strength");
         if (value)
@@ -1028,6 +1137,8 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
     data->images = &imageList[0];
     data->textures_count = imageIndex; 
     data->textures = &textureList[0];
+    data->samplers_count = samplerIndex;
+    data->samplers = &samplerList[0];
 
     // Write to disk
     cgltf_result result = cgltf_write_file(&options, filePath.asString().c_str(), data);
@@ -1165,7 +1276,7 @@ void addTexCoordNode(NodePtr image, int uvindex)
     }
 }
 
-void setImageProperties(NodePtr image, const cgltf_texture_view* textureView)
+void readImageProperties(NodePtr image, const cgltf_texture_view* textureView)
 {
     cgltf_texture* texture = textureView ? textureView->texture : nullptr;
     if (!texture)
@@ -1198,7 +1309,7 @@ void setImageProperties(NodePtr image, const cgltf_texture_view* textureView)
         if (rotationInput)
         {
             // Note: Rotation in glTF and MaterialX are opposite directions
-            // This is handled in the MaterialX implementation
+            // Direction is handled in the MaterialX implementation
             rotationInput->setValue<float>(TO_DEGREE * transform.rotation);
         }
         InputPtr scaleInput = image->addInputFromNodeDef("scale");
@@ -1272,7 +1383,7 @@ void setImageProperties(NodePtr image, const cgltf_texture_view* textureView)
     }
 }
 
-void GltfMaterialHandler::setNormalMapInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName,
+void GltfMaterialHandler::readNormalMapInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName,
     const void* textureViewIn, const std::string& inputImageNodeName)
 {
     const cgltf_texture_view* textureView = (const cgltf_texture_view*)(textureViewIn);
@@ -1289,7 +1400,7 @@ void GltfMaterialHandler::setNormalMapInput(DocumentPtr materials, NodePtr shade
                                             VEC3_STRING, EMPTY_STRING, "gltf_normalmap");
         if (newTexture)
         {
-            setImageProperties(newTexture, textureView);
+            readImageProperties(newTexture, textureView);
 
             InputPtr normalInput = shaderNode->addInputFromNodeDef(inputName);
             if (normalInput)
@@ -1301,7 +1412,7 @@ void GltfMaterialHandler::setNormalMapInput(DocumentPtr materials, NodePtr shade
     }
 }
 
-void GltfMaterialHandler::setColorInput(DocumentPtr materials, NodePtr shaderNode, const std::string& colorInputName, 
+void GltfMaterialHandler::readColorInput(DocumentPtr materials, NodePtr shaderNode, const std::string& colorInputName, 
                                        const Color3& color, float alpha, const std::string& alphaInputName, 
                                        const void* textureViewIn,
                                        const std::string& inputImageNodeName)
@@ -1325,7 +1436,7 @@ void GltfMaterialHandler::setColorInput(DocumentPtr materials, NodePtr shaderNod
             NodePtr newTexture = createTexture(materials, imageNodeName, uri, "color3", "srgb_texture");
             if (newTexture)
             {
-                setImageProperties(newTexture, textureView);
+                readImageProperties(newTexture, textureView);
             }
             if (!colorInput)
             {
@@ -1346,7 +1457,7 @@ void GltfMaterialHandler::setColorInput(DocumentPtr materials, NodePtr shaderNod
             NodePtr newTexture = createColoredTexture(materials, imageNodeName, uri, color4, "srgb_texture");
             if (newTexture)
             {
-                setImageProperties(newTexture, textureView);
+                readImageProperties(newTexture, textureView);
 
                 const string& newTextureName = newTexture->getName();
                 if (!colorInput)
@@ -1392,7 +1503,7 @@ void GltfMaterialHandler::setColorInput(DocumentPtr materials, NodePtr shaderNod
     }
 }
 
-void GltfMaterialHandler::setFloatInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+void GltfMaterialHandler::readFloatInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
                                        float floatFactor, const void* textureViewIn,
                                        const std::string& inputImageNodeName)
 {
@@ -1410,7 +1521,7 @@ void GltfMaterialHandler::setFloatInput(DocumentPtr materials, NodePtr shaderNod
                                                FLOAT_STRING, EMPTY_STRING);
             if (newTexture)
             {
-                setImageProperties(newTexture, textureView);
+                readImageProperties(newTexture, textureView);
             }
             floatInput->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, newTexture->getName());
             floatInput->removeAttribute(AttributeDef::VALUE_ATTRIBUTE);               
@@ -1428,7 +1539,7 @@ void GltfMaterialHandler::setFloatInput(DocumentPtr materials, NodePtr shaderNod
     }
 }
 
-void GltfMaterialHandler::setVector3Input(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+void GltfMaterialHandler::readVector3Input(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
                                        const Vector3& vecFactor, const void* textureViewIn,
                                        const std::string& inputImageNodeName)
 {
@@ -1449,7 +1560,7 @@ void GltfMaterialHandler::setVector3Input(DocumentPtr materials, NodePtr shaderN
                                                VEC3_STRING, EMPTY_STRING);
             if (newTexture)
             {
-                setImageProperties(newTexture, textureView);
+                readImageProperties(newTexture, textureView);
             }
             vecInput->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, newTexture->getName());
             vecInput->removeAttribute(AttributeDef::VALUE_ATTRIBUTE);               
@@ -1592,7 +1703,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
                 {
                     haveSeparateOcclusion = true;
                     InputPtr occlusionInput = shaderNode->addInputFromNodeDef("occlusion");
-                    setFloatInput(_materials, shaderNode, "occlusion", 1.0, &material->occlusion_texture, "image_occlusion");
+                    readFloatInput(_materials, shaderNode, "occlusion", 1.0, &material->occlusion_texture, "image_occlusion");
                 }
             }
         }
@@ -1609,7 +1720,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
                 roughness.base_color_factor[1],
                 roughness.base_color_factor[2]);
             float alpha = roughness.base_color_factor[3];
-            setColorInput(_materials, shaderNode, colorAlphaInputs[colorAlphaInputOffset],
+            readColorInput(_materials, shaderNode, colorAlphaInputs[colorAlphaInputOffset],
                 colorFactor, alpha, colorAlphaInputs[colorAlphaInputOffset + 1],
                 &roughness.base_color_texture, "image_basecolor");
 
@@ -1637,7 +1748,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
                     VEC3_STRING, EMPTY_STRING);
                 if (textureNode)
                 {
-                    setImageProperties(textureNode, &textureView);
+                    readImageProperties(textureNode, &textureView);
                 }
 
                 // Map image channesl to inputs
@@ -1692,7 +1803,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
         }
 
         // Normal texture
-        setNormalMapInput(_materials, shaderNode, "normal", &(material->normal_texture), "image_normal");
+        readNormalMapInput(_materials, shaderNode, "normal", &(material->normal_texture), "image_normal");
 
         // Handle sheen
         if (material->has_sheen)
@@ -1702,10 +1813,10 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
             Color3 colorFactor(sheen.sheen_color_factor[0],
                                sheen.sheen_color_factor[1],
                                sheen.sheen_color_factor[2]);
-            setColorInput(_materials, shaderNode, "sheen_color",
+            readColorInput(_materials, shaderNode, "sheen_color",
                 colorFactor, 1.0f, EMPTY_STRING, &sheen.sheen_color_texture, "image_sheen");
 
-            setFloatInput(_materials, shaderNode, "sheen_roughness",
+            readFloatInput(_materials, shaderNode, "sheen_roughness",
                 sheen.sheen_roughness_factor, &sheen.sheen_roughness_texture,
                 "image_sheen_roughness");
         }
@@ -1729,11 +1840,11 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
             {
                 const cgltf_iridescence& iridescence = material->iridescence;
 
-                setFloatInput(_materials, shaderNode, "iridescence",
+                readFloatInput(_materials, shaderNode, "iridescence",
                     iridescence.iridescence_factor, &iridescence.iridescence_texture,
                     "image_iridescence");
 
-                setFloatInput(_materials, shaderNode, "iridescence_ior",
+                readFloatInput(_materials, shaderNode, "iridescence_ior",
                     iridescence.iridescence_ior, nullptr,
                     "image_iridescence_ior");
 
@@ -1761,7 +1872,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
                             {
                                 maxInput->setValue<float>(iridescence.iridescence_thickness_max);
                             }
-                            setImageProperties(newTexture, &textureView);
+                            readImageProperties(newTexture, &textureView);
                         }
                         floatInput->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, newTexture->getName());
                         floatInput->removeAttribute(AttributeDef::VALUE_ATTRIBUTE);
@@ -1785,19 +1896,19 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
             cgltf_clearcoat& clearcoat = material->clearcoat;
 
             // Mapped or unmapped clearcoat
-            setFloatInput(_materials, shaderNode, "clearcoat",
+            readFloatInput(_materials, shaderNode, "clearcoat",
                 clearcoat.clearcoat_factor,
                 &clearcoat.clearcoat_texture,
                 "image_clearcoat");
 
             // Mapped or unmapped clearcoat roughness
-            setFloatInput(_materials, shaderNode, "clearcoat_roughness",
+            readFloatInput(_materials, shaderNode, "clearcoat_roughness",
                 clearcoat.clearcoat_roughness_factor,
                 &clearcoat.clearcoat_roughness_texture,
                 "image_clearcoat_roughness");
 
             // Normal map clearcoat_normal
-            setNormalMapInput(_materials, shaderNode, "clearcoat_normal", &material->normal_texture, 
+            readNormalMapInput(_materials, shaderNode, "clearcoat_normal", &material->normal_texture, 
                             "image_clearcoat_normal");
         }
 
@@ -1811,7 +1922,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
         {
             cgltf_transmission& transmission = material->transmission;
 
-            setFloatInput(_materials, shaderNode, "transmission",
+            readFloatInput(_materials, shaderNode, "transmission",
                 transmission.transmission_factor,
                 &transmission.transmission_texture,
                 "image_transmission");
@@ -1833,13 +1944,13 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
             Color3 colorFactor(specular.specular_color_factor[0],
                 specular.specular_color_factor[1],
                 specular.specular_color_factor[2]);
-            setColorInput(_materials, shaderNode, "specular_color",
+            readColorInput(_materials, shaderNode, "specular_color",
                 colorFactor, 1.0f, EMPTY_STRING,
                 &specular.specular_color_texture,
                 "image_specularcolor");
 
             // Mapped or unmapped specular color
-            setFloatInput(_materials, shaderNode, "specular",
+            readFloatInput(_materials, shaderNode, "specular",
                 specular.specular_factor,
                 &specular.specular_texture,
                 "image_specular");
@@ -1864,7 +1975,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
         Color3 colorFactor(material->emissive_factor[0],
             material->emissive_factor[1],
             material->emissive_factor[2]);
-        setColorInput(_materials, shaderNode, "emissive",
+        readColorInput(_materials, shaderNode, "emissive",
             colorFactor, 1.0f, EMPTY_STRING, &material->emissive_texture, "image_emission");
 
         if (material->has_emissive_strength)
@@ -1892,7 +2003,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
             cgltf_volume& volume = material->volume;
 
             // Textured or untexture thickness
-            setFloatInput(_materials, shaderNode, "thickness",
+            readFloatInput(_materials, shaderNode, "thickness",
                 volume.thickness_factor,
                 &volume.thickness_texture,
                 "thickness");
@@ -1901,11 +2012,11 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
             Color3 attenFactor(volume.attenuation_color[0],
                 volume.attenuation_color[1],
                 volume.attenuation_color[2]);
-            setColorInput(_materials, shaderNode, "attenuation_color",
+            readColorInput(_materials, shaderNode, "attenuation_color",
                           attenFactor, 1.0f, EMPTY_STRING, nullptr, EMPTY_STRING);
 
             // Untextured attenuation distance
-            setFloatInput(_materials, shaderNode, "attenuation_distance",
+            readFloatInput(_materials, shaderNode, "attenuation_distance",
                 volume.attenuation_distance, nullptr, EMPTY_STRING);
         }
     }

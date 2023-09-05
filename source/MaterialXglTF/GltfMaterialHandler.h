@@ -177,16 +177,16 @@ class MX_GLTF_API GltfMaterialHandler : public MaterialHandler
     NodePtr createTexture(DocumentPtr& doc, const std::string & nodeName, const std::string& fileName,
                           const std::string & textureType, const std::string & colorspace, 
                           const std::string& nodeType = "gltf_image");
-    void    setColorInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+    void    readColorInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
                           const Color3& color, float alpha, const std::string& alphaInputName, 
                           const void* textureView, const std::string& inputImageNodeName);
-    void    setFloatInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+    void    readFloatInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
                           float floatFactor, const void* textureView,
                           const std::string& inputImageNodeName);
-    void    setVector3Input(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+    void    readVector3Input(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
                             const Vector3& vecFactor, const void* textureViewIn,
                             const std::string& inputImageNodeName);
-    void    setNormalMapInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
+    void    readNormalMapInput(DocumentPtr materials, NodePtr shaderNode, const std::string& inputName, 
                               const void* textureViewIn, const std::string& inputImageNodeName);
 
     void loadMaterials(void *);
