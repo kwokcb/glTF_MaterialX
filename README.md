@@ -9,7 +9,7 @@ presentation](https://materialx.org/assets/ASWF_OSD2022_MaterialX_OSL_Final.pdf)
 
 The supported targets are:
  * glTF version [2.0.1](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html) 
-* Corresponding MaterialX version which supports this. The minimal target release is [1.38.6.](https://github.com/AcademySoftwareFoundation/MaterialX/releases/tag/v1.38.6). 
+* Corresponding MaterialX version which supports this. The current target release is [1.38.8.](https://github.com/AcademySoftwareFoundation/MaterialX/releases/tag/v1.38.8). 
 
 Any future specification changes will go into MaterialX core as noted by issues logged [here](https://github.com/AcademySoftwareFoundation/MaterialX/issues)
 
@@ -17,270 +17,32 @@ A [Khronos branch](https://github.com/KhronosGroup/MaterialX/tree/gltf_mtlx_inte
 currently includes integration in the MaterialXViewer and
 MaterialX GraphEditor. Note that no pipeline tools are integrated there (such as baking) hence export expects the target nodegraph denoted in the next section.
 
-<img src="docs/glTF_import_graphEditor.png" width=80%></img>
-<br>
-<img src="docs/gltf_import-graphEditor2.png" width=80%></img>
-<br>
-<sub>Figure: Snapshot of some sample assets imported into the MaterialX GraphEditor</sub>
+<table>
+<tr>
+<td>
+<img src="docs/glTF_import_graphEditor.png" width=100%></img>
+<td>
+<img src="docs/gltf_import-graphEditor2.png" width=100%></img>
+</tr>
+</table>
+<sub>Figure: Snapshot of some sample glTF assets imported into the MaterialX GraphEditor</sub>
 
-Some of the documentation for this site will be migrating to the [MaterialX Learning Site](https://kwokcb.github.io/MaterialX_Learn/) (As of August, 2023).
-**Stay Tuned**
+For further documentation on interop and workflows see [MaterialX Learning Site](https://kwokcb.github.io/MaterialX_Learn/documents/workflow_gltf.html).
+<img src="documents/learning_site_workflow.png" width="80%"></img>
 
-## 2. Target MaterialX Representation
+The glTF documentation covers:
 
-There is a specific target MaterialX node graph configuration which is the target for distillation / export as well as remixing / import. These nodegraphs can be created in various editors including Maya, Houdini, etc and USD HDStorm integrations in general as long as the appropriate MaterialX library version is used.
-
-<img src="docs/gltf_target_graph.png" width=80%></img>
-<br><sub>Figure: Layout of "target" nodegraphs. Note that 0 or more upstream pattern graphs are supported for inputs to the root PBR shader</sub>
-
-The definitions for these nodes can be found as part of the [core MaterialX  library definitions](https://github.com/kwokcb/MaterialX/blob/main/libraries/bxdf/gltf_pbr.mtlx)
-
-Documentation for these nodes including nodegraph implementations has been extracted and can be found [here](documents/NodeDescriptions.md)
-
-<img src="docs/definitions.png" width="80%"></img>
-
-The breakdown is into two logical parts:
- * A root shading model instance
- * A small subset of upstream pattern nodes directly connected to the root 
-
-### `2.1 <gltf_pbr>`
-
-The current version of this PBR MaterialX node is `2.0.1` defined using MaterialX core pbr nodes:
-```mermaid
-graph LR; 
-    IMPL_gltf_pbr_surfaceshader_shader_constructor[surface] --> IMPL_gltf_pbr_surfaceshader_out([out])
-    style IMPL_gltf_pbr_surfaceshader_out fill:#1b1, color:#111
-    IMPL_gltf_pbr_surfaceshader_clearcoat_layer[layer] --".bsdf"--> IMPL_gltf_pbr_surfaceshader_shader_constructor[surface]
-    IMPL_gltf_pbr_surfaceshader_clearcoat_bsdf[dielectric_bsdf] --".top"--> IMPL_gltf_pbr_surfaceshader_clearcoat_layer[layer]
-    IMPL_gltf_pbr_surfaceshader_clearcoat([clearcoat]) ==.weight==> IMPL_gltf_pbr_surfaceshader_clearcoat_bsdf[dielectric_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_clearcoat fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_clearcoat_normal([clearcoat_normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_clearcoat_bsdf[dielectric_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_clearcoat_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_clearcoat_roughness_uv[roughness_anisotropy] --".roughness"--> IMPL_gltf_pbr_surfaceshader_clearcoat_bsdf[dielectric_bsdf]
-    IMPL_gltf_pbr_surfaceshader_clearcoat_roughness([clearcoat_roughness]) ==.roughness==> IMPL_gltf_pbr_surfaceshader_clearcoat_roughness_uv[roughness_anisotropy]
-    style IMPL_gltf_pbr_surfaceshader_clearcoat_roughness fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_sheen_layer[layer] --".base"--> IMPL_gltf_pbr_surfaceshader_clearcoat_layer[layer]
-    IMPL_gltf_pbr_surfaceshader_sheen_bsdf[sheen_bsdf] --".top"--> IMPL_gltf_pbr_surfaceshader_sheen_layer[layer]
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_sheen_bsdf[sheen_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_sheen_intensity[max] --".weight"--> IMPL_gltf_pbr_surfaceshader_sheen_bsdf[sheen_bsdf]
-    IMPL_gltf_pbr_surfaceshader_sheen_color_max_rg[max] --".in1"--> IMPL_gltf_pbr_surfaceshader_sheen_intensity[max]
-    IMPL_gltf_pbr_surfaceshader_sheen_color_r[extract] --".in1"--> IMPL_gltf_pbr_surfaceshader_sheen_color_max_rg[max]
-    IMPL_gltf_pbr_surfaceshader_sheen_color([sheen_color]) ==.in==> IMPL_gltf_pbr_surfaceshader_sheen_color_r[extract]
-    style IMPL_gltf_pbr_surfaceshader_sheen_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_sheen_color_g[extract] --".in2"--> IMPL_gltf_pbr_surfaceshader_sheen_color_max_rg[max]
-    IMPL_gltf_pbr_surfaceshader_sheen_color([sheen_color]) ==.in==> IMPL_gltf_pbr_surfaceshader_sheen_color_g[extract]
-    style IMPL_gltf_pbr_surfaceshader_sheen_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_sheen_color_b[extract] --".in2"--> IMPL_gltf_pbr_surfaceshader_sheen_intensity[max]
-    IMPL_gltf_pbr_surfaceshader_sheen_color([sheen_color]) ==.in==> IMPL_gltf_pbr_surfaceshader_sheen_color_b[extract]
-    style IMPL_gltf_pbr_surfaceshader_sheen_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_sheen_color_normalized[divide] --".color"--> IMPL_gltf_pbr_surfaceshader_sheen_bsdf[sheen_bsdf]
-    IMPL_gltf_pbr_surfaceshader_sheen_color([sheen_color]) ==.in1==> IMPL_gltf_pbr_surfaceshader_sheen_color_normalized[divide]
-    style IMPL_gltf_pbr_surfaceshader_sheen_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_sheen_intensity[max] --".in2"--> IMPL_gltf_pbr_surfaceshader_sheen_color_normalized[divide]
-    IMPL_gltf_pbr_surfaceshader_sheen_roughness_sq[multiply] --".roughness"--> IMPL_gltf_pbr_surfaceshader_sheen_bsdf[sheen_bsdf]
-    IMPL_gltf_pbr_surfaceshader_sheen_roughness([sheen_roughness]) ==.in1==> IMPL_gltf_pbr_surfaceshader_sheen_roughness_sq[multiply]
-    style IMPL_gltf_pbr_surfaceshader_sheen_roughness fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_sheen_roughness([sheen_roughness]) ==.in2==> IMPL_gltf_pbr_surfaceshader_sheen_roughness_sq[multiply]
-    style IMPL_gltf_pbr_surfaceshader_sheen_roughness fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_base_mix[mix] --".base"--> IMPL_gltf_pbr_surfaceshader_sheen_layer[layer]
-    IMPL_gltf_pbr_surfaceshader_metallic([metallic]) ==.mix==> IMPL_gltf_pbr_surfaceshader_base_mix[mix]
-    style IMPL_gltf_pbr_surfaceshader_metallic fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_mix_iridescent_dielectric_bsdf[mix] --".bg"--> IMPL_gltf_pbr_surfaceshader_base_mix[mix]
-    IMPL_gltf_pbr_surfaceshader_iridescence([iridescence]) ==.mix==> IMPL_gltf_pbr_surfaceshader_mix_iridescent_dielectric_bsdf[mix]
-    style IMPL_gltf_pbr_surfaceshader_iridescence fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_dielectric_bsdf[layer] --".bg"--> IMPL_gltf_pbr_surfaceshader_mix_iridescent_dielectric_bsdf[mix]
-    IMPL_gltf_pbr_surfaceshader_reflection_bsdf[generalized_schlick_bsdf] --".top"--> IMPL_gltf_pbr_surfaceshader_dielectric_bsdf[layer]
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_reflection_bsdf[generalized_schlick_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_dielectric_f0[multiply] --".color0"--> IMPL_gltf_pbr_surfaceshader_reflection_bsdf[generalized_schlick_bsdf]
-    IMPL_gltf_pbr_surfaceshader_specular([specular]) ==.in2==> IMPL_gltf_pbr_surfaceshader_dielectric_f0[multiply]
-    style IMPL_gltf_pbr_surfaceshader_specular fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_clamped_dielectric_f0_from_ior_specular_color[min] --".in1"--> IMPL_gltf_pbr_surfaceshader_dielectric_f0[multiply]
-    IMPL_gltf_pbr_surfaceshader_dielectric_f0_from_ior_specular_color[multiply] --".in1"--> IMPL_gltf_pbr_surfaceshader_clamped_dielectric_f0_from_ior_specular_color[min]
-    IMPL_gltf_pbr_surfaceshader_specular_color([specular_color]) ==.in1==> IMPL_gltf_pbr_surfaceshader_dielectric_f0_from_ior_specular_color[multiply]
-    style IMPL_gltf_pbr_surfaceshader_specular_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_dielectric_f0_from_ior[multiply] --".in2"--> IMPL_gltf_pbr_surfaceshader_dielectric_f0_from_ior_specular_color[multiply]
-    IMPL_gltf_pbr_surfaceshader_ior_div[divide] --".in1"--> IMPL_gltf_pbr_surfaceshader_dielectric_f0_from_ior[multiply]
-    IMPL_gltf_pbr_surfaceshader_one_minus_ior[subtract] --".in1"--> IMPL_gltf_pbr_surfaceshader_ior_div[divide]
-    IMPL_gltf_pbr_surfaceshader_ior([ior]) ==.in2==> IMPL_gltf_pbr_surfaceshader_one_minus_ior[subtract]
-    style IMPL_gltf_pbr_surfaceshader_ior fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_one_plus_ior[add] --".in2"--> IMPL_gltf_pbr_surfaceshader_ior_div[divide]
-    IMPL_gltf_pbr_surfaceshader_ior([ior]) ==.in2==> IMPL_gltf_pbr_surfaceshader_one_plus_ior[add]
-    style IMPL_gltf_pbr_surfaceshader_ior fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_ior_div[divide] --".in2"--> IMPL_gltf_pbr_surfaceshader_dielectric_f0_from_ior[multiply]
-    IMPL_gltf_pbr_surfaceshader_dielectric_f90[multiply] --".color90"--> IMPL_gltf_pbr_surfaceshader_reflection_bsdf[generalized_schlick_bsdf]
-    IMPL_gltf_pbr_surfaceshader_specular([specular]) ==.in2==> IMPL_gltf_pbr_surfaceshader_dielectric_f90[multiply]
-    style IMPL_gltf_pbr_surfaceshader_specular fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_roughness_uv[roughness_anisotropy] --".roughness"--> IMPL_gltf_pbr_surfaceshader_reflection_bsdf[generalized_schlick_bsdf]
-    IMPL_gltf_pbr_surfaceshader_roughness([roughness]) ==.roughness==> IMPL_gltf_pbr_surfaceshader_roughness_uv[roughness_anisotropy]
-    style IMPL_gltf_pbr_surfaceshader_roughness fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_transmission_mix[mix] --".base"--> IMPL_gltf_pbr_surfaceshader_dielectric_bsdf[layer]
-    IMPL_gltf_pbr_surfaceshader_transmission([transmission]) ==.mix==> IMPL_gltf_pbr_surfaceshader_transmission_mix[mix]
-    style IMPL_gltf_pbr_surfaceshader_transmission fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_diffuse_bsdf[oren_nayar_diffuse_bsdf] --".bg"--> IMPL_gltf_pbr_surfaceshader_transmission_mix[mix]
-    IMPL_gltf_pbr_surfaceshader_base_color([base_color]) ==.color==> IMPL_gltf_pbr_surfaceshader_diffuse_bsdf[oren_nayar_diffuse_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_base_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_diffuse_bsdf[oren_nayar_diffuse_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_transmission_bsdf[dielectric_bsdf] --".fg"--> IMPL_gltf_pbr_surfaceshader_transmission_mix[mix]
-    IMPL_gltf_pbr_surfaceshader_base_color([base_color]) ==.tint==> IMPL_gltf_pbr_surfaceshader_transmission_bsdf[dielectric_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_base_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_ior([ior]) ==.ior==> IMPL_gltf_pbr_surfaceshader_transmission_bsdf[dielectric_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_ior fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_transmission_bsdf[dielectric_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_roughness_uv[roughness_anisotropy] --".roughness"--> IMPL_gltf_pbr_surfaceshader_transmission_bsdf[dielectric_bsdf]
-    IMPL_gltf_pbr_surfaceshader_iridescent_dielectric_bsdf[layer] --".fg"--> IMPL_gltf_pbr_surfaceshader_mix_iridescent_dielectric_bsdf[mix]
-    IMPL_gltf_pbr_surfaceshader_dielectric_thinfilm_bsdf[thin_film_bsdf] --".top"--> IMPL_gltf_pbr_surfaceshader_iridescent_dielectric_bsdf[layer]
-    IMPL_gltf_pbr_surfaceshader_iridescence_thickness([iridescence_thickness]) ==.thickness==> IMPL_gltf_pbr_surfaceshader_dielectric_thinfilm_bsdf[thin_film_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_iridescence_thickness fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_iridescence_ior([iridescence_ior]) ==.ior==> IMPL_gltf_pbr_surfaceshader_dielectric_thinfilm_bsdf[thin_film_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_iridescence_ior fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_tf_dielectric_bsdf[layer] --".base"--> IMPL_gltf_pbr_surfaceshader_iridescent_dielectric_bsdf[layer]
-    IMPL_gltf_pbr_surfaceshader_tf_reflection_bsdf[generalized_schlick_bsdf] --".top"--> IMPL_gltf_pbr_surfaceshader_tf_dielectric_bsdf[layer]
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_tf_reflection_bsdf[generalized_schlick_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_dielectric_f0[multiply] --".color0"--> IMPL_gltf_pbr_surfaceshader_tf_reflection_bsdf[generalized_schlick_bsdf]
-    IMPL_gltf_pbr_surfaceshader_dielectric_f90[multiply] --".color90"--> IMPL_gltf_pbr_surfaceshader_tf_reflection_bsdf[generalized_schlick_bsdf]
-    IMPL_gltf_pbr_surfaceshader_roughness_uv[roughness_anisotropy] --".roughness"--> IMPL_gltf_pbr_surfaceshader_tf_reflection_bsdf[generalized_schlick_bsdf]
-    IMPL_gltf_pbr_surfaceshader_tf_transmission_mix[mix] --".base"--> IMPL_gltf_pbr_surfaceshader_tf_dielectric_bsdf[layer]
-    IMPL_gltf_pbr_surfaceshader_transmission([transmission]) ==.mix==> IMPL_gltf_pbr_surfaceshader_tf_transmission_mix[mix]
-    style IMPL_gltf_pbr_surfaceshader_transmission fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_tf_diffuse_bsdf[oren_nayar_diffuse_bsdf] --".bg"--> IMPL_gltf_pbr_surfaceshader_tf_transmission_mix[mix]
-    IMPL_gltf_pbr_surfaceshader_base_color([base_color]) ==.color==> IMPL_gltf_pbr_surfaceshader_tf_diffuse_bsdf[oren_nayar_diffuse_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_base_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_tf_diffuse_bsdf[oren_nayar_diffuse_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_tf_transmission_bsdf[dielectric_bsdf] --".fg"--> IMPL_gltf_pbr_surfaceshader_tf_transmission_mix[mix]
-    IMPL_gltf_pbr_surfaceshader_base_color([base_color]) ==.tint==> IMPL_gltf_pbr_surfaceshader_tf_transmission_bsdf[dielectric_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_base_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_ior([ior]) ==.ior==> IMPL_gltf_pbr_surfaceshader_tf_transmission_bsdf[dielectric_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_ior fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_tf_transmission_bsdf[dielectric_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_roughness_uv[roughness_anisotropy] --".roughness"--> IMPL_gltf_pbr_surfaceshader_tf_transmission_bsdf[dielectric_bsdf]
-    IMPL_gltf_pbr_surfaceshader_mix_iridescent_metal_bsdf[mix] --".fg"--> IMPL_gltf_pbr_surfaceshader_base_mix[mix]
-    IMPL_gltf_pbr_surfaceshader_iridescence([iridescence]) ==.mix==> IMPL_gltf_pbr_surfaceshader_mix_iridescent_metal_bsdf[mix]
-    style IMPL_gltf_pbr_surfaceshader_iridescence fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_metal_bsdf[generalized_schlick_bsdf] --".bg"--> IMPL_gltf_pbr_surfaceshader_mix_iridescent_metal_bsdf[mix]
-    IMPL_gltf_pbr_surfaceshader_base_color([base_color]) ==.color0==> IMPL_gltf_pbr_surfaceshader_metal_bsdf[generalized_schlick_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_base_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_metal_bsdf[generalized_schlick_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_roughness_uv[roughness_anisotropy] --".roughness"--> IMPL_gltf_pbr_surfaceshader_metal_bsdf[generalized_schlick_bsdf]
-    IMPL_gltf_pbr_surfaceshader_iridescent_metal_bsdf[layer] --".fg"--> IMPL_gltf_pbr_surfaceshader_mix_iridescent_metal_bsdf[mix]
-    IMPL_gltf_pbr_surfaceshader_metal_thinfilm_bsdf[thin_film_bsdf] --".top"--> IMPL_gltf_pbr_surfaceshader_iridescent_metal_bsdf[layer]
-    IMPL_gltf_pbr_surfaceshader_iridescence_thickness([iridescence_thickness]) ==.thickness==> IMPL_gltf_pbr_surfaceshader_metal_thinfilm_bsdf[thin_film_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_iridescence_thickness fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_iridescence_ior([iridescence_ior]) ==.ior==> IMPL_gltf_pbr_surfaceshader_metal_thinfilm_bsdf[thin_film_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_iridescence_ior fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_tf_metal_bsdf[generalized_schlick_bsdf] --".base"--> IMPL_gltf_pbr_surfaceshader_iridescent_metal_bsdf[layer]
-    IMPL_gltf_pbr_surfaceshader_base_color([base_color]) ==.color0==> IMPL_gltf_pbr_surfaceshader_tf_metal_bsdf[generalized_schlick_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_base_color fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_normal([normal]) ==.normal==> IMPL_gltf_pbr_surfaceshader_tf_metal_bsdf[generalized_schlick_bsdf]
-    style IMPL_gltf_pbr_surfaceshader_normal fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_roughness_uv[roughness_anisotropy] --".roughness"--> IMPL_gltf_pbr_surfaceshader_tf_metal_bsdf[generalized_schlick_bsdf]
-    IMPL_gltf_pbr_surfaceshader_emission[uniform_edf] --".edf"--> IMPL_gltf_pbr_surfaceshader_shader_constructor[surface]
-    IMPL_gltf_pbr_surfaceshader_emission_color[multiply] --".color"--> IMPL_gltf_pbr_surfaceshader_emission[uniform_edf]
-    IMPL_gltf_pbr_surfaceshader_emissive([emissive]) ==.in1==> IMPL_gltf_pbr_surfaceshader_emission_color[multiply]
-    style IMPL_gltf_pbr_surfaceshader_emissive fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_emissive_strength([emissive_strength]) ==.in2==> IMPL_gltf_pbr_surfaceshader_emission_color[multiply]
-    style IMPL_gltf_pbr_surfaceshader_emissive_strength fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_opacity[ifequal] --".opacity"--> IMPL_gltf_pbr_surfaceshader_shader_constructor[surface]
-    IMPL_gltf_pbr_surfaceshader_alpha_mode([alpha_mode]) ==.value1==> IMPL_gltf_pbr_surfaceshader_opacity[ifequal]
-    style IMPL_gltf_pbr_surfaceshader_alpha_mode fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_opacity_mask[ifequal] --".in2"--> IMPL_gltf_pbr_surfaceshader_opacity[ifequal]
-    IMPL_gltf_pbr_surfaceshader_alpha_mode([alpha_mode]) ==.value1==> IMPL_gltf_pbr_surfaceshader_opacity_mask[ifequal]
-    style IMPL_gltf_pbr_surfaceshader_alpha_mode fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_alpha([alpha]) ==.in2==> IMPL_gltf_pbr_surfaceshader_opacity_mask[ifequal]
-    style IMPL_gltf_pbr_surfaceshader_alpha fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_opacity_mask_cutoff[ifgreatereq] --".in1"--> IMPL_gltf_pbr_surfaceshader_opacity_mask[ifequal]
-    IMPL_gltf_pbr_surfaceshader_alpha([alpha]) ==.value1==> IMPL_gltf_pbr_surfaceshader_opacity_mask_cutoff[ifgreatereq]
-    style IMPL_gltf_pbr_surfaceshader_alpha fill:#0bb, color:#111
-    IMPL_gltf_pbr_surfaceshader_alpha_cutoff([alpha_cutoff]) ==.value2==> IMPL_gltf_pbr_surfaceshader_opacity_mask_cutoff[ifgreatereq]
-    style IMPL_gltf_pbr_surfaceshader_alpha_cutoff fill:#0bb, color:#111
-
-```
-See [here](https://kwokcb.github.io/MaterialX_Learn/documents/definitions/gltf_pbr.html) for a description of the node.
-
-<!-- <img src="./docs/gltf_pbr_graph.png" width=80%></img> -->
-
-As Khronos extensions are added the subversion will be incremented. 
-  
-### `2.2 <gltf_image>`
-This node provides an interface which matches how image lookup are performed within glTF 2.0 based on this [spec](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_texture_transform/README.md)
-
-<details open><summary>Details</summary>
-<p>
-
-This includes handling these differences:
-* The transform pivot is 0,0 for MaterialX but 0,1 for glTF.
-  * Offset is thus negated in V
-* Rotation is specified as radians versus angles and is reverse direction. (negation required)
-* Scale is inverted between MaterialX and glTF
-* The default transformation order is TRS for glTF and not SRT.
-
-This is supported for all variants of this node: vector3, float, color3, and color4. No vector2 variant is required at this time.
-* One texture coordinate set referenced by set name, with the default set being "UV0" which is equal to set 0.
-  * Names are used to support **OpenUSD** workflows where al sets are named.
-  * A `<texcoord>` node which a different index can be connected to provide index based workflows as found for glTF.
-* U and V address modes and filter type are accessible with the defaults for glTF and MaterialX matching.
-
-The color4 output is split into color3 and alpha outputs which can be directly mapped to a `gltf_pbr` node.
-
-If in the future real world units are supported in glTF then the appropriate semantic unit tagging can be added to 
-the existing inputs are additional inputs. Input values are not considered to be mappable and hence if a unit semantic is provided import / export can handle this via either a 3rd-party or built in scale unit conversion utility.
-
-</details>
-
-### `2.3 <gltf_colorimage>`
-Node for handling input of color images. Inherits properties from `<gltf_image>`
-<details><summary>Details</summary>
-<p>
-
-This encapsulates color/alpha management where an color4 image lookup can be modulated by a color4 factor as well as geometric color4. That is final color is (base on this [post](https://github.com/KhronosGroup/glTF/issues/1638)):
-```
-  color4_image * color4_factor * geometry_color4
-```
-The input image can have a "colorspace" semantic specified. By default for import/export this should be `srgb_texture` but is not hard-coded as part of the definition. Color factor is set to be uniform and both it and geometry color are assumed to be specified in the rendering / target colorspace.
-
-As not all geometry have geometric colors , the default "geometry color" input is a uniform value = { 1,1,1,1 }
-which can be mapped to a `<geomcolor>` node as required. That node allows for color set index to be set with the
-default being set 0.Compliant texture transform support is provided by using a `gltf_image` node as part of it's definition.
-
-</details>
-
-### `2.4 <gtlf_normalmap>`
-
-Node for handling input of tangent space normal map images. Inherits properties from `<gltf_image>`
-<details><summary>Details</summary>
-<p>
-
-This node encapsulates a file texture which is a normal map. It uses `<gltf_vector3>` and `<normalmap>` as it's main components to provide base level glTF support which always outputs a normal map.  normalmap space is not an exposed interface and is always set to tangent space, with a default / fallback value of { 0.5, 0.5, 1.0 } if no input image is specified.
-
-Compliant texture transform support is provided by using a <gltf_image> node as part of it's definition.
-
-</details>
-
-### `2.5 <gltf_iridescence_thickness>`
-
-Node for handling "thickness" images. Inherits properties from `<gltf_image>`
-<details><summary>Details</summary>
-<p>
-
-This node handles user input for a "thickness" image which is mapped to a thickness "min" and "max" to scale the images output (g channel) as defined [here](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_iridescence/README.md). This produces a float thickness output which can be connected to gttf_pbr "iridescence ior". 
-
-Compliant glTF texture transform support is provided by using a <gltf_image> in it's implementation.
-
-</details>
-<p>
+1. The target MaterialX representation, which includes the [glTF PBR node](https://kwokcb.github.io/MaterialX_Learn/documents/definitions/gltf_pbr.html)
+2. Details about glTF support nodes which are part of the core MaterialX distribution.
+3. Key glTF<->MaterialX mapping information.
+4. [Node implementations](https://kwokcb.github.io/MaterialX_Learn/documents/definitions/definitions_by_group.html). (Filter nodes which start with gltf). 
+<img src="documents/node_reference_snap.png" width="80%"></img>
 
 ### 2.6 Units and Color Management Notes
 
-Note that real world distance units are not explicitly used but can be added in on top of the supplemental nodes.
+Real world distance units are not explicitly used but can be added in on top of the supplemental nodes. An integration can set a target unit to `meter` to match glTF if using code generation.
 
-Color management is assumed not to be applied to any of these nodes but there is no way to restrict this. The defaults for colored texture match glTF (`srgb_texture` = sRGB), and "render space" for uniforms and varying geometric color by default.
+The default input color space is assumed linear / raw except for color input images whih by default match glTF (`srgb_texture` = sRGB), and "render space" for uniforms and varying geometric color by default.
 
 ### 2.7 Material Assignments
 
@@ -311,9 +73,9 @@ See [Developer Docs](documents/Developer.md) for more details.
 
 <img src="docs/bidirectional_workflow.png" width="80%"></img>
 
-The basic import from glTF to MaterialX and MaterialX to glTF for  shading models: gltf_pbr or `unlit_surface` (if the material is marked as being unit`. Texture mapping is supported for import however texture transforms are not supported yet for export. 
+The basic import from glTF to MaterialX and MaterialX to glTF for  shading models: gltf_pbr or `unlit_surface` (if the material is marked as being unit`. Texture mapping including sampler and transform is supported bidirectionally. 
 
-Color per vertex associated alpha blending are supported. Import detection
+Color per vertex associated alpha blending is supported. Import detection
 uses a heuristic of checking if the assigned geometry has a color channel to add a default color channel binding to the input on the graph node.
 
 | Flght Helmet | Alpha Blend Test | Vertex Color Test | 
@@ -347,7 +109,7 @@ Note that all renders are generated as part of unit tests using the core `Materi
 
 <details open><summary>Sample Results</summary>
 
-Conversion from "stock" MaterialX materials to glTF is available for "distilation". 
+Conversion from "stock" MaterialX materials to glTF is available for "distillation". 
 
 Metallic-roughness-occlusion (ORM) maps are generated based on whether there are any graph connections for `occlusion`, `metallic` and `roughness` inputs on a `<gtlf_pbr>` instance. If metallic and or roughness are mapped to different inputs then the upstream image(s) or uniform input(s) are merged. This allows for (re)import to `<gltf_colorimage>` which supports channel splitting of the merged image.
 
