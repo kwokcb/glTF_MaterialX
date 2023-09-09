@@ -1,3 +1,20 @@
+/* 
+
+Copyright 2022 - 2023 Bernard Kwok
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http ://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
 
 #ifndef MATERIALX_CGLTF_MaterialHandler_H
 #define MATERIALX_CGLTF_MaterialHandler_H
@@ -49,7 +66,12 @@ class MX_GLTF_API MaterialHandler
     ///     to perform actions such as shader translation and baking.
     /// </summary>
     /// <param name="doc">Document to modify</param>
-    virtual void translateShaders(DocumentPtr /*doc*/, StringVec& /*log*/) {};
+    /// <param name="log">Error log</param>
+    virtual void translateShaders(DocumentPtr doc, StringVec& log) 
+    {
+        std::ignore = doc;
+        std::ignore = log;
+    };
 
     /// <summary>
     ///     Set document containing MaterialX definitions. This includes core library
@@ -153,6 +175,7 @@ class MX_GLTF_API GltfMaterialHandler : public MaterialHandler
     ///     Convert MaterialX document to glTF and save to file path
     /// </summary>
     /// <param name="filePath">File path</param>
+    /// <param name="log">Error log</param>
     /// <returns>True on success</returns>
     bool load(const FilePath& filePath, StringVec& log) override;
 
@@ -160,6 +183,7 @@ class MX_GLTF_API GltfMaterialHandler : public MaterialHandler
     ///     Convert glTF to MaterialX document and save to file path    
     /// </summary>
     /// <param name="filePath">File path</param>
+    /// <param name="log">Error log</param>
     /// <returns>True on success</returns>
     bool save(const FilePath& filePath, StringVec& log) override;
 
@@ -169,6 +193,7 @@ class MX_GLTF_API GltfMaterialHandler : public MaterialHandler
     ///     to perform actions such as shader translation and baking.
     /// </summary>
     /// <param name="doc">Document to modify</param>
+    /// <param name="log">Error log</param>
     void translateShaders(DocumentPtr doc, StringVec& log) override;
 
   private:
