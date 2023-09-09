@@ -13,9 +13,9 @@ The supported targets are:
 
 Any future specification changes will go into MaterialX core as noted by issues logged [here](https://github.com/AcademySoftwareFoundation/MaterialX/issues)
 
-A [Khronos branch](https://github.com/KhronosGroup/MaterialX/tree/gltf_mtlx_interop) using this library is available in a branch. This
-currently includes integration in the MaterialXViewer and
-MaterialX GraphEditor. Note that no pipeline tools are integrated there (such as baking) hence export expects the target nodegraph denoted in the next section.
+A [Khronos integration](https://github.com/KhronosGroup/MaterialX/tree/1.38.8_gltf_interop) using this library is being reviewed for integration into main. This
+currently includes additional features such as integration in the MaterialXViewer and
+MaterialX GraphEditor, and Python support. Note that no pipeline tools are integrated there (such as baking) hence export expects the target nodegraph denoted in the next section.
 
 <table>
 <tr>
