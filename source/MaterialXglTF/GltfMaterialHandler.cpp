@@ -1993,7 +1993,7 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
             material->emissive_factor[1],
             material->emissive_factor[2]);
         readColorInput(_materials, shaderNode, "emissive",
-            colorFactor, 1.0f, EMPTY_STRING, &material->emissive_texture, "image_emission");
+            colorFactor, 1.0f, EMPTY_STRING, &material->emissive_texture, "image_emissive");
 
         if (material->has_emissive_strength)
         {

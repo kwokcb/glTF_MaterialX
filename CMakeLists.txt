@@ -34,7 +34,7 @@ if (APPLE)
    set(CMAKE_OSX_ARCHITECTURES "x86_64")
 endif()
 
-option(MATERIALX_EXTERNAL "Build aginst an external install of Materialx (MATERIALX_ROOT may also need to be set)" OFF)
+option(MATERIALX_EXTERNAL "Build against an external install of Materialx (MATERIALX_ROOT may also need to be set)" OFF)
 if (MATERIALX_EXTERNAL)
     set(MATERIALX_LIBRARY_NAMES "MaterialXCore;MaterialXFormat;MaterialXRender")
     find_path(MATERIALX_INCLUDE_DIRS
