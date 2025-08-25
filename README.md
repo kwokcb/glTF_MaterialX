@@ -4,18 +4,14 @@
 
 ## 1. Introduction
 
-This repo contains utilities to support glTF bidirectional MaterialX data model conversion for workflows first described in the [ASWF 2022 Open Source days
-presentation](https://materialx.org/assets/ASWF_OSD2022_MaterialX_OSL_Final.pdf).
+This repo contains utilities to support glTF bidirectional MaterialX data model conversion for workflows first described in the [ASWF 2022 Open Source days presentation](https://materialx.org/assets/ASWF_OSD2022_MaterialX_OSL_Final.pdf).
 
 The supported targets are:
  * glTF version [2.0.1](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html) 
-* Corresponding MaterialX version which supports this. The current target release is [1.38.8.](https://github.com/AcademySoftwareFoundation/MaterialX/releases/tag/v1.38.8). 
+* Corresponding MaterialX version which supports this. The current target release is [1.39.3.](https://github.com/AcademySoftwareFoundation/MaterialX/releases/tag/v1.39.3). 
 
 Any future specification changes will go into MaterialX core as noted by issues logged [here](https://github.com/AcademySoftwareFoundation/MaterialX/issues)
 
-A [Khronos integration](https://github.com/KhronosGroup/MaterialX/tree/1.38.8_gltf_interop) using this library is being reviewed for integration into main. This
-currently includes additional features such as integration in the MaterialXViewer and
-MaterialX GraphEditor, and Python support. Note that no pipeline tools are integrated there (such as baking) hence export expects the target nodegraph denoted in the next section.
 
 <table>
 <tr>
