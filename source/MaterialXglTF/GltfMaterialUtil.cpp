@@ -1,6 +1,6 @@
 /* 
 
-Copyright 2022 - 2023 Bernard Kwok
+Copyright 2022 - 2025 Bernard Kwok
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ limitations under the License.
 #include <limits>
 #include <unordered_set>
 
+#include <iostream>
+
 MATERIALX_NAMESPACE_BEGIN
 
 DocumentPtr GltfMaterialUtil::glTF2Mtlx(
@@ -35,8 +37,9 @@ DocumentPtr GltfMaterialUtil::glTF2Mtlx(
     gltfMTLXLoader->setGenerateFullDefinitions(fullDefinition);
     
     bool loadedMaterial = gltfMTLXLoader->load(filename, logger);
+
     DocumentPtr materials = loadedMaterial ? gltfMTLXLoader->getMaterials() : nullptr;
-    
+
     return materials;
 }    
 
@@ -60,7 +63,7 @@ bool GltfMaterialUtil::haveSingleDocBake(const FilePath& errorFile)
     }
 
     const string redirectString(" 2>&1");
-    string testcommand = "python " + shaderTranslator.asString()
+    string testcommand = "python3 " + shaderTranslator.asString()
         + " --help"
         +" > " + errorFile.asString() + redirectString;
 
@@ -93,7 +96,7 @@ bool GltfMaterialUtil::bakeDocument(const FilePath& inputFileName, const FilePat
 
         bool haveSingleBakeDocSupport = GltfMaterialUtil::haveSingleDocBake(errorFile);
 
-        std::string command = "python " + shaderTranslator.asString()
+        std::string command = "python3 " + shaderTranslator.asString()
             + " --width " + std::to_string(width)
             + " --height " + std::to_string(height)
             + (haveSingleBakeDocSupport ? " --writeSingleDocument " : EMPTY_STRING)

@@ -1,6 +1,4 @@
 @echo off
-
-git submodule update --init --recursive
 mkdir build
 cd build
 cmake -DGLTF_MATERIALX_TEST_RENDER=ON -G "Visual Studio 16 2019" -A "x64" -DCMAKE_BUILD_TYPE=RelWithDebInfo ..

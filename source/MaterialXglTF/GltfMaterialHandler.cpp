@@ -1,6 +1,6 @@
 /* 
 
-Copyright 2022 - 2023 Bernard Kwok
+Copyright 2022 - 2025 Bernard Kwok
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -533,7 +533,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
     const string gltf_versionString = "2.0";
 	data->asset.generator = const_cast<char*>((new string("MaterialX " + mtlx_versionString + " to glTF " + gltf_versionString + " generator. https://github.com/kwokcb/glTF_MaterialX"))->c_str());;
     data->asset.version = const_cast<char*>((new string(gltf_versionString))->c_str());
-    std::string *copyright = new string("Copyright 2022-2023: Bernard Kwok");
+    std::string *copyright = new string("Copyright 2022-2025: Bernard Kwok");
     data->asset.copyright = const_cast<char*>((copyright)->c_str());
 
     // Scan for PBR shader nodes
@@ -561,6 +561,7 @@ bool GltfMaterialHandler::save(const FilePath& filePath, StringVec& logger)
     cgltf_size materials_count = pbrNodes.size() + unlitNodes.size();
     if (!materials_count)
     {
+        logger.push_back("No materials found !!!\n");
         return false;
     }
 
@@ -1458,8 +1459,12 @@ void GltfMaterialHandler::readColorInput(DocumentPtr materials, NodePtr shaderNo
             if (!colorInput)
             {
                 colorInput = colorInputName.size() ? shaderNode->addInputFromNodeDef(colorInputName) : nullptr;
-                colorInput->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, newTexture->getName());
-                colorInput->removeAttribute(AttributeDef::VALUE_ATTRIBUTE);
+                if (colorInput)
+                {
+                    // TODO : Fix
+                    colorInput->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, newTexture->getName());
+                    colorInput->removeAttribute(AttributeDef::VALUE_ATTRIBUTE);
+                }
             }
         }
 
@@ -1768,28 +1773,44 @@ void GltfMaterialHandler::loadMaterials(void *vdata)
                     readImageProperties(textureNode, &textureView);
                 }
 
-                // Map image channesl to inputs
+                // Map image channels to inputs
                 StringVec indexName = { "x", "y", "z" };
                 std::vector<InputPtr> inputs = { occlusionInput, roughnessInput, metallicInput };
                 for (size_t i = 0; i < inputs.size(); i++)
                 {
                     if (inputs[i])
                     {
-                        inputs[i]->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, textureNode->getName());
+                        string extractNodeName = _materials->createValidChildName("extract_orm");
+                        NodePtr extractNode = _materials->addNode("extract", extractNodeName, FLOAT_STRING);
+                        extractNode->addInputsFromNodeDef();
+                        InputPtr extractNodeInput = extractNode->getInput(IN_STRING);
+                        extractNodeInput->setType(VEC3_STRING);    
+                        extractNodeInput->removeAttribute(AttributeDef::VALUE_ATTRIBUTE);
+                        extractNodeInput->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, textureNode->getName());                                
+                        extractNodeInput = extractNode->getInput("index");
+                        //string value_i = std::to_string(i);
+                        //extractNodeInput->setValueString(value_i);
+                        extractNodeInput->setValue<int>(static_cast<int>(i));
+
+                        inputs[i]->setAttribute(PortElement::NODE_NAME_ATTRIBUTE, extractNode->getName());
                         inputs[i]->setType(FLOAT_STRING);
-                        inputs[i]->setChannels(indexName[i]);
                     }
                 }
 
                 // See note about both AttributeDef::VALUE_ATTRIBUTE and PortElement::NODE_NAME_ATTRIBUTE being
                 // specified.
-                metallicInput->setValue<float>(roughness.metallic_factor);
-                roughnessInput->setValue<float>(roughness.roughness_factor);
+                // TODO : Fix inputs are null !!
+                if (metallicInput)
+                    metallicInput->setValue<float>(roughness.metallic_factor);
+                if (roughnessInput)
+                    roughnessInput->setValue<float>(roughness.roughness_factor);
             }
             else
             {
-                metallicInput->setValue<float>(roughness.metallic_factor);;
-                roughnessInput->setValue<float>(roughness.roughness_factor);
+                if (metallicInput)
+                    metallicInput->setValue<float>(roughness.metallic_factor);;
+                if (roughnessInput)
+                    roughnessInput->setValue<float>(roughness.roughness_factor);
             }
         }
 

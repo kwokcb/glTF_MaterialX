@@ -1,6 +1,6 @@
 /* 
 
-Copyright 2022 - 2023 Bernard Kwok
+Copyright 2022 - 2025 Bernard Kwok
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
     }
     else
     {
-        rootPath = "resources/glTF_export/Materials/Examples/StandardSurface";
+        rootPath = "resources/glTF_export/Materials/Examples/GltfPbr";
         rootPath = searchPath.find(rootPath);
     }
 
@@ -113,7 +113,7 @@ TEST_CASE("Validate MaterialX to glTF export", "[gltf_export]")
                 std::string::npos != fullPath.asString().find("distilled") ||
                 std::string::npos != fullPath.asString().find("baked"))
             {
-                //logFile << "------------ Skip file: " << fullPath.asString() << std::endl;
+                logFile << "------------ Skip file: " << fullPath.asString() << std::endl;
                 continue;
             }
 
@@ -293,6 +293,7 @@ TEST_CASE("Validate gltf to MaterialX import", "[gltf_import]")
 
         for (const mx::FilePath& gltfFile : dir.getFilesInDirectory(GLTF_EXTENSION))
         {
+
             mx::FilePath fullPath = dir / gltfFile;
 
             if (testedFiles.count(fullPath))
@@ -304,6 +305,7 @@ TEST_CASE("Validate gltf to MaterialX import", "[gltf_import]")
             logFile << "* Convert from glTF to MTLX: " << fullPath.asString() << std::endl;
 
             mx::StringVec log;
+
             mx::DocumentPtr materials = mx::GltfMaterialUtil::glTF2Mtlx(fullPath, libraries, createAssignments, fullDefinition, log);
             for (const std::string& error : log)
             {

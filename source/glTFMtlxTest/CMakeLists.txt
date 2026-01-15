@@ -47,7 +47,7 @@ target_link_libraries(
 # For now only test Standard Surface as that has a translation graph to glTF
 add_custom_command(TARGET glTFMtlxTest POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${MATERIALX_ROOT}/resources/Materials/Examples/StandardSurface ${CMAKE_BINARY_DIR}/bin/resources/glTF_export/Materials/Examples/StandardSurface)
+    ${MATERIALX_ROOT}/resources/Materials/Examples/GltfPbr ${CMAKE_BINARY_DIR}/bin/resources/glTF_export/Materials/Examples/GltfPbr)
 add_custom_command(TARGET glTFMtlxTest POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${MATERIALX_ROOT}/resources/Images ${CMAKE_BINARY_DIR}/bin/resources/glTF_export/Images)
